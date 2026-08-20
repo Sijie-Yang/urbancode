@@ -1,29 +1,42 @@
-"""
-Street View Image (SVI) analysis module.
+"""Deprecated alias of ``urbancode.streetview``. Do not add new APIs here."""
 
-This module provides functions for analyzing street view images, including:
-- Basic image features (color, edges, etc.)
-- Semantic segmentation
-- Object detection
-- Scene recognition
-- Perception (comfort prediction)
-"""
+from __future__ import annotations
 
-from .feature import (
-    filename,
-    color,
-    segmentation,
-    object_detection,
-    scene_recognition
-)
-
-from .perception import comfort
+import warnings
+from typing import Any
 
 __all__ = [
-    'filename',
-    'color',
-    'segmentation',
-    'object_detection',
-    'scene_recognition',
-    'comfort'
+    "filename",
+    "color",
+    "segmentation",
+    "object_detection",
+    "scene_recognition",
+    "comfort",
+    "fetch",
 ]
+
+_WARNED = False
+
+
+def _warn_once() -> None:
+    global _WARNED
+    if _WARNED:
+        return
+    _WARNED = True
+    warnings.warn(
+        "uc.svi is deprecated; use uc.streetview. "
+        "See docs/source/migration/svi-to-streetview.rst",
+        DeprecationWarning,
+        stacklevel=3,
+    )
+
+
+def __getattr__(name: str) -> Any:
+    _warn_once()
+    import urbancode.streetview as streetview
+
+    if name not in __all__:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    value = getattr(streetview, name)
+    globals()[name] = value
+    return value

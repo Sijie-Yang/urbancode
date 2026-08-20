@@ -1,93 +1,44 @@
-# UrbanCode (v0.2.1)
+# UrbanCode (v0.3.0)
 
-A Python package for street view image perception analysis, providing tools for feature extraction and comfort prediction.
+UrbanCode is a unified Python workflow for reproducible, multimodal and
+multi-city urban analysis. Import it as `uc`.
 
-## Related Research
-
-[Thermal Comfort in Sight: Thermal Affordance and Its Visual Assessment](https://github.com/Sijie-Yang/Thermal-Affordance)
-
-## Features
-
-### Street View Image (SVI) Analysis
-- Semantic segmentation
-- Object detection
-- Color feature extraction
-- Scene recognition
-- Perception analysis (thermal_comfort, visual_comfort, safety, etc.)
-
-## Examples
-
-### 1. Street View Image Feature Extraction
-`examples/test_svi_image_feature.ipynb`
-- Demonstrates how to extract various features from street view images
-- Includes semantic segmentation, object detection, color analysis, and scene recognition
-- Shows how to process multiple images and save results
-
-### 2. Street View Image Comfort Prediction
-`examples/test_svi_comfort_prediction.ipynb`
-- Shows how to predict comfort scores from street view images
-- Demonstrates the use of the comfort function for both single images and folders
-- Includes visualization of perception metrics
-- Automatically normalizes perception scores to 0-5 range
-
-## Installation
+**Docs:** https://urbancode.readthedocs.io/
 
 ```bash
 pip install urbancode
+pip install "urbancode[standard]"     # vector + network + imagery + climate + viz
+pip install "urbancode[streetview]"   # TCIS + color (install aliases: svi, download)
 ```
 
-## Usage
+Python 3.10+. The core wheel is small. Torch is not in `[standard]`.
+Weights download into `~/.cache/urbancode/`.
 
-### Feature Extraction
-```python
-import urbancode as uc
-import pandas as pd
+## Quick start (offline Punggol pocket)
 
-# Process a folder of images
-df = uc.svi.filename("path/to/folder")
-df = uc.svi.segmentation(df, folder_path="path/to/folder")
-df = uc.svi.object_detection(df, folder_path="path/to/folder")
-df = uc.svi.color(df, folder_path="path/to/folder")
-df = uc.svi.scene_recognition(df, folder_path="path/to/folder")
-
-# Save results
-df.to_csv("svi_results.csv", index=False)
-```
-
-### Comfort Prediction
 ```python
 import urbancode as uc
 
-# Process a single image
-df = uc.svi.comfort("path/to/image.jpg", mode='image')
-
-# Process a folder of images
-df = uc.svi.comfort("path/to/folder", mode='folder')
-
-# Save results
-df.to_csv("comfort_results.csv", index=False)
+city = uc.load("examples/data/real/punggol", layers=["streets", "sentinel2"], lazy=True)
+city.study_area = uc.StudyArea.from_bbox(*city.metadata["bbox"], place=city.place, city_id="punggol")
+units = uc.units.grid(city, cell_size=250)
+ndvi = uc.imagery.ndvi(city.layers["sentinel2"].path)
+reach = uc.network.accessibility(city["streets"], radius=150, metric="reachability")
+result = uc.fusion.combine(
+    units,
+    uc.fusion.aggregate(ndvi, units, indicator="ndvi"),
+    uc.fusion.aggregate(reach, units, indicator="reachability"),
+)
+result.save("out/punggol")
 ```
 
-### Perception Metrics
-The comfort function returns a DataFrame with the following perception metrics (normalized to 0-5 range):
-- thermal_comfort
-- visual_comfort
-- temp_intensity
-- sun_intensity
-- humidity_inference
-- wind_inference
-- traffic_flow
-- greenery_rate
-- shading_area
-- material_comfort
-- imageability
-- enclosure
-- human_scale
-- transparency
-- complexity
-- safe
-- lively
-- beautiful
-- wealthy
-- boring
-- depressing
+The full script is `examples/workflows/punggol_end_to_end.py`.
+
+Do **not** pass `layers="all"` for a whole city.
+
+## Tests
+
+```bash
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=. pytest tests/unit
+sphinx-build -W --keep-going -b html docs/source docs/build/html
+```

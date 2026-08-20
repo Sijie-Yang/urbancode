@@ -1,0 +1,74 @@
+{
+  "dataset_id": "greenwich_village_real_v1",
+  "city_id": "greenwich_village",
+  "place": "Greenwich Village, New York",
+  "bbox": [
+    -74.01097432515101,
+    40.72409476960649,
+    -73.98702248221187,
+    40.74190393658467
+  ],
+  "physical_extent": {
+    "width": 2000.0,
+    "height": 2000.0,
+    "unit": "metre"
+  },
+  "geographic_crs": "EPSG:4326",
+  "metric_crs": "EPSG:32618",
+  "source": "osm+sentinel-2-l2a+cop-dem-glo-30",
+  "source_uri": {
+    "osm": "https://www.openstreetmap.org",
+    "stac": "https://planetarycomputer.microsoft.com/api/stac/v1"
+  },
+  "license": {
+    "osm": "ODbL-1.0",
+    "sentinel2": "Copernicus Sentinel license",
+    "dem": "Copernicus DEM license"
+  },
+  "attribution": {
+    "osm": "\u00a9 OpenStreetMap contributors (ODbL 1.0)",
+    "sentinel2": "Copernicus Sentinel-2 L2A via Microsoft Planetary Computer",
+    "dem": "Copernicus DEM GLO-30 via Microsoft Planetary Computer"
+  },
+  "acquired_at": "2024-06-28T15:49:41.024000Z",
+  "temporal_extent": "2024-06-01/2024-08-31",
+  "original_item_id": {
+    "sentinel2": [
+      "S2A_MSIL2A_20240628T154941_R054_T18TWL_20240629T040340"
+    ],
+    "dem": [
+      "Copernicus_DSM_COG_10_N40_00_W075_00_DEM"
+    ]
+  },
+  "processing_steps": [
+    "2 km x 2 km box in local UTM",
+    "OSM walk network and vector layers clipped to bbox",
+    "Sentinel-2 L2A windowed read of B02,B03,B04,B08,B11",
+    "Copernicus DEM GLO-30 resampled to the Sentinel grid"
+  ],
+  "file_checksums": {},
+  "generated_by": "scripts/data/build_real_pockets.py",
+  "generated_at": "2026-08-16T09:11:30.305078+00:00",
+  "synthetic": false,
+  "season_note": "Northern-summer window (June-August 2024).",
+  "network_type": "walk",
+  "raster": {
+    "sentinel_item_ids": [
+      "S2A_MSIL2A_20240628T154941_R054_T18TWL_20240629T040340"
+    ],
+    "sentinel_datetime": "2024-06-28T15:49:41.024000Z",
+    "sentinel_cloud_cover": 3.027024,
+    "sentinel_collection": "sentinel-2-l2a",
+    "dem_item_ids": [
+      "Copernicus_DSM_COG_10_N40_00_W075_00_DEM"
+    ],
+    "time": "2024-06-01/2024-08-31",
+    "bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11"
+    ]
+  }
+}

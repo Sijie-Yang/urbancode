@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "urbancode_version": "0.3.0.dev0",
+  "created_at": "2026-08-16T09:07:58.335465+00:00",
+  "place": "Kallio, Helsinki",
+  "boundary": null,
+  "study_area": {
+    "city_id": "kallio",
+    "place": "Kallio, Helsinki",
+    "bbox": [
+      24.932545368841204,
+      60.178746925887104,
+      24.967464452497982,
+      60.19725081228293
+    ],
+    "geographic_crs": "EPSG:4326",
+    "projected_crs": "EPSG:32635",
+    "metric_crs": "EPSG:32635",
+    "timezone": null,
+    "metadata": {},
+    "provenance_id": null,
+    "boundary": "area/study_area.gpkg"
+  },
+  "layers": [
+    {
+      "name": "streets",
+      "kind": "graph",
+      "path": "layers/streets.graphml",
+      "crs": "EPSG:4326",
+      "source": "osm",
+      "metadata": {}
+    },
+    {
+      "name": "buildings",
+      "kind": "vector",
+      "path": "layers/buildings.gpkg",
+      "crs": "EPSG:4326",
+      "source": "osm",
+      "metadata": {}
+    },
+    {
+      "name": "parks",
+      "kind": "vector",
+      "path": "layers/parks.gpkg",
+      "crs": "EPSG:4326",
+      "source": "osm",
+      "metadata": {}
+    },
+    {
+      "name": "pois",
+      "kind": "vector",
+      "path": "layers/pois.gpkg",
+      "crs": "EPSG:4326",
+      "source": "osm",
+      "metadata": {}
+    },
+    {
+      "name": "sentinel2",
+      "kind": "raster",
+      "path": "layers/sentinel2.tif",
+      "crs": null,
+      "source": "sentinel-2-l2a",
+      "metadata": {
+        "sentinel_item_ids": [
+          "S2A_MSIL2A_20240627T094031_R036_T35VLG_20240627T150844"
+        ],
+        "sentinel_datetime": "2024-06-27T09:40:31.024000Z",
+        "sentinel_cloud_cover": 0.003664,
+        "sentinel_collection": "sentinel-2-l2a",
+        "dem_item_ids": [
+          "Copernicus_DSM_COG_10_N60_00_E024_00_DEM"
+        ],
+        "time": "2024-06-01/2024-08-31",
+        "bands": [
+          "B02",
+          "B03",
+          "B04",
+          "B08",
+          "B11"
+        ]
+      },
+      "checksum": "8d1a747097d248dfcf9240d889da6e4c2bf51c5c794539e7e9d0db0987184008",
+      "transform": [
+        10.0,
+        0.0,
+        385310.0,
+        0.0,
+        -10.0,
+        6675180.0
+      ],
+      "width": 200,
+      "height": 212,
+      "dtype": "float32",
+      "nodata": NaN
+    },
+    {
+      "name": "dem",
+      "kind": "raster",
+      "path": "layers/dem.tif",
+      "crs": null,
+      "source": "cop-dem-glo-30",
+      "metadata": {},
+      "checksum": "8e1a3f7198c012c349e0510213c2b0977b83671b1fe6cab0846683f89e9d36a7",
+      "transform": [
+        10.0,
+        0.0,
+        385310.0,
+        0.0,
+        -10.0,
+        6675180.0
+      ],
+      "width": 200,
+      "height": 212,
+      "dtype": "float32",
+      "nodata": NaN
+    },
+    {
+      "name": "water",
+      "kind": "vector",
+      "path": "layers/water.gpkg",
+      "crs": "EPSG:4326",
+      "source": "sentinel2-ndwi>=0.15",
+      "metadata": {}
+    }
+  ],
+  "metadata": {
+    "bbox": [
+      24.932545368841204,
+      60.178746925887104,
+      24.967464452497982,
+      60.19725081228293
+    ],
+    "dataset_id": "kallio_real_v1",
+    "city_id": "kallio",
+    "place": "Kallio, Helsinki",
+    "physical_extent": {
+      "width": 2000.0,
+      "height": 2000.0,
+      "unit": "metre"
+    },
+    "geographic_crs": "EPSG:4326",
+    "metric_crs": "EPSG:32635",
+    "source": "osm+sentinel-2-l2a+cop-dem-glo-30",
+    "source_uri": {
+      "osm": "https://www.openstreetmap.org",
+      "stac": "https://planetarycomputer.microsoft.com/api/stac/v1"
+    },
+    "license": {
+      "osm": "ODbL-1.0",
+      "sentinel2": "Copernicus Sentinel license",
+      "dem": "Copernicus DEM license"
+    },
+    "attribution": {
+      "osm": "\u00a9 OpenStreetMap contributors (ODbL 1.0)",
+      "sentinel2": "Copernicus Sentinel-2 L2A via Microsoft Planetary Computer",
+      "dem": "Copernicus DEM GLO-30 via Microsoft Planetary Computer"
+    },
+    "acquired_at": "2024-06-27T09:40:31.024000Z",
+    "temporal_extent": "2024-06-01/2024-08-31",
+    "original_item_id": {
+      "sentinel2": [
+        "S2A_MSIL2A_20240627T094031_R036_T35VLG_20240627T150844"
+      ],
+      "dem": [
+        "Copernicus_DSM_COG_10_N60_00_E024_00_DEM"
+      ]
+    },
+    "processing_steps": [
+      "2 km x 2 km box in local UTM",
+      "OSM walk network and vector layers clipped to bbox",
+      "Sentinel-2 L2A windowed read of B02,B03,B04,B08,B11",
+      "Copernicus DEM GLO-30 resampled to the Sentinel grid"
+    ],
+    "file_checksums": {},
+    "generated_by": "scripts/data/build_real_pockets.py",
+    "generated_at": "2026-08-16T09:07:58.337338+00:00",
+    "synthetic": false,
+    "season_note": "Northern-summer window (June-August 2024).",
+    "network_type": "walk",
+    "raster": {
+      "sentinel_item_ids": [
+        "S2A_MSIL2A_20240627T094031_R036_T35VLG_20240627T150844"
+      ],
+      "sentinel_datetime": "2024-06-27T09:40:31.024000Z",
+      "sentinel_cloud_cover": 0.003664,
+      "sentinel_collection": "sentinel-2-l2a",
+      "dem_item_ids": [
+        "Copernicus_DSM_COG_10_N60_00_E024_00_DEM"
+      ],
+      "time": "2024-06-01/2024-08-31",
+      "bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08",
+        "B11"
+      ]
+    },
+    "fixture": false,
+    "locator": "context/locator_boundary.gpkg"
+  },
+  "errors": [],
+  "default_vector_crs": "EPSG:4326",
+  "dataset_id": "kallio_real_v1",
+  "city_id": "kallio",
+  "bbox": [
+    24.932545368841204,
+    60.178746925887104,
+    24.967464452497982,
+    60.19725081228293
+  ],
+  "physical_extent": {
+    "width": 2000.0,
+    "height": 2000.0,
+    "unit": "metre"
+  },
+  "geographic_crs": "EPSG:4326",
+  "metric_crs": "EPSG:32635",
+  "source": "osm+sentinel-2-l2a+cop-dem-glo-30",
+  "source_uri": {
+    "osm": "https://www.openstreetmap.org",
+    "stac": "https://planetarycomputer.microsoft.com/api/stac/v1"
+  },
+  "license": {
+    "osm": "ODbL-1.0",
+    "sentinel2": "Copernicus Sentinel license",
+    "dem": "Copernicus DEM license"
+  },
+  "attribution": {
+    "osm": "\u00a9 OpenStreetMap contributors (ODbL 1.0)",
+    "sentinel2": "Copernicus Sentinel-2 L2A via Microsoft Planetary Computer",
+    "dem": "Copernicus DEM GLO-30 via Microsoft Planetary Computer"
+  },
+  "acquired_at": "2024-06-27T09:40:31.024000Z",
+  "temporal_extent": "2024-06-01/2024-08-31",
+  "original_item_id": {
+    "sentinel2": [
+      "S2A_MSIL2A_20240627T094031_R036_T35VLG_20240627T150844"
+    ],
+    "dem": [
+      "Copernicus_DSM_COG_10_N60_00_E024_00_DEM"
+    ]
+  },
+  "processing_steps": [
+    "2 km x 2 km box in local UTM",
+    "OSM walk network and vector layers clipped to bbox",
+    "Sentinel-2 L2A windowed read of B02,B03,B04,B08,B11",
+    "Copernicus DEM GLO-30 resampled to the Sentinel grid",
+    "context layers: water from sentinel2-ndwi>=0.15; locator from documented_parent_city_envelope"
+  ],
+  "file_checksums": {
+    "LICENSE.md": "f408de88d29c5a27e7f7f52b5335b2bdea38d9357563032c5b47daed3d3a9dbd",
+    "README.md": "e785b1237e4772c420fe1a1d03b74e7be5c5df16103523b42661f6f3be660079",
+    "manifest.json": "070342f858c733712334c877ac618e518a92e82985d074b2665470dda809b4a6",
+    "dataset.json": "ffba50be6e7e6198bbcbeebd0b7230c2aa56ceda2e20c41f8ba39ff8cff18fe4",
+    "context/locator_boundary.gpkg": "5852176efc9edb3f471c10ad759f5e2d62f5b637f775182d74c999a534ce5948",
+    "layers/streets.graphml": "e0f8d296f0cd4419090ee9103a6c458cd1818ddb890ab5551cef33c6b1f530be",
+    "layers/parks.gpkg": "b607dd8d7a04ebc1cdd0f3a99e9f840fd4fcff5bdc3d75b817ae7f78fea0141e",
+    "layers/pois.gpkg": "a18d5b5cbf01a5df822c9b1f45c170f00da42cba4d467950c559cfe46e8829df",
+    "layers/buildings.gpkg": "d0a84466fe742eaf11b29e3ba85e840ed123d10ee3b3d3c490acdb689d77a1c0",
+    "layers/sentinel2.tif": "8d1a747097d248dfcf9240d889da6e4c2bf51c5c794539e7e9d0db0987184008",
+    "layers/water.gpkg": "05aff0568dfedd66b4fd9d69384cfd7c3e8c1d9e810796757bc1a49f6d0bc028",
+    "layers/dem.tif": "8e1a3f7198c012c349e0510213c2b0977b83671b1fe6cab0846683f89e9d36a7",
+    "area/study_area.gpkg": "a8be2c4682544ae38306f7748720aebf6b0b0d73e856bbc79cacbd3eb89d746d"
+  },
+  "generated_by": "scripts/data/build_real_pockets.py",
+  "generated_at": "2026-08-16T09:07:58.337338+00:00",
+  "synthetic": false,
+  "season_note": "Northern-summer window (June-August 2024).",
+  "network_type": "walk",
+  "raster": {
+    "sentinel_item_ids": [
+      "S2A_MSIL2A_20240627T094031_R036_T35VLG_20240627T150844"
+    ],
+    "sentinel_datetime": "2024-06-27T09:40:31.024000Z",
+    "sentinel_cloud_cover": 0.003664,
+    "sentinel_collection": "sentinel-2-l2a",
+    "dem_item_ids": [
+      "Copernicus_DSM_COG_10_N60_00_E024_00_DEM"
+    ],
+    "time": "2024-06-01/2024-08-31",
+    "bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11"
+    ]
+  },
+  "locator": "context/locator_boundary.gpkg",
+  "context": {
+    "water_source": "sentinel2-ndwi>=0.15",
+    "locator_source": "documented_parent_city_envelope",
+    "generated_at": "2026-08-16T15:46:36.782181+00:00",
+    "generated_by": "scripts/data/build_context_layers.py"
+  }
+}

@@ -1,0 +1,2 @@
+Filename,thermal_comfort,visual_comfort,model_version,generated_at,photo_page,photo_license,note
+streetview.jpg,,,,,https://commons.wikimedia.org/wiki/File%3APunggol%20Waterway%20-%20panoramio.jpg,CC BY-SA 3.0,Real Wikimedia photo. TCIS scores are not baked in; run examples/live/03_svi_predict.py

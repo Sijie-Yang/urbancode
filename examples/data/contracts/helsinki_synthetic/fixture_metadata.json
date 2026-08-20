@@ -1,0 +1,17 @@
+{
+  "fixture_version": 1,
+  "location": "Kallio, Helsinki",
+  "bbox": [
+    24.945,
+    60.183,
+    24.955,
+    60.193
+  ],
+  "synthetic": true,
+  "generated_by": "examples/data/build_pockets.py",
+  "generated_at": "2026-08-16T07:44:01.164484+00:00",
+  "crs": {
+    "vectors": "EPSG:4326",
+    "rasters": "EPSG:32635"
+  }
+}

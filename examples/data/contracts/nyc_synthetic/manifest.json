@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "urbancode_version": "0.3.0.dev0",
+  "created_at": "2026-08-16T07:44:01.196462+00:00",
+  "place": "Greenwich Village, New York",
+  "boundary": null,
+  "study_area": {
+    "city_id": "nyc",
+    "place": "Greenwich Village, New York",
+    "bbox": [
+      -74.005,
+      40.728,
+      -73.995,
+      40.738
+    ],
+    "geographic_crs": "EPSG:4326",
+    "projected_crs": "EPSG:32618",
+    "metric_crs": "EPSG:32618",
+    "timezone": null,
+    "metadata": {},
+    "provenance_id": null
+  },
+  "layers": [
+    {
+      "name": "streets",
+      "kind": "graph",
+      "path": "layers/streets.graphml",
+      "crs": "EPSG:4326",
+      "source": "synthetic",
+      "metadata": {}
+    },
+    {
+      "name": "buildings",
+      "kind": "vector",
+      "path": "layers/buildings.gpkg",
+      "crs": "EPSG:4326",
+      "source": "synthetic",
+      "metadata": {}
+    },
+    {
+      "name": "parks",
+      "kind": "vector",
+      "path": "layers/parks.gpkg",
+      "crs": "EPSG:4326",
+      "source": "synthetic",
+      "metadata": {}
+    },
+    {
+      "name": "pois",
+      "kind": "vector",
+      "path": "layers/pois.gpkg",
+      "crs": "EPSG:4326",
+      "source": "synthetic",
+      "metadata": {}
+    },
+    {
+      "name": "sentinel2",
+      "kind": "raster",
+      "path": "layers/sentinel2.tif",
+      "crs": "EPSG:32618",
+      "source": "synthetic",
+      "metadata": {},
+      "checksum": "499e83142a2ff9be221ae2bd25e0e45574f8b0772c7f27fb654d75e84c21fb68",
+      "transform": [
+        17.855480428033236,
+        0.0,
+        584012.1418370644,
+        0.0,
+        -23.326807111424085,
+        4510158.941940812
+      ],
+      "width": 48,
+      "height": 48,
+      "dtype": "float32",
+      "nodata": NaN
+    },
+    {
+      "name": "dem",
+      "kind": "raster",
+      "path": "layers/dem.tif",
+      "crs": "EPSG:32618",
+      "source": "synthetic",
+      "metadata": {},
+      "checksum": "653866c2f0b110e623f27076fbfcc0e585f74456c9e5897511ea048fd4c093d4",
+      "transform": [
+        17.855480428033236,
+        0.0,
+        584012.1418370644,
+        0.0,
+        -23.326807111424085,
+        4510158.941940812
+      ],
+      "width": 48,
+      "height": 48,
+      "dtype": "float32",
+      "nodata": NaN
+    },
+    {
+      "name": "streetview",
+      "kind": "images",
+      "path": "layers/streetview.jpg",
+      "crs": null,
+      "source": "synthetic",
+      "metadata": {
+        "note": "Placeholder JPEG. Not a real street photo."
+      }
+    },
+    {
+      "name": "comfort",
+      "kind": "table",
+      "path": "layers/comfort.parquet",
+      "crs": null,
+      "source": "display",
+      "metadata": {}
+    }
+  ],
+  "metadata": {
+    "bbox": [
+      -74.005,
+      40.728,
+      -73.995,
+      40.738
+    ],
+    "fixture": true,
+    "synthetic": true
+  },
+  "errors": [],
+  "default_vector_crs": "EPSG:4326",
+  "synthetic": true
+}

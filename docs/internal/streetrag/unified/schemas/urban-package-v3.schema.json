@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urbancode.dev/schemas/urban-package-v3.schema.json",
+  "title": "UrbanPackage v3 (draft stub)",
+  "description": "Documentation artifact only. Not imported by UrbanCode. SCHEMA_VERSION in urbancode.city stays 1.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "city_id"],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 3
+    },
+    "city_id": { "type": "string" },
+    "urbancode_version": { "type": "string" },
+    "crs": { "type": "string" },
+    "study_area": { "type": "string", "description": "Relative path, typically area/study_area.json" },
+    "layers": {
+      "type": "object",
+      "properties": {
+        "vector": { "type": "array", "items": { "type": "string" } },
+        "raster": { "type": "array", "items": { "type": "string" } },
+        "graph": { "type": "array", "items": { "type": "string" } },
+        "tables": { "type": "array", "items": { "type": "string" } },
+        "images": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "entities": {
+      "type": "object",
+      "properties": {
+        "places": { "type": "string" },
+        "streets": { "type": "string" },
+        "regions": { "type": "string" }
+      }
+    },
+    "observations": {
+      "type": "object",
+      "properties": {
+        "baseline": { "type": "string" },
+        "scenarios": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "provenance": { "type": "string", "description": "Typically provenance/receipts.jsonl" }
+  }
+}

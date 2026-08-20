@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urbancode.dev/schemas/relation.schema.json",
+  "title": "Relation (draft stub)",
+  "description": "Typed link between entities. relation_id minted by UrbanCode. Documentation only.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["relation_id", "city_id", "kind", "source_id", "target_id"],
+  "properties": {
+    "relation_id": { "type": "string" },
+    "city_id": { "type": "string" },
+    "kind": { "type": "string" },
+    "source_id": { "type": "string" },
+    "target_id": { "type": "string" },
+    "properties": { "type": "object" },
+    "provenance_id": { "type": ["string", "null"] }
+  }
+}

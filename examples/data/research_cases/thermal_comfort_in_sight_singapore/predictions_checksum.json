@@ -1,0 +1,14 @@
+{
+  "host": "ual-chark",
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "gpu_memory_total_mb": 32085.8,
+  "image_store_alienware": "D:/svi_singapore_92233_resized_version",
+  "image_store_server": "/data/sijie/svi_data/svi_sg_92233",
+  "predictions_parquet": "/data/sijie/svi_data/tcis/svi_sg_92233/predictions.parquet",
+  "predictions_sha256": "7a2cb62b7a680b3ac8638189f585cd8f6df7bba837c60d84db56fdd27ab14b86",
+  "predictions_bytes": 47940801,
+  "n_rows": 92233,
+  "n_failed": 0,
+  "not_in_git": true,
+  "note": "Parquet and JPEGs stay on disk. Git holds receipts and checksums only."
+}

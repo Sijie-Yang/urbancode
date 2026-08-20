@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urbancode.dev/schemas/result.schema.json",
+  "title": "OperationResult (draft stub)",
+  "description": "Fields only. Observations use observation.schema.json. Documentation only.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["request_id", "status"],
+  "properties": {
+    "request_id": { "type": "string" },
+    "status": { "type": "string", "enum": ["ok", "partial", "error"] },
+    "observations": {
+      "type": "array",
+      "items": { "$ref": "observation.schema.json" }
+    },
+    "artifact_refs": { "type": "array", "items": { "type": "string" } },
+    "coverage": { "type": ["object", "null"] },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "provenance_ids": { "type": "array", "items": { "type": "string" } }
+  }
+}

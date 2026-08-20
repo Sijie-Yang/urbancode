@@ -1,0 +1,15 @@
+{
+  "catalog": "/data/sijie/svi_data/tcis/svi_sg_92233/catalog.parquet",
+  "image_root": "/data/sijie/svi_data/svi_sg_92233",
+  "output": "/data/sijie/svi_data/tcis/svi_sg_92233/predictions.parquet",
+  "success": 92233,
+  "failed": 0,
+  "n_columns": 102,
+  "has_if": true,
+  "has_vpi": true,
+  "images_per_second": 23.03,
+  "device": "cuda",
+  "peak_gpu_memory_mb": 3704.2,
+  "elapsed_s": 4004.871,
+  "finished": "2026-08-17T16:47:01.402676+00:00"
+}

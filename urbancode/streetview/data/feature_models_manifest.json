@@ -1,0 +1,44 @@
+{
+  "chain_id": "tcis-if-vpi-vata",
+  "notes": "Pin every IF extractor before a 92k run. Changing any revision requires a new model_run_id and a full recompute.",
+  "segformer": {
+    "model": "nvidia/segformer-b0-finetuned-cityscapes-1024-1024",
+    "processor": "nvidia/segformer-b0-finetuned-cityscapes-1024-1024",
+    "revision": "21b3847fae21ddee674abd31129307b6a1235bd9",
+    "taxonomy": "cityscapes-19",
+    "classes": [
+      "road",
+      "sidewalk",
+      "building",
+      "wall",
+      "fence",
+      "pole",
+      "traffic light",
+      "traffic sign",
+      "vegetation",
+      "terrain",
+      "sky",
+      "person",
+      "rider",
+      "car",
+      "truck",
+      "bus",
+      "train",
+      "motorcycle",
+      "bicycle"
+    ]
+  },
+  "faster_rcnn": {
+    "architecture": "fasterrcnn_resnet50_fpn",
+    "weights": "COCO_V1",
+    "score_threshold": 0.0,
+    "notes": "score_threshold 0.0 matches the original TCIS feature script. Do not raise it without a new run id."
+  },
+  "places365": {
+    "model": "resnet50_places365",
+    "weights_file": "resnet50_places365.pth.tar",
+    "weights_sha256": "46529c86902bd0cfb0ea562a30b2850c28d2620d96282b3db9c318e1d774f6c5",
+    "labels_file": "categories_places365.txt",
+    "labels_sha256": "2affba635eb657e7ca95f4e6cc69bd9fac29ef4c32aeb83cafdfcd06ec6a1ea6"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "fixture_version": 2,
+  "location": "Punggol, Singapore",
+  "title": "Punggol, Singapore",
+  "bbox": [
+    103.905,
+    1.4,
+    103.915,
+    1.41
+  ],
+  "geometry_source": "osm",
+  "raster_source": "sentinel-2-l2a / cop-dem-glo-30",
+  "generated_by": "examples/data/build_fixture.py",
+  "generated_at": "2026-08-16T03:17:08.410403+00:00",
+  "crs": {
+    "vectors": "EPSG:4326",
+    "rasters": "EPSG:32648"
+  },
+  "attribution": {
+    "osm": "\u00a9 OpenStreetMap contributors (ODbL 1.0)",
+    "sentinel2": "Copernicus Sentinel-2 L2A via Planetary Computer",
+    "dem": "Copernicus DEM GLO-30 via Planetary Computer",
+    "streetview": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Punggol_Waterway_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File%3APunggol%20Waterway%20-%20panoramio.jpg",
+      "title": "File:Punggol Waterway - panoramio.jpg",
+      "license": "CC BY-SA 3.0",
+      "artist": "<a rel=\"nofollow\" class=\"external text\" href=\"https://web.archive.org/web/20161022044602/http://www.panoramio.com/user/3447566?with_photo_id=61344747\">Lee Jee Tshoon Lee</a>",
+      "credit": "<a rel=\"nofollow\" class=\"external free\" href=\"https://web.archive.org/web/20161022044600/http://www.panoramio.com/photo/61344747\">https://web.archive.org/web/20161022044600/http://www.panoramio.com/photo/61344747</a>"
+    }
+  }
+}

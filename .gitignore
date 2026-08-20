@@ -1,5 +1,6 @@
 urbancode-env/
 urbancode.egg-info/
+*.egg-info/
 .DS_Store
 **/.DS_Store
 urbancode/tests/
@@ -7,7 +8,13 @@ urbancode/tests/
 __pycache__/
 *.py[cod]
 *.cpython-*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
 
 build/
+docs/build/
+examples/output/
 dist/
 .venv-publish/
+cache/

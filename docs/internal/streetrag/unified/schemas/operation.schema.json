@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urbancode.dev/schemas/operation.schema.json",
+  "title": "OperationSpec (draft stub)",
+  "description": "Fields only. No selection_ref. StreetRAG resolves selections before the call. Documentation only.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["operation", "city_id", "request_id"],
+  "properties": {
+    "operation": {
+      "type": "string",
+      "enum": [
+        "count",
+        "zonal_stats",
+        "reachability",
+        "ndvi",
+        "park_accessibility",
+        "rank",
+        "filter"
+      ]
+    },
+    "city_id": { "type": "string" },
+    "entity_ids": { "type": "array", "items": { "type": "string" } },
+    "geometry": { "type": ["object", "string", "null"] },
+    "layer_refs": { "type": "array", "items": { "type": "string" } },
+    "parameters": { "type": "object" },
+    "scenario_id": { "type": "string" },
+    "request_id": { "type": "string" }
+  }
+}
