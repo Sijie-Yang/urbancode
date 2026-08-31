@@ -181,6 +181,7 @@ docs = [
     "sphinx>=7.0,<9",
     "sphinx-immaterial>=0.12",
     "sphinx-copybutton>=0.5",
+    "pillow>=10.0",
 ]
 all = [
     "networkx>=2.8",

@@ -130,8 +130,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install svi extra
-        run: python -m pip install --upgrade pip && pip install -e ".[dev,svi]"
+      - name: Install perception extra
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,perception]"
       - name: Prove extras import
         run: python -c "import torch, PIL"
       - name: Streetview contract and color (no skip)

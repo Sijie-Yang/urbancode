@@ -17,7 +17,12 @@ import warnings
 
 import numpy as np
 import pandas as pd
-from PIL import Image
+
+
+def _pil_image():
+    from PIL import Image
+
+    return Image
 
 warnings.filterwarnings('ignore', category=FutureWarning)
 warnings.filterwarnings('ignore', category=UserWarning)
@@ -146,7 +151,7 @@ def read_image_with_pil(image_path):
         ValueError: If image cannot be read
     """
     try:
-        pil_image = Image.open(image_path)
+        pil_image = _pil_image().open(image_path)
         pil_image = pil_image.convert('RGB')
         image = np.array(pil_image)
         cv2 = _cv2()
@@ -403,7 +408,7 @@ def segmentation(df, folder_path, filename_column='Filename'):
     # Add tqdm progress bar
     for _, row in _tqdm(df.iterrows(), total=len(df), desc="Segmenting images"):
         img_path = os.path.join(folder_path, row[filename_column])
-        image = Image.open(img_path).convert('RGB')
+        image = _pil_image().open(img_path).convert('RGB')
         
         # Preprocessing
         inputs = feature_extractor(images=image, return_tensors="pt")
@@ -491,7 +496,7 @@ def object_detection(df, folder_path, filename_column='Filename'):
         img_path = os.path.join(folder_path, row[filename_column])
         
         # Load and transform image
-        image = Image.open(img_path).convert("RGB")
+        image = _pil_image().open(img_path).convert("RGB")
         image_tensor = transform(image).to(device)
         
         # Run detection
@@ -576,7 +581,7 @@ def scene_recognition(df, folder_path=None, filename_column='Filename'):
         img_path = os.path.join(folder_path, row[filename_column])
         
         # Load and process image
-        image = Image.open(img_path).convert('RGB')
+        image = _pil_image().open(img_path).convert('RGB')
         image_tensor = transform(image).unsqueeze(0).to(device)
         
         # Make prediction

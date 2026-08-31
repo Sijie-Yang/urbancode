@@ -101,7 +101,7 @@ def test_aspect_on_fixture() -> None:
         pytest.skip("punggol fixture missing")
     import urbancode as uc
 
-    layer = uc.imagery.aspect(uc.load(fixture)["dem"])
+    layer = uc.imagery.aspect(uc.load(fixture, lazy=True)["dem"])
     assert layer.metadata["unit"] == "degree"
     assert layer.metadata["processing"]["op"] == "aspect"
     assert layer.data.shape[0] > 1

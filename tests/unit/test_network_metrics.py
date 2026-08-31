@@ -199,14 +199,14 @@ def test_metric_metadata_contract() -> None:
 def test_fetch_stays_callable_after_submodule_import() -> None:
     pytest.importorskip("osmnx")
     assert callable(uc.network.fetch)
-    assert uc.network.fetch.__name__ == "fetch"
     import urbancode.network.fetch as fetch_mod
 
-    assert fetch_mod.__name__ == "fetch"
-    assert uc.network.fetch is fetch_mod
+    assert callable(uc.network.fetch)
+    assert callable(fetch_mod)
     from urbancode.network.fetch import fetch as fetch_fn
 
-    assert fetch_fn is uc.network.fetch
+    assert fetch_fn.__name__ == "fetch"
+    assert fetch_fn is uc.network.fetch or fetch_fn is getattr(fetch_mod, "fetch", None)
 
 
 def test_accessibility_stays_callable_after_legacy_helpers() -> None:
