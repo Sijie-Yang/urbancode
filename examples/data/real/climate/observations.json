@@ -1,0 +1,68 @@
+[
+  {
+    "timestamp": "2024-07-15T14:00",
+    "air_temperature_c": 26.7,
+    "relative_humidity_percent": 83,
+    "wind_speed_ms": 2.42,
+    "source": "open-meteo-archive",
+    "source_uri": "https://archive-api.open-meteo.com/v1/archive?latitude=1.40500&longitude=103.91000&start_date=2024-07-15&end_date=2024-07-15&hourly=temperature_2m%2Crelative_humidity_2m%2Cwind_speed_10m&wind_speed_unit=ms&timezone=UTC",
+    "units": {
+      "air_temperature": "degree_celsius",
+      "relative_humidity": "percent",
+      "wind_speed": "m s-1"
+    },
+    "mean_radiant_temperature": {
+      "value": 26.7,
+      "status": "modelled",
+      "assumption": "MRT set equal to 2 m air temperature (modelled_mrt)"
+    },
+    "city_id": "punggol",
+    "place": "Punggol, Singapore",
+    "lon": 103.91,
+    "lat": 1.405
+  },
+  {
+    "timestamp": "2024-07-15T14:00",
+    "air_temperature_c": 19.9,
+    "relative_humidity_percent": 66,
+    "wind_speed_ms": 5.88,
+    "source": "open-meteo-archive",
+    "source_uri": "https://archive-api.open-meteo.com/v1/archive?latitude=60.18800&longitude=24.95000&start_date=2024-07-15&end_date=2024-07-15&hourly=temperature_2m%2Crelative_humidity_2m%2Cwind_speed_10m&wind_speed_unit=ms&timezone=UTC",
+    "units": {
+      "air_temperature": "degree_celsius",
+      "relative_humidity": "percent",
+      "wind_speed": "m s-1"
+    },
+    "mean_radiant_temperature": {
+      "value": 19.9,
+      "status": "modelled",
+      "assumption": "MRT set equal to 2 m air temperature (modelled_mrt)"
+    },
+    "city_id": "kallio",
+    "place": "Kallio, Helsinki",
+    "lon": 24.95,
+    "lat": 60.188
+  },
+  {
+    "timestamp": "2024-07-15T14:00",
+    "air_temperature_c": 29.9,
+    "relative_humidity_percent": 70,
+    "wind_speed_ms": 3.16,
+    "source": "open-meteo-archive",
+    "source_uri": "https://archive-api.open-meteo.com/v1/archive?latitude=40.73300&longitude=-73.99900&start_date=2024-07-15&end_date=2024-07-15&hourly=temperature_2m%2Crelative_humidity_2m%2Cwind_speed_10m&wind_speed_unit=ms&timezone=UTC",
+    "units": {
+      "air_temperature": "degree_celsius",
+      "relative_humidity": "percent",
+      "wind_speed": "m s-1"
+    },
+    "mean_radiant_temperature": {
+      "value": 29.9,
+      "status": "modelled",
+      "assumption": "MRT set equal to 2 m air temperature (modelled_mrt)"
+    },
+    "city_id": "greenwich_village",
+    "place": "Greenwich Village, New York",
+    "lon": -73.999,
+    "lat": 40.733
+  }
+]

@@ -1,0 +1,74 @@
+{
+  "dataset_id": "punggol_real_v1",
+  "city_id": "punggol",
+  "place": "Punggol, Singapore",
+  "bbox": [
+    103.90101643295905,
+    1.3959501786810404,
+    103.91898363615519,
+    1.4140498401820776
+  ],
+  "physical_extent": {
+    "width": 2000.0,
+    "height": 2000.0,
+    "unit": "metre"
+  },
+  "geographic_crs": "EPSG:4326",
+  "metric_crs": "EPSG:32648",
+  "source": "osm+sentinel-2-l2a+cop-dem-glo-30",
+  "source_uri": {
+    "osm": "https://www.openstreetmap.org",
+    "stac": "https://planetarycomputer.microsoft.com/api/stac/v1"
+  },
+  "license": {
+    "osm": "ODbL-1.0",
+    "sentinel2": "Copernicus Sentinel license",
+    "dem": "Copernicus DEM license"
+  },
+  "attribution": {
+    "osm": "\u00a9 OpenStreetMap contributors (ODbL 1.0)",
+    "sentinel2": "Copernicus Sentinel-2 L2A via Microsoft Planetary Computer",
+    "dem": "Copernicus DEM GLO-30 via Microsoft Planetary Computer"
+  },
+  "acquired_at": "2024-07-28T03:15:19.024000Z",
+  "temporal_extent": "2024-06-01/2024-08-31",
+  "original_item_id": {
+    "sentinel2": [
+      "S2B_MSIL2A_20240728T031519_R118_T48NUG_20240728T071428"
+    ],
+    "dem": [
+      "Copernicus_DSM_COG_10_N01_00_E103_00_DEM"
+    ]
+  },
+  "processing_steps": [
+    "2 km x 2 km box in local UTM",
+    "OSM walk network and vector layers clipped to bbox",
+    "Sentinel-2 L2A windowed read of B02,B03,B04,B08,B11",
+    "Copernicus DEM GLO-30 resampled to the Sentinel grid"
+  ],
+  "file_checksums": {},
+  "generated_by": "scripts/data/build_real_pockets.py",
+  "generated_at": "2026-08-16T09:05:12.820921+00:00",
+  "synthetic": false,
+  "season_note": "Equatorial. The June-August window is a shared calendar window, not a shared growing season.",
+  "network_type": "walk",
+  "raster": {
+    "sentinel_item_ids": [
+      "S2B_MSIL2A_20240728T031519_R118_T48NUG_20240728T071428"
+    ],
+    "sentinel_datetime": "2024-07-28T03:15:19.024000Z",
+    "sentinel_cloud_cover": 14.808747,
+    "sentinel_collection": "sentinel-2-l2a",
+    "dem_item_ids": [
+      "Copernicus_DSM_COG_10_N01_00_E103_00_DEM"
+    ],
+    "time": "2024-06-01/2024-08-31",
+    "bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B08",
+      "B11"
+    ]
+  }
+}

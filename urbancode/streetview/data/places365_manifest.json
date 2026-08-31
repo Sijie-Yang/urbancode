@@ -1,0 +1,9 @@
+{
+  "model": "resnet50_places365",
+  "filename": "resnet50_places365.pth.tar",
+  "url": "http://places2.csail.mit.edu/models_places365/resnet50_places365.pth.tar",
+  "sha256": "46529c86902bd0cfb0ea562a30b2850c28d2620d96282b3db9c318e1d774f6c5",
+  "labels_file": "categories_places365.txt",
+  "labels_sha256": "2affba635eb657e7ca95f4e6cc69bd9fac29ef4c32aeb83cafdfcd06ec6a1ea6",
+  "notes": "Downloaded into the UrbanCode models cache. Not packaged in the core wheel."
+}

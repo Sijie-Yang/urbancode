@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "urbancode_version": "0.3.0.dev0",
+  "created_at": "2026-08-16T07:44:01.164058+00:00",
+  "place": "Kallio, Helsinki",
+  "boundary": null,
+  "study_area": {
+    "city_id": "helsinki",
+    "place": "Kallio, Helsinki",
+    "bbox": [
+      24.945,
+      60.183,
+      24.955,
+      60.193
+    ],
+    "geographic_crs": "EPSG:4326",
+    "projected_crs": "EPSG:32635",
+    "metric_crs": "EPSG:32635",
+    "timezone": null,
+    "metadata": {},
+    "provenance_id": null
+  },
+  "layers": [
+    {
+      "name": "streets",
+      "kind": "graph",
+      "path": "layers/streets.graphml",
+      "crs": "EPSG:4326",
+      "source": "synthetic",
+      "metadata": {}
+    },
+    {
+      "name": "buildings",
+      "kind": "vector",
+      "path": "layers/buildings.gpkg",
+      "crs": "EPSG:4326",
+      "source": "synthetic",
+      "metadata": {}
+    },
+    {
+      "name": "parks",
+      "kind": "vector",
+      "path": "layers/parks.gpkg",
+      "crs": "EPSG:4326",
+      "source": "synthetic",
+      "metadata": {}
+    },
+    {
+      "name": "pois",
+      "kind": "vector",
+      "path": "layers/pois.gpkg",
+      "crs": "EPSG:4326",
+      "source": "synthetic",
+      "metadata": {}
+    },
+    {
+      "name": "sentinel2",
+      "kind": "raster",
+      "path": "layers/sentinel2.tif",
+      "crs": "EPSG:32635",
+      "source": "synthetic",
+      "metadata": {},
+      "checksum": "7c950ac64fca3d8b7164d0752baf486fa1d77e739f18abf742021786f7bb774c",
+      "transform": [
+        12.270990557049421,
+        0.0,
+        386022.8430345297,
+        0.0,
+        -23.553499056530807,
+        6674678.794672488
+      ],
+      "width": 48,
+      "height": 48,
+      "dtype": "float32",
+      "nodata": NaN
+    },
+    {
+      "name": "dem",
+      "kind": "raster",
+      "path": "layers/dem.tif",
+      "crs": "EPSG:32635",
+      "source": "synthetic",
+      "metadata": {},
+      "checksum": "abf798c3f44a0a78cb048dbab9000e91d4587bf37ab1a5665250fd601f40f131",
+      "transform": [
+        12.270990557049421,
+        0.0,
+        386022.8430345297,
+        0.0,
+        -23.553499056530807,
+        6674678.794672488
+      ],
+      "width": 48,
+      "height": 48,
+      "dtype": "float32",
+      "nodata": NaN
+    },
+    {
+      "name": "streetview",
+      "kind": "images",
+      "path": "layers/streetview.jpg",
+      "crs": null,
+      "source": "synthetic",
+      "metadata": {
+        "note": "Placeholder JPEG. Not a real street photo."
+      }
+    },
+    {
+      "name": "comfort",
+      "kind": "table",
+      "path": "layers/comfort.parquet",
+      "crs": null,
+      "source": "display",
+      "metadata": {}
+    }
+  ],
+  "metadata": {
+    "bbox": [
+      24.945,
+      60.183,
+      24.955,
+      60.193
+    ],
+    "fixture": true,
+    "synthetic": true
+  },
+  "errors": [],
+  "default_vector_crs": "EPSG:4326",
+  "synthetic": true
+}

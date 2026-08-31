@@ -1,17 +1,14 @@
-# Core dependencies
-networkx>=2.5
-osmnx>=1.1.1
-momepy>=0.5.3
-geopandas>=0.9.0
-matplotlib>=3.3.4
-torch>=2.0.0
-torchvision>=0.15.0
-contextily>=1.6.2
-tqdm>=4.60.0
+# Core (see pyproject.toml for extras)
+pandas>=1.5.0
+numpy>=1.23.0
+pyyaml>=6.0
+typer>=0.12.0
+huggingface_hub>=0.20.0
+platformdirs>=3.0.0
 
-# Documentation dependencies
-sphinx>=6.0
-sphinx-rtd-theme>=1.0.0
+# Documentation
+sphinx>=6.0,<9
+sphinx-immaterial>=0.12.0
 sphinx-autodoc-typehints>=1.19.5
 sphinx-copybutton>=0.5.0
-sphinxcontrib-napoleon>=0.7 
+sphinxcontrib-napoleon>=0.7

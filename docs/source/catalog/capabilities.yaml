@@ -1,0 +1,791 @@
+# Machine-readable capability catalog.
+# status: stable | experimental | adapter-only | planned
+# planned items are never public exports.
+# blocked items stay listed with recipe: null and a blocked reason.
+
+capabilities:
+  - id: core.load
+    function: uc.load
+    status: stable
+    domain: vector
+    extra: vector
+    backend: geopandas
+    urban_question: Can this City directory be loaded without re-fetching?
+    input: City directory
+    output: City
+    unit: mixed
+    dataset: punggol
+    recipe: core/city_roundtrip_punggol
+    figure: recipes/core/city_roundtrip_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - lazy load defers raster and graph reads until a layer is used
+      - the directory must include manifest.json
+  - id: core.fetch
+    function: uc.fetch
+    status: stable
+    domain: vector
+    extra: network
+    backend: osmnx
+    urban_question: Which OSM and imagery layers cover this place?
+    input: place or bbox
+    output: City
+    unit: mixed
+    dataset: punggol
+    recipe: core/fetch_punggol
+    figure: recipes/cli/fetch.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - the offline recipe plots the committed pocket, not a live download
+      - live refresh is a Tier 2 network job
+  - id: core.study_area
+    function: uc.StudyArea.from_bbox
+    status: stable
+    domain: vector
+    extra: vector
+    backend: pyproj
+    urban_question: What is the study boundary and canonical metric CRS?
+    input: west south east north
+    output: StudyArea
+    unit: CRS
+    dataset: punggol
+    recipe: core/study_area_punggol
+    figure: recipes/core/study_area_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - four numbers outside the geographic range are not treated as lon/lat
+      - the committed pocket is a 2 km extract, not the municipal boundary
+  - id: network.fetch
+    function: uc.network.fetch
+    status: stable
+    domain: network
+    extra: network
+    backend: osmnx
+    urban_question: What street graph covers this study area?
+    input: bbox or place
+    output: City with streets graph Layer
+    unit: graph
+    dataset: punggol
+    recipe: network/fetch_punggol
+    figure: recipes/network/fetch_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - committed pocket is a clipped OSM extract, not a live refresh
+      - OSM timestamp is the extract date, not a planning-grade inventory
+  - id: network.centrality
+    function: uc.network.centrality
+    status: stable
+    domain: network
+    extra: network
+    backend: networkx
+    urban_question: Which streets sit on many shortest paths, and which are close to others?
+    input: streets graph
+    output: graph Layer
+    unit: dimensionless
+    dataset: punggol
+    recipe: network/centrality_punggol
+    figure: recipes/network/centrality_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - betweenness is sensitive to the pocket boundary
+      - values are graph-theoretic, not traffic volume
+  - id: network.accessibility
+    function: uc.network.accessibility
+    status: stable
+    domain: network
+    extra: network
+    backend: networkx
+    urban_question: How many other street nodes can you reach within a walk distance?
+    input: streets graph
+    output: graph Layer
+    unit: count
+    dataset: punggol
+    recipe: network/accessibility_punggol
+    figure: recipes/network/accessibility_punggol.png
+    workflow: workflows/green_accessibility
+    offline: true
+    limitations:
+      - this is network reachability (node count), not population or jobs access
+      - radius is graph length, not a door-to-door walk
+  - id: network.clustering
+    function: uc.network.clustering
+    status: experimental
+    domain: network
+    extra: network
+    backend: networkx
+    urban_question: How tightly are neighbouring street nodes connected?
+    input: streets graph
+    output: graph Layer
+    unit: dimensionless
+    dataset: punggol
+    recipe: network/clustering_punggol
+    figure: recipes/network/clustering_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - many degree-1 and degree-2 street nodes have clustering 0
+      - experimental Watts-Strogatz local definition
+  - id: network.local_efficiency
+    function: uc.network.local_efficiency
+    status: experimental
+    domain: network
+    extra: network
+    backend: networkx
+    urban_question: How well do neighbours stay connected if a node is removed?
+    input: streets graph
+    output: graph Layer
+    unit: dimensionless
+    dataset: punggol
+    recipe: network/local_efficiency_punggol
+    figure: recipes/network/local_efficiency_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - experimental Latora-Marchiori local efficiency
+      - not a congestion or travel-time measure
+  - id: imagery.read
+    function: uc.imagery.read
+    status: stable
+    domain: imagery
+    extra: imagery
+    backend: rasterio
+    urban_question: What is on this GeoTIFF, and how is it georeferenced?
+    input: GeoTIFF
+    output: raster Layer
+    unit: source units
+    dataset: punggol
+    recipe: imagery/read_punggol
+    figure: recipes/imagery/read_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - preview is not a radiometric product
+      - band names come from the fixture metadata
+  - id: imagery.fetch
+    function: uc.imagery.fetch
+    status: stable
+    domain: imagery
+    extra: imagery
+    backend: pystac-client
+    urban_question: Which Sentinel-2 or DEM window covers this bbox?
+    input: bbox and STAC search
+    output: raster Layer
+    unit: reflectance or metres
+    dataset: punggol
+    recipe: imagery/fetch_punggol
+    figure: recipes/imagery/fetch_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - offline recipe uses the committed STAC item, not a live search
+      - live refresh is Tier 2
+  - id: imagery.ndvi
+    function: uc.imagery.ndvi
+    status: stable
+    domain: imagery
+    extra: imagery
+    backend: rasterio
+    urban_question: Where is vegetation concentrated?
+    input: sentinel2
+    output: raster Layer
+    unit: dimensionless
+    dataset: punggol
+    recipe: imagery/ndvi_punggol
+    figure: recipes/imagery/indices_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - single acquisition date
+      - residual cloud and atmospheric effects
+  - id: imagery.ndwi
+    function: uc.imagery.ndwi
+    status: stable
+    domain: imagery
+    extra: imagery
+    backend: rasterio
+    urban_question: Where does the green-NIR response look like water?
+    input: sentinel2
+    output: raster Layer
+    unit: dimensionless
+    dataset: punggol
+    recipe: imagery/ndwi_punggol
+    figure: recipes/imagery/indices_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - needs B03 and B08
+      - water and dark shadow can look similar
+  - id: imagery.ndbi
+    function: uc.imagery.ndbi
+    status: stable
+    domain: imagery
+    extra: imagery
+    backend: rasterio
+    urban_question: Where does the SWIR-NIR response look built-up?
+    input: sentinel2
+    output: raster Layer
+    unit: dimensionless
+    dataset: punggol
+    recipe: imagery/ndbi_punggol
+    figure: recipes/imagery/indices_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - needs B11 and B08
+      - bare soil can raise NDBI
+  - id: imagery.slope
+    function: uc.imagery.slope
+    status: stable
+    domain: imagery
+    extra: imagery
+    backend: rasterio
+    urban_question: How steep is the terrain?
+    input: dem
+    output: raster Layer
+    unit: degree
+    dataset: punggol
+    recipe: imagery/slope_punggol
+    figure: recipes/imagery/terrain_punggol.png
+    workflow: workflows/multi_city_comparison
+    offline: true
+    limitations:
+      - Copernicus DEM GLO-30 is a 30 m product resampled to the pocket grid
+      - buildings are not a DSM
+  - id: imagery.aspect
+    function: uc.imagery.aspect
+    status: stable
+    domain: imagery
+    extra: imagery
+    backend: rasterio
+    urban_question: Which way does the slope face?
+    input: dem
+    output: raster Layer
+    unit: degree
+    dataset: punggol
+    recipe: imagery/aspect_punggol
+    figure: recipes/imagery/terrain_punggol.png
+    workflow: workflows/multi_city_comparison
+    offline: true
+    limitations:
+      - cyclic 0-360 degrees from north
+      - flat cells are nodata
+  - id: imagery.hillshade
+    function: uc.imagery.hillshade
+    status: stable
+    domain: imagery
+    extra: imagery
+    backend: rasterio
+    urban_question: How does the terrain look under a standard illumination?
+    input: dem
+    output: raster Layer
+    unit: dimensionless
+    dataset: punggol
+    recipe: imagery/hillshade_punggol
+    figure: recipes/imagery/terrain_punggol.png
+    workflow: workflows/multi_city_comparison
+    offline: true
+    limitations:
+      - illumination is assumed, not a local sun position
+      - shading is not a solar-access model
+  - id: imagery.zonal_stats
+    function: uc.imagery.zonal_stats
+    status: stable
+    domain: imagery
+    extra: imagery
+    backend: rasterio
+    urban_question: What is the mean NDVI inside each park polygon?
+    input: raster plus parks
+    output: vector Layer
+    unit: dimensionless
+    dataset: punggol
+    recipe: imagery/zonal_stats_punggol
+    figure: recipes/imagery/zonal_stats_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - park polygons are OSM leisure/natural tags
+      - mean ignores within-park structure
+  - id: climate.utci
+    function: uc.climate.utci
+    status: experimental
+    domain: climate
+    extra: climate
+    backend: pythermalcomfort
+    urban_question: How hot does the outdoor thermal environment feel?
+    input: air temperature, humidity, wind, radiant temperature
+    output: raster Layer
+    unit: degree_celsius
+    dataset: climate
+    recipe: climate/utci_real
+    figure: recipes/climate/utci_real.png
+    workflow: workflows/heat_exposure
+    offline: true
+    limitations:
+      - mean radiant temperature is modelled, not measured
+      - weather is one archive timestamp, not a climate normal
+  - id: streetview.filename
+    function: uc.svi.filename
+    status: stable
+    domain: streetview
+    extra: svi
+    backend: pandas
+    urban_question: Which image files are in this folder?
+    input: image directory
+    output: DataFrame
+    unit: filename
+    dataset: streetview
+    recipe: streetview/filename_punggol
+    figure: recipes/streetview/filename_punggol.png
+    workflow: workflows/street_experience
+    offline: true
+    limitations:
+      - catalog only; no perception scores
+      - photo locations are recorded separately
+  - id: streetview.color
+    function: uc.svi.color
+    status: experimental
+    domain: streetview
+    extra: svi
+    backend: opencv
+    urban_question: How colourful are these street photos?
+    input: image catalog
+    output: DataFrame
+    unit: colorfulness
+    dataset: streetview
+    recipe: streetview/color_punggol
+    figure: recipes/streetview/color_punggol.png
+    workflow: workflows/street_experience
+    offline: true
+    limitations:
+      - Colorfulness is a pixel statistic, not a comfort score
+      - camera processing affects the value
+  - id: images.from_table
+    function: uc.images.from_table
+    status: stable
+    domain: images
+    extra: vector
+    backend: geopandas
+    urban_question: How do geotagged city photos become an observation Layer?
+    input: table with image_id, path, and lon/lat
+    output: point Layer
+    unit: image
+    dataset: streetview
+    recipe: images/from_table_punggol
+    figure: recipes/images/from_table_punggol.png
+    workflow: workflows/research_cases/thermal_comfort_in_sight
+    offline: true
+    limitations:
+      - image_id must be unique; one location can have several photos
+      - window-view photos use view_type=windowview, not streetview
+  - id: streetview.as_layer
+    function: uc.svi.as_layer
+    status: stable
+    domain: streetview
+    extra: vector
+    backend: geopandas
+    urban_question: Where do these photo observations sit on the map?
+    input: table with lon/lat
+    output: point Layer
+    unit: point
+    dataset: streetview
+    recipe: streetview/as_layer_punggol
+    figure: recipes/streetview/as_layer_punggol.png
+    workflow: workflows/street_experience
+    offline: true
+    limitations:
+      - only geotagged photos are real observations
+      - illustrative coordinates must stay labelled illustrative
+  - id: streetview.fetch
+    function: uc.svi.fetch
+    status: experimental
+    domain: streetview
+    extra: download
+    backend: zensvi
+    urban_question: Which street-level photos can a live provider return for this area?
+    input: study area
+    output: image catalog
+    unit: image
+    dataset: null
+    recipe: null
+    figure: null
+    workflow: workflows/street_experience
+    offline: false
+    blocked: "zensvi/Mapillary imagery cannot be redistributed in the docs fixture; live-only"
+    limitations:
+      - provider terms forbid committing fetched photos
+      - coverage is the provider archive, not a census
+  - id: streetview.segmentation
+    function: uc.svi.segmentation
+    status: experimental
+    domain: streetview
+    extra: svi
+    backend: torch
+    urban_question: What share of the photo is sky, vegetation, building, or road?
+    input: street photo
+    output: class proportions
+    unit: fraction
+    dataset: null
+    recipe: null
+    figure: null
+    workflow: workflows/street_experience
+    offline: false
+    blocked: "torch SegFormer weights and redistributable precomputed masks are not in the repo; live/heavy only"
+    limitations:
+      - class taxonomy is the packaged model, not a field survey
+      - no offline result figure until artifacts are committed
+  - id: streetview.object_detection
+    function: uc.svi.object_detection
+    status: experimental
+    domain: streetview
+    extra: svi
+    backend: torch
+    urban_question: Which objects does the detector mark in the photo?
+    input: street photo
+    output: boxes and counts
+    unit: count
+    dataset: null
+    recipe: null
+    figure: null
+    workflow: workflows/street_experience
+    offline: false
+    blocked: "torch detector weights and redistributable boxes are not in the repo; live/heavy only"
+    limitations:
+      - detector classes are not a traffic or pedestrian count
+      - no offline result figure until artifacts are committed
+  - id: streetview.scene_recognition
+    function: uc.svi.scene_recognition
+    status: experimental
+    domain: streetview
+    extra: svi
+    backend: torch
+    urban_question: Which Places365 scenes does the photo resemble?
+    input: street photo
+    output: class probabilities
+    unit: probability
+    dataset: null
+    recipe: null
+    figure: null
+    workflow: workflows/street_experience
+    offline: false
+    blocked: "Places365 weights and redistributable scores are not in the repo; live/heavy only"
+    limitations:
+      - Places365 is a scene prior, not a land-use survey
+      - no offline result figure until artifacts are committed
+  - id: streetview.comfort
+    function: uc.svi.comfort
+    status: compatibility
+    domain: streetview
+    extra: svi
+    backend: torch
+    urban_question: How does the TCIS model score this street photo?
+    input: street photo
+    output: score table
+    unit: score
+    dataset: null
+    recipe: null
+    figure: null
+    workflow: workflows/street_experience
+    offline: false
+    blocked: "Deprecated DataFrame entry; use uc.perception.thermal_affordance. Live/heavy only."
+    migration: /migration/streetview-to-svi
+    limitations:
+      - thermal_comfort is a compatibility alias for thermal_affordance (VATA)
+      - not measured personal comfort and not UTCI
+  - id: perception.thermal_affordance
+    function: uc.perception.thermal_affordance
+    status: experimental
+    domain: perception
+    extra: perception
+    backend: torch
+    urban_question: What visual thermal affordance does TCIS assign to these photos?
+    input: geolocated image Layer
+    output: point Layer
+    unit: score_0_5
+    dataset: streetview
+    recipe: perception/thermal_affordance_punggol
+    figure: recipes/perception/thermal_affordance_punggol.png
+    workflow: workflows/research_cases/thermal_comfort_in_sight
+    offline: true
+    limitations:
+      - VATA is visual thermal affordance, not measured comfort and not UTCI
+      - eight Commons photos are a tiny out-of-distribution fixture, not the flagship 92,233 Singapore result
+      - dataset-scale runs use output/chunk_size/resume on this same function
+  - id: fusion.aggregate
+    function: uc.fusion.aggregate
+    status: stable
+    domain: fusion
+    extra: vector
+    backend: geopandas
+    urban_question: What does each analysis unit receive from this layer?
+    input: Layer plus AnalysisUnits
+    output: IndicatorResult
+    unit: stat-dependent
+    dataset: punggol
+    recipe: fusion/aggregate_punggol
+    figure: recipes/fusion/aggregate_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - coverage is the fraction of the unit that intersected the source
+      - missing stays null, not zero
+  - id: fusion.aggregate_many
+    function: uc.fusion.aggregate_many
+    status: stable
+    domain: fusion
+    extra: vector
+    backend: geopandas
+    urban_question: How do many perception columns become one indicator table?
+    input: Layer plus column map plus AnalysisUnits
+    output: IndicatorResult
+    unit: mixed
+    dataset: streetview
+    recipe: fusion/aggregate_many_punggol
+    figure: recipes/fusion/aggregate_many_punggol.png
+    workflow: workflows/research_cases/thermal_comfort_in_sight
+    offline: true
+    limitations:
+      - each column is aggregated separately, then combined
+      - units with no photos stay null, not zero
+  - id: fusion.combine
+    function: uc.fusion.combine
+    status: stable
+    domain: fusion
+    extra: vector
+    backend: pandas
+    urban_question: Can two indicator tables share the same units?
+    input: IndicatorResult plus AnalysisUnits
+    output: IndicatorResult
+    unit: mixed
+    dataset: punggol
+    recipe: fusion/combine_punggol
+    figure: recipes/fusion/combine_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - combine checks city_id, unit IDs, CRS, and scheme
+      - it does not spatially re-aggregate
+  - id: units.grid
+    function: uc.units.grid
+    status: stable
+    domain: units
+    extra: vector
+    backend: geopandas
+    urban_question: What regular cells cover this study area?
+    input: City or StudyArea
+    output: AnalysisUnits
+    unit: metre
+    dataset: punggol
+    recipe: units/grid_punggol
+    figure: recipes/units/units_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - cell_size is metres in the metric CRS
+      - edge cells are clipped to the study area
+  - id: units.hexgrid
+    function: uc.units.hexgrid
+    status: stable
+    domain: units
+    extra: vector
+    backend: shapely
+    urban_question: What hex cells cover this study area?
+    input: City or StudyArea
+    output: AnalysisUnits
+    unit: metre
+    dataset: punggol
+    recipe: units/hexgrid_punggol
+    figure: recipes/units/units_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - hex size is metres
+      - IDs are scheme-specific and not interchangeable with square grid IDs
+  - id: units.from_layer
+    function: uc.units.from_layer
+    status: stable
+    domain: units
+    extra: vector
+    backend: geopandas
+    urban_question: Can existing polygons become analysis units?
+    input: polygon Layer
+    output: AnalysisUnits
+    unit: polygon
+    dataset: punggol
+    recipe: units/from_layer_punggol
+    figure: recipes/units/units_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - unit IDs are geometry fingerprints
+      - duplicate geometries raise
+  - id: imagery.utci
+    function: uc.imagery.utci
+    status: compatibility
+    extra: climate
+    backend: pythermalcomfort
+    migration: /reference/api/climate
+  - id: imagery.slope_degrees
+    function: uc.imagery.slope_degrees
+    status: compatibility
+    extra: imagery
+    backend: rasterio
+    migration: /reference/api/imagery
+  - id: imagery.aspect_degrees
+    function: uc.imagery.aspect_degrees
+    status: compatibility
+    extra: imagery
+    backend: rasterio
+    migration: /reference/api/imagery
+  - id: network.download_network
+    function: uc.network.download_network
+    status: legacy
+    extra: network
+    backend: osmnx
+    migration: /reference/api/network
+  - id: network.save_network
+    function: uc.network.save_network
+    status: legacy
+    extra: network
+    backend: osmnx
+    migration: /reference/api/network
+  - id: network.load_saved_network
+    function: uc.network.load_saved_network
+    status: legacy
+    extra: network
+    backend: osmnx
+    migration: /reference/api/network
+  - id: network.graph_to_gdf
+    function: uc.network.graph_to_gdf
+    status: compatibility
+    extra: network
+    backend: osmnx
+    migration: /reference/api/network
+  - id: network.graph_from_gdf
+    function: uc.network.graph_from_gdf
+    status: compatibility
+    extra: network
+    backend: momepy
+    migration: /reference/api/network
+  - id: network.closeness_centrality_radius
+    function: uc.network.closeness_centrality_radius
+    status: legacy
+    extra: network
+    backend: networkx
+    migration: /reference/api/network
+  - id: network.betweenness_centrality_radius
+    function: uc.network.betweenness_centrality_radius
+    status: legacy
+    extra: network
+    backend: networkx
+    migration: /reference/api/network
+  - id: network.reachability_radius
+    function: uc.network.reachability_radius
+    status: legacy
+    extra: network
+    backend: networkx
+    migration: /reference/api/network
+  - id: network.local_efficiency_radius
+    function: uc.network.local_efficiency_radius
+    status: legacy
+    extra: network
+    backend: networkx
+    migration: /reference/api/network
+  - id: network.clustering_coefficient_radius
+    function: uc.network.clustering_coefficient_radius
+    status: legacy
+    extra: network
+    backend: networkx
+    migration: /reference/api/network
+  - id: network.calculate_accessibility_metrics
+    function: uc.network.calculate_accessibility_metrics
+    status: legacy
+    extra: network
+    backend: networkx
+    migration: /reference/api/network
+  - id: indicators.save
+    function: uc.IndicatorResult.save
+    status: stable
+    domain: fusion
+    extra: vector
+    backend: pandas
+    urban_question: How is an indicator table written to disk with receipts?
+    input: IndicatorResult
+    output: directory
+    unit: mixed
+    dataset: punggol
+    recipe: fusion/combine_punggol
+    figure: recipes/fusion/combine_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - parquet falls back to CSV when the engine is missing
+  - id: indicators.load
+    function: uc.IndicatorResult.load
+    status: stable
+    domain: fusion
+    extra: vector
+    backend: pandas
+    urban_question: Can a saved indicator directory be reloaded?
+    input: directory
+    output: IndicatorResult
+    unit: mixed
+    dataset: punggol
+    recipe: fusion/combine_punggol
+    figure: recipes/fusion/combine_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - load prefers parquet then CSV
+  - id: indicators.plot
+    function: uc.IndicatorResult.plot
+    status: stable
+    domain: fusion
+    extra: viz
+    backend: matplotlib
+    urban_question: How does one indicator look on its analysis units?
+    input: IndicatorResult
+    output: figure
+    unit: indicator-dependent
+    dataset: punggol
+    recipe: fusion/combine_punggol
+    figure: recipes/fusion/combine_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - plot requires a single indicator or an indicator= argument
+  - id: indicators.to_layer
+    function: uc.IndicatorResult.to_layer
+    status: stable
+    domain: fusion
+    extra: vector
+    backend: geopandas
+    urban_question: How does a long indicator table become a plottable Layer?
+    input: IndicatorResult
+    output: vector Layer
+    unit: indicator-dependent
+    dataset: punggol
+    recipe: fusion/combine_punggol
+    figure: recipes/fusion/combine_punggol.png
+    workflow: workflows/punggol_urban_profile
+    offline: true
+    limitations:
+      - to_layer copies unit and indicator name into Layer metadata for color scales
+  - id: adapters.osmnx
+    function: uc.adapters.osmnx
+    status: adapter-only
+    domain: adapters
+    extra: network
+    backend: osmnx
+    interop: adapters/osmnx
+  - id: adapters.zensvi
+    function: uc.adapters.zensvi
+    status: adapter-only
+    domain: adapters
+    extra: download
+    backend: zensvi
+    interop: adapters/zensvi

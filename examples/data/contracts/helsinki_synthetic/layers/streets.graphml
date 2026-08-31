@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d6" for="edge" attr.name="osmid" attr.type="string"/>
+<key id="d5" for="edge" attr.name="highway" attr.type="string"/>
+<key id="d4" for="edge" attr.name="length" attr.type="string"/>
+<key id="d3" for="node" attr.name="street_count" attr.type="string"/>
+<key id="d2" for="node" attr.name="y" attr.type="string"/>
+<key id="d1" for="node" attr.name="x" attr.type="string"/>
+<key id="d0" for="graph" attr.name="crs" attr.type="string"/>
+<graph edgedefault="directed"><data key="d0">EPSG:4326</data>
+<node id="1">
+  <data key="d1">24.947</data>
+  <data key="d2">60.185</data>
+  <data key="d3">2</data>
+</node>
+<node id="2">
+  <data key="d1">24.95</data>
+  <data key="d2">60.185</data>
+  <data key="d3">2</data>
+</node>
+<node id="3">
+  <data key="d1">24.953</data>
+  <data key="d2">60.185</data>
+  <data key="d3">2</data>
+</node>
+<node id="4">
+  <data key="d1">24.947</data>
+  <data key="d2">60.188</data>
+  <data key="d3">2</data>
+</node>
+<node id="5">
+  <data key="d1">24.95</data>
+  <data key="d2">60.188</data>
+  <data key="d3">2</data>
+</node>
+<node id="6">
+  <data key="d1">24.953</data>
+  <data key="d2">60.188</data>
+  <data key="d3">2</data>
+</node>
+<node id="7">
+  <data key="d1">24.947</data>
+  <data key="d2">60.191</data>
+  <data key="d3">2</data>
+</node>
+<node id="8">
+  <data key="d1">24.95</data>
+  <data key="d2">60.191</data>
+  <data key="d3">2</data>
+</node>
+<node id="9">
+  <data key="d1">24.953</data>
+  <data key="d2">60.191</data>
+  <data key="d3">2</data>
+</node>
+<edge source="1" target="2" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">12</data>
+</edge>
+<edge source="1" target="4" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">14</data>
+</edge>
+<edge source="2" target="1" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">21</data>
+</edge>
+<edge source="2" target="3" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">23</data>
+</edge>
+<edge source="2" target="5" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">25</data>
+</edge>
+<edge source="3" target="2" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">32</data>
+</edge>
+<edge source="3" target="6" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">36</data>
+</edge>
+<edge source="4" target="5" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">45</data>
+</edge>
+<edge source="4" target="1" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">41</data>
+</edge>
+<edge source="4" target="7" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">47</data>
+</edge>
+<edge source="5" target="4" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">54</data>
+</edge>
+<edge source="5" target="6" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">56</data>
+</edge>
+<edge source="5" target="2" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">52</data>
+</edge>
+<edge source="5" target="8" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">58</data>
+</edge>
+<edge source="6" target="5" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">65</data>
+</edge>
+<edge source="6" target="3" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">63</data>
+</edge>
+<edge source="6" target="9" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">69</data>
+</edge>
+<edge source="7" target="8" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">78</data>
+</edge>
+<edge source="7" target="4" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">74</data>
+</edge>
+<edge source="8" target="7" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">87</data>
+</edge>
+<edge source="8" target="9" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">89</data>
+</edge>
+<edge source="8" target="5" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">85</data>
+</edge>
+<edge source="9" target="8" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">98</data>
+</edge>
+<edge source="9" target="6" id="0">
+  <data key="d4">80.0</data>
+  <data key="d5">residential</data>
+  <data key="d6">96</data>
+</edge>
+</graph></graphml>

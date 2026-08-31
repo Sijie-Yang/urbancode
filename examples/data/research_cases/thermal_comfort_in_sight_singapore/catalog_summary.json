@@ -1,0 +1,10 @@
+{
+  "n_images": 92233,
+  "n_geolocated": 92233,
+  "n_parse_errors": 0,
+  "catalog": "tcis_svi_catalog.parquet",
+  "catalog_sha256": "53ba69261b70d580c39a8cf24a33b640e8a3a6df3a3eb8412c5a309c9d3ba888",
+  "image_root_name": "svi_singapore_92233_resized_version",
+  "built_at": "2026-08-17T00:34:51.408178+00:00",
+  "note": "image_root is local to the machine that built this catalog"
+}

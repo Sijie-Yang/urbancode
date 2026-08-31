@@ -1,0 +1,17 @@
+{
+  "stage": 100,
+  "passed": true,
+  "success": 100,
+  "failed": 0,
+  "images_per_second": 2631.586,
+  "device": "cuda",
+  "peak_gpu_memory_mb": 0.0,
+  "elapsed_s": 0.038,
+  "eta_92233_hours": 0.01,
+  "output_rows": 100,
+  "model_revision": null,
+  "segformer_revision": null,
+  "weights_sha256": null,
+  "finished": "2026-08-17T00:40:04.622771+00:00",
+  "resume": true
+}

@@ -1,93 +1,75 @@
-# UrbanCode (v0.2.1)
+# UrbanCode
 
-A Python package for street view image perception analysis, providing tools for feature extraction and comfort prediction.
+UrbanCode is a library for reproducible urban analysis across street
+networks, earth observation, climate, and street-view imagery. It is
+built on GeoPandas, OSMnx, Rasterio, and related tools.
 
-## Related Research
+Import the package as `uc`.
 
-[Thermal Comfort in Sight: Thermal Affordance and Its Visual Assessment](https://github.com/Sijie-Yang/Thermal-Affordance)
+**Docs:** https://urbancode.readthedocs.io/
 
-## Features
+## What it offers
 
-### Street View Image (SVI) Analysis
-- Semantic segmentation
-- Object detection
-- Color feature extraction
-- Scene recognition
-- Perception analysis (thermal_comfort, visual_comfort, safety, etc.)
+- Load a study area and keep vector, raster, and graph layers in one `City`
+- Build shared analysis units (grid, hex, or from a layer)
+- Measure vegetation, water, built-up surface, and terrain
+- Measure street-network centrality, clustering, and walk reachability
+- Compute UTCI from observed weather plus a documented MRT proxy
+- Score street photos for visual thermal affordance (VATA)
+- Fuse those quantities onto the same units with provenance receipts
 
-## Examples
-
-### 1. Street View Image Feature Extraction
-`examples/test_svi_image_feature.ipynb`
-- Demonstrates how to extract various features from street view images
-- Includes semantic segmentation, object detection, color analysis, and scene recognition
-- Shows how to process multiple images and save results
-
-### 2. Street View Image Comfort Prediction
-`examples/test_svi_comfort_prediction.ipynb`
-- Shows how to predict comfort scores from street view images
-- Demonstrates the use of the comfort function for both single images and folders
-- Includes visualization of perception metrics
-- Automatically normalizes perception scores to 0-5 range
-
-## Installation
+## Install
 
 ```bash
 pip install urbancode
+pip install "urbancode[standard]"     # vector + network + imagery + climate + viz
+pip install "urbancode[svi]"          # TCIS + color
 ```
 
-## Usage
+Python 3.10+. The core wheel is small. Torch is not in `[standard]`.
+Weights download into `~/.cache/urbancode/`.
 
-### Feature Extraction
-```python
-import urbancode as uc
-import pandas as pd
+## Examples
 
-# Process a folder of images
-df = uc.svi.filename("path/to/folder")
-df = uc.svi.segmentation(df, folder_path="path/to/folder")
-df = uc.svi.object_detection(df, folder_path="path/to/folder")
-df = uc.svi.color(df, folder_path="path/to/folder")
-df = uc.svi.scene_recognition(df, folder_path="path/to/folder")
-
-# Save results
-df.to_csv("svi_results.csv", index=False)
-```
-
-### Comfort Prediction
 ```python
 import urbancode as uc
 
-# Process a single image
-df = uc.svi.comfort("path/to/image.jpg", mode='image')
-
-# Process a folder of images
-df = uc.svi.comfort("path/to/folder", mode='folder')
-
-# Save results
-df.to_csv("comfort_results.csv", index=False)
+city = uc.load("examples/data/real/punggol", lazy=True)
+print(city.place, city.keys()[:3])
 ```
 
-### Perception Metrics
-The comfort function returns a DataFrame with the following perception metrics (normalized to 0-5 range):
-- thermal_comfort
-- visual_comfort
-- temp_intensity
-- sun_intensity
-- humidity_inference
-- wind_inference
-- traffic_flow
-- greenery_rate
-- shading_area
-- material_comfort
-- imageability
-- enclosure
-- human_scale
-- transparency
-- complexity
-- safe
-- lively
-- beautiful
-- wealthy
-- boring
-- depressing
+Output:
+
+```text
+Punggol, Singapore ['streets', 'buildings', 'parks']
+```
+
+`city` is a lazy `City`: its manifest and layer inventory are loaded,
+while raster pixels stay unopened until an imagery function needs them.
+
+```python
+units = uc.units.grid(city, cell_size=250)
+ndvi = uc.imagery.ndvi(city.layers["sentinel2"])
+result = uc.fusion.aggregate(ndvi, units, stat="mean", indicator="ndvi")
+print(round(float(result.to_pandas()["value"].mean()), 3))
+result.plot(indicator="ndvi")
+```
+
+Output:
+
+```text
+0.208
+```
+
+`units` is the 250 m grid, `ndvi` is the native Sentinel-2 raster, and
+`result` is an `IndicatorResult` with one value and coverage record per
+cell. The final line draws that result. Walkthrough:
+https://urbancode.readthedocs.io/en/latest/getting_started/quickstart.html
+Do **not** pass `layers="all"` for a whole city.
+
+## Tests
+
+```bash
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=. pytest tests/unit
+sphinx-build -W --keep-going -b html docs/source docs/build/html
+```

@@ -1,29 +1,33 @@
-"""
-Street View Image (SVI) analysis module.
+"""Street-view imagery (SVI): catalogs, features, fetch, and deprecated comfort.
 
-This module provides functions for analyzing street view images, including:
-- Basic image features (color, edges, etc.)
-- Semantic segmentation
-- Object detection
-- Scene recognition
-- Perception (comfort prediction)
+This is the official public namespace. ``uc.streetview`` is a
+compatibility alias of the same implementation.
+
+Prefer ``uc.perception.thermal_affordance`` for Layer-returning scores.
+Heavy deps load on first use.
 """
 
-from .feature import (
-    filename,
-    color,
-    segmentation,
-    object_detection,
-    scene_recognition
-)
+from __future__ import annotations
 
-from .perception import comfort
+from typing import Any
 
 __all__ = [
-    'filename',
-    'color',
-    'segmentation',
-    'object_detection',
-    'scene_recognition',
-    'comfort'
+    "filename",
+    "color",
+    "segmentation",
+    "object_detection",
+    "scene_recognition",
+    "comfort",
+    "fetch",
+    "as_layer",
 ]
+
+
+def __getattr__(name: str) -> Any:
+    if name not in __all__:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    import urbancode.streetview as streetview
+
+    value = getattr(streetview, name)
+    globals()[name] = value
+    return value

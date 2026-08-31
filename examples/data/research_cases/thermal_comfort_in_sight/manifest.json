@@ -1,0 +1,24 @@
+{
+  "dataset_id": "thermal_comfort_in_sight",
+  "city_id": "punggol",
+  "place": "Punggol, Singapore",
+  "tier": "tiny_fixture",
+  "role": "ground-photo out-of-distribution demonstration; not the flagship research result",
+  "n_images": 8,
+  "sample_warning": "Eight licensed Commons photos. This is not a Punggol census and must not be read as a city-scale thermal-affordance map. Flagship TCIS uses the Alienware 92,233 JPEG store; the full run finished on ual-chark (RTX 5090).",
+  "source": "wikimedia-commons",
+  "source_uri": "https://commons.wikimedia.org/",
+  "license": "CC BY-SA 4.0",
+  "citation": "Yang, S. et al. (2024). Thermal Comfort in Sight: Thermal Affordance and its Visual Assessment for Sustainable Streetscape Design. https://arxiv.org/abs/2410.11887",
+  "project_repository": "https://github.com/Sijie-Yang/Thermal-Comfort-In-Sight",
+  "photo_catalog": "examples/data/real/streetview/catalog.json",
+  "predictions": "predictions.csv",
+  "checksums": "checksums.sha256",
+  "view_type": "streetview",
+  "location_quality": "commons-geosearch",
+  "notes": [
+    "Photos are redistributable Commons files already in the streetview fixture.",
+    "TCIS weights are not committed. Full mode downloads them to the user cache.",
+    "VATA is visual thermal affordance, not measured personal comfort and not UTCI."
+  ]
+}

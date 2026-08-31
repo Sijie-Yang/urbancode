@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urbancode.dev/schemas/observation.schema.json",
+  "title": "Observation / IndicatorResult (draft stub)",
+  "description": "Core fields only. Missing value is not 0. Percentile does not replace raw. Documentation only.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "observation_id",
+    "city_id",
+    "entity_level",
+    "entity_id",
+    "metric_key"
+  ],
+  "properties": {
+    "observation_id": { "type": "string" },
+    "city_id": { "type": "string" },
+    "entity_level": { "type": "string", "enum": ["place", "street", "region"] },
+    "entity_id": { "type": "string" },
+    "metric_key": { "type": "string" },
+    "value": { "type": ["number", "null"] },
+    "unit": { "type": ["string", "null"] },
+    "measurement_scale": {
+      "type": "string",
+      "enum": ["ratio", "interval", "ordinal", "nominal"]
+    },
+    "direction": {
+      "type": "string",
+      "enum": ["higher-is-better", "lower-is-better", "none"]
+    },
+    "spatial_support": { "type": ["object", "string", "null"] },
+    "temporal": {
+      "type": "object",
+      "properties": {
+        "valid_from": { "type": ["string", "null"] },
+        "valid_to": { "type": ["string", "null"] }
+      }
+    },
+    "scenario_id": { "type": "string" },
+    "method": { "type": "string" },
+    "parameters": { "type": "object" },
+    "coverage": { "type": ["number", "object", "null"] },
+    "uncertainty": { "type": ["number", "object", "null"] },
+    "quality_flags": { "type": "array", "items": { "type": "string" } },
+    "provenance_id": { "type": ["string", "null"] },
+    "artifact_ref": { "type": ["string", "null"] }
+  }
+}

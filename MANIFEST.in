@@ -1,0 +1,3 @@
+recursive-include urbancode/streetview/data *.json *.txt *.npz
+recursive-exclude urbancode/streetview/data *.pth *.pth.tar
+global-exclude *.pth *.pth.tar

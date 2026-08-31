@@ -1,0 +1,17 @@
+{
+  "fixture_version": 1,
+  "location": "Greenwich Village, New York",
+  "bbox": [
+    -74.005,
+    40.728,
+    -73.995,
+    40.738
+  ],
+  "synthetic": true,
+  "generated_by": "examples/data/build_pockets.py",
+  "generated_at": "2026-08-16T07:44:01.196744+00:00",
+  "crs": {
+    "vectors": "EPSG:4326",
+    "rasters": "EPSG:32618"
+  }
+}

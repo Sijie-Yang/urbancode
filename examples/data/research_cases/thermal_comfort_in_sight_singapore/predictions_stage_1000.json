@@ -1,0 +1,17 @@
+{
+  "stage": 1000,
+  "passed": true,
+  "success": 1000,
+  "failed": 0,
+  "images_per_second": 1.385,
+  "device": "cuda",
+  "peak_gpu_memory_mb": 11388.8,
+  "elapsed_s": 722.041,
+  "eta_92233_hours": 18.5,
+  "output_rows": 1000,
+  "model_revision": "96dcfe0229542c280536dfb1994e4a4834d83c93",
+  "segformer_revision": "21b3847fae21ddee674abd31129307b6a1235bd9",
+  "weights_sha256": "2d58e1d99055f438e853105ce75c73eddad6b00288b6f5e131cb60040ad3d1cc",
+  "finished": "2026-08-17T00:52:30.025958+00:00",
+  "resume": true
+}

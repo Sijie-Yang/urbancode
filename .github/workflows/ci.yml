@@ -1,0 +1,305 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+
+env:
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+  MPLBACKEND: Agg
+  MPLCONFIGDIR: /tmp/urbancode-mpl
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install core + dev
+        run: python -m pip install --upgrade pip && pip install -e ".[dev]"
+      - name: Unit tests without extras
+        run: |
+          python -m pytest \
+            tests/unit/test_city.py \
+            tests/unit/test_city_contract.py \
+            tests/unit/test_geocode.py \
+            tests/unit/test_indices.py \
+            tests/unit/test_cache.py \
+            tests/unit/test_cli_version.py \
+            tests/unit/test_comfort_contract.py \
+            tests/unit/test_osm_specs.py \
+            tests/unit/test_old_api.py \
+            tests/unit/test_missing_extra.py \
+            tests/unit/test_adapters.py \
+            tests/unit/test_svi_fetch_mock.py \
+            tests/unit/test_utci.py \
+            tests/unit/test_stac_helpers.py \
+            tests/unit/test_package_data.py \
+            tests/unit/test_tcis_smoke.py \
+            tests/unit/test_lazy_load.py \
+            tests/unit/test_study_area.py \
+            tests/unit/test_indicators.py \
+            tests/unit/test_backends.py \
+            tests/unit/test_climate_streetview.py \
+            tests/unit/test_docs_streetview.py \
+            tests/unit/test_capability_imports.py \
+            tests/unit/test_public_api_catalog.py \
+            tests/unit/test_workflow_docs.py \
+            tests/integration/test_fetch_offline.py \
+            -q --tb=short -o addopts=
+
+  network:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install network extra
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,network]"
+      - name: Prove extras import
+        run: python -c "import geopandas, osmnx, shapely, networkx"
+      - name: Network tests (no skip)
+        env:
+          UC_FAIL_ON_SKIP: "1"
+        run: |
+          python -m pytest \
+            tests/unit/test_osm_specs.py \
+            tests/unit/test_city.py \
+            tests/unit/test_city_contract.py \
+            tests/unit/test_network_metrics.py \
+            tests/unit/test_catalog_examples.py \
+            tests/integration/test_network_fetch_mock.py \
+            -q --tb=short -o addopts=
+
+  imagery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install imagery extra
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,imagery]"
+      - name: Prove extras import
+        run: python -c "import rasterio, rioxarray, geopy"
+      - name: Imagery tests (no skip)
+        env:
+          UC_FAIL_ON_SKIP: "1"
+        run: |
+          python -m pytest \
+            tests/integration/test_raster_pipeline.py \
+            tests/unit/test_indices.py \
+            tests/unit/test_aspect.py \
+            tests/unit/test_stac_helpers.py \
+            tests/unit/test_geocode.py \
+            -q --tb=short -o addopts=
+
+  fusion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install network + imagery
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,network,imagery]"
+      - name: Cross-modal grid aggregate
+        env:
+          UC_FAIL_ON_SKIP: "1"
+        run: |
+          python -m pytest tests/unit/test_fusion.py -q --tb=short -o addopts=
+
+  streetview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install perception extra
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,perception]" transformers
+      - name: Prove extras import
+        run: python -c "import torch, PIL"
+      - name: Streetview contract and color (no skip)
+        env:
+          UC_FAIL_ON_SKIP: "1"
+        run: |
+          python -m pytest \
+            tests/unit/test_comfort_contract.py \
+            tests/unit/test_color_features.py \
+            tests/unit/test_tcis_smoke.py::test_manifest_sha_fields \
+            -q --tb=short -o addopts=
+      - name: TCIS golden smoke
+        env:
+          UC_FAIL_ON_SKIP: "1"
+        run: |
+          python -m pytest tests/unit/test_tcis_smoke.py::test_comfort_golden_image \
+            -q --tb=short -o addopts=
+
+  workflows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install standard + docs + OpenCV
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,standard,docs]" opencv-python
+      - name: Workflow scripts (no skip)
+        env:
+          UC_FAIL_ON_SKIP: "1"
+        run: |
+          python -m pytest \
+            tests/unit/test_workflows.py \
+            tests/unit/test_workflow_docs.py \
+            tests/unit/test_fusion.py \
+            tests/unit/test_units_contract.py \
+            tests/unit/test_study_area.py \
+            tests/unit/test_indicators.py \
+            tests/unit/test_provenance.py \
+            tests/unit/test_capability_imports.py \
+            tests/unit/test_recipe_coverage.py \
+            tests/unit/test_dataset_manifests.py \
+            tests/unit/test_recipe_figures.py \
+            tests/unit/test_recipes_offline.py \
+            tests/unit/test_images.py \
+            tests/unit/test_public_api_catalog.py \
+            tests/unit/test_aggregate_many.py \
+            -q --tb=short -o addopts=
+
+  wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build wheel
+        run: python -m pip install --upgrade pip build && python -m build
+      - name: Wheel must be small and weight-free
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          wheels = list(Path("dist").glob("*.whl"))
+          assert wheels, "no wheel"
+          wheel = wheels[0]
+          size_mb = wheel.stat().st_size / (1024 * 1024)
+          assert size_mb < 5, f"wheel is {size_mb:.1f} MB"
+          with zipfile.ZipFile(wheel) as zf:
+              names = zf.namelist()
+          assert not any(n.endswith(".pth.tar") or n.endswith(".pth") for n in names)
+          print(f"{wheel.name} {size_mb:.2f} MB, {len(names)} files")
+          PY
+      - name: Install wheel and smoke CLI
+        run: |
+          pip install dist/*.whl
+          uc --version
+          python -c "import urbancode as uc; import sys; assert 'torch' not in sys.modules"
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install docs extra
+        run: python -m pip install --upgrade pip && pip install -e ".[docs]"
+      - name: Capabilities RST matches YAML
+        run: python scripts/build_capabilities.py --check
+      - name: Recipe RST matches catalog
+        run: python scripts/build_recipe_rst.py --check
+      - name: Figure checker
+        run: python scripts/build_docs_examples.py --check --require-catalog
+      - name: Sphinx HTML
+        run: sphinx-build -W --keep-going -b html docs/source docs/build/html
+
+  gallery-network:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install network + gallery
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,network,gallery]"
+      - name: Vector and access gallery (no skip)
+        env:
+          UC_FAIL_ON_SKIP: "1"
+        run: |
+          python -m pytest \
+            tests/gallery/test_docs_assets.py \
+            tests/gallery/test_fixture_contract.py \
+            tests/gallery/test_vector_gallery.py \
+            tests/gallery/test_access_gallery.py \
+            -m "gallery_network or not (gallery_imagery or gallery_streetview)" \
+            -q --tb=short -o addopts=
+
+  gallery-imagery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install imagery + gallery
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,network,imagery,gallery]"
+      - name: Imagery gallery (no skip)
+        env:
+          UC_FAIL_ON_SKIP: "1"
+        run: |
+          python -m pytest \
+            tests/gallery/test_docs_assets.py \
+            tests/gallery/test_fixture_contract.py \
+            tests/gallery/test_imagery_gallery.py \
+            tests/gallery/test_tutorial_build.py \
+            -m "gallery_imagery or not (gallery_network or gallery_streetview)" \
+            -q --tb=short -o addopts=
+
+  gallery-streetview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install extras for streetview display gallery
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,network,imagery,gallery]"
+      - name: Streetview gallery display only (no skip)
+        env:
+          UC_FAIL_ON_SKIP: "1"
+        run: |
+          python -m pytest \
+            tests/gallery/test_docs_assets.py \
+            tests/gallery/test_streetview_gallery.py \
+            -m "gallery_streetview or not (gallery_network or gallery_imagery)" \
+            -q --tb=short -o addopts=
+
+  # Tier 2: weekly cron / manual. Street-view ML, STAC/OSM refresh, live fetch.
+  live:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install extras for live APIs
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,network,imagery]"
+      - name: Live small-bbox tests
+        run: python -m pytest -m live -q --tb=short -o addopts=

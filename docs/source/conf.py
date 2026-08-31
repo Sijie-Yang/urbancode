@@ -1,320 +1,209 @@
-# Configuration file for the Sphinx documentation builder.
-#
-# For the full list of built-in configuration values, see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
+"""Sphinx configuration for UrbanCode."""
 
-# -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+from __future__ import annotations
 
-project = 'UrbanCode'
-copyright = '2024, Sijie Yang'
-author = 'Sijie Yang'
-release = '0.1.1'
+import sys
+from pathlib import Path
 
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from urbancode import __version__
+
+project = "UrbanCode"
+copyright = "2024–2026, Sijie Yang"
+author = "Sijie Yang"
+version = __version__
+release = __version__
+language = "en"
+html_title = project
 
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.intersphinx',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.intersphinx",
+    "sphinx_copybutton",
+    "sphinx_immaterial",
 ]
 
-templates_path = ['_templates']
-exclude_patterns = []
+exclude_patterns = [
+    "tutorials/**",
+    "user_guide/**",
+    "gallery/**",
+    "architecture/**",
+    "catalog/*.rst",
+    "workflows/punggol_end_to_end.rst",
+    "workflows/climate_heat_stress.rst",
+    "workflows/real_heat_stress.rst",
+    "workflows/streetview_to_grid.rst",
+    "workflows/multi_city_contract.rst",
+    "workflows/real_multi_city.rst",
+]
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]
+html_logo = "_static/urbancode_logo.svg"
+html_favicon = "_static/urbancode_logo.svg"
+html_theme = "sphinx_immaterial"
+html_last_updated_fmt = "%b %d, %Y"
+autosummary_generate = False
 
-# Add these lines after the extensions list
-add_module_names = True  # Include module names with object names
-python_use_unqualified_type_names = False  # Use fully qualified type names
+html_theme_options = {
+    "font": False,
+    "icon": {
+        "repo": "fontawesome/brands/github",
+        "edit": "material/file-code",
+    },
+    "site_url": "https://urbancode.readthedocs.io",
+    "repo_url": "https://github.com/Sijie-Yang/UrbanCode/",
+    "edit_uri": "blob/main/docs/source",
+    "repo_name": "Sijie-Yang/UrbanCode",
+    "features": [
+        "navigation.sections",
+        "navigation.top",
+        "search.share",
+        "search.suggest",
+        "toc.follow",
+        "toc.sticky",
+        "content.code.copy",
+        "content.action.edit",
+    ],
+    "palette": [
+        {
+            "media": "(prefers-color-scheme)",
+            "scheme": "default",
+            "primary": "black",
+            "accent": "red",
+            "toggle": {
+                "icon": "material/brightness-auto",
+                "name": "Switch to light mode",
+            },
+        },
+        {
+            "media": "(prefers-color-scheme: light)",
+            "scheme": "default",
+            "primary": "black",
+            "accent": "red",
+            "toggle": {
+                "icon": "material/lightbulb",
+                "name": "Switch to dark mode",
+            },
+        },
+        {
+            "media": "(prefers-color-scheme: dark)",
+            "scheme": "slate",
+            "primary": "black",
+            "accent": "red",
+            "toggle": {
+                "icon": "material/lightbulb-outline",
+                "name": "Switch to system preference",
+            },
+        },
+    ],
+}
 
-# -- Options for HTML output -------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
-
-html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
-
-# -- Extension configuration -------------------------------------------------
-
-# Napoleon settings
+# Match momepy. "description" strips annotations and leaves
+# dataclass ``<factory>`` defaults, which sphinx-immaterial then
+# treats as type parameters (``place=None`` as the parameter name).
+autodoc_typehints = "none"
+autodoc_default_options = {
+    "members": False,
+    "undoc-members": False,
+    "show-inheritance": True,
+}
+autodoc_mock_imports = [
+    "torch",
+    "torchvision",
+    "cv2",
+    "transformers",
+    "sklearn",
+    "tqdm",
+    "tensorboard",
+    "scipy",
+    "osmnx",
+    "geopandas",
+    "momepy",
+    "networkx",
+    "matplotlib",
+    "rasterio",
+    "rioxarray",
+    "zensvi",
+    "streetlevel",
+    "city2graph",
+    "pythermalcomfort",
+]
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
-napoleon_include_init_with_doc = True
-napoleon_include_private_with_doc = False
-napoleon_include_special_with_doc = True
-napoleon_use_admonition_for_examples = False
-napoleon_use_admonition_for_notes = False
-napoleon_use_admonition_for_references = False
-napoleon_use_ivar = False
-napoleon_use_param = True
-napoleon_use_rtype = True
-napoleon_type_aliases = None
 
-# Autodoc settings
-autodoc_default_options = {
-    'members': False,
-    'undoc-members': False,
-    'show-inheritance': True,
-    'imported-members': False,
-}
+# Offline docs builds must not fail on inventory download.
+intersphinx_mapping: dict[str, tuple[str, str | None]] = {}
 
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
-
-# The suffix of source filenames.
-source_suffix = '.rst'
-
-# The encoding of source files.
-source_encoding = 'utf-8'
-
-# The master toctree document.
-master_doc = 'index'
-
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
-
-# Add any extra paths that contain custom files (such as robots.txt or
-# .htaccess) here, relative to this directory. These files are copied
-# directly to the root of the documentation.
-# html_extra_path = []
-
-# If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
-# using the given strftime format.
-html_last_updated_fmt = '%b %d, %Y'
-
-# If true, SmartyPants will be used to convert quotes and dashes to
-# typographically correct entities.
-html_use_smartypants = True
-
-# Custom sidebar templates, maps document names to template names.
-html_sidebars = {
-    '**': [
-        'relations.html',  # needs 'show_related': True theme option to display
-        'searchbox.html',
-    ]
-}
-
-# Additional templates that should be rendered to pages, maps page names to
-# template names.
-# html_additional_pages = {}
-
-# If false, no module index is generated.
-html_domain_indices = True
-
-# If false, no index is generated.
-html_use_index = True
-
-# If true, the index is split into individual pages for each letter.
-html_split_index = False
-
-# If true, links to the reST sources are added to the pages.
-html_show_sourcelink = True
-
-# If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
-html_show_sphinx = True
-
-# If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
-html_show_copyright = True
-
-# If true, an OpenSearch description file will be output, and all pages will
-# contain a <link> tag referring to it.  The value of this option must be the
-# base URL from which the finished HTML is served.
-# html_use_opensearch = ''
-
-# This is the file name suffix for HTML files (e.g. ".xhtml").
-html_file_suffix = None
-
-# Language to be used for generating the HTML full-text search index.
-# Sphinx supports the following languages:
-#   'da', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'ja'
-#   'nl', 'no', 'pt', 'ro', 'ru', 'sv', 'tr', 'zh'
-html_search_language = 'en'
-
-# A dictionary with options for the search language support, empty by default.
-# 'ja' uses this config value.
-# 'zh' user can custom change `jieba` dictionary path.
-html_search_options = {'type': 'default'}
-
-# Output file base name for HTML help builder.
-htmlhelp_basename = 'UrbanCodedoc'
-
-# -- Options for LaTeX output ------------------------------------------------
-
-latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    'papersize': 'letterpaper',
-
-    # The font size ('10pt', '11pt' or '12pt').
-    'pointsize': '11pt',
-
-    # Additional stuff for the LaTeX preamble.
-    'preamble': '',
-
-    # Latex figure (float) alignment
-    'figure_align': 'htbp',
-}
-
-# Grouping the document tree into LaTeX files. List of tuples
-# (source start file, target name, title,
-#  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    (master_doc, 'UrbanCode.tex', 'UrbanCode Documentation',
-     'Sijie Yang', 'manual'),
-]
-
-# The name of an image file (relative to this directory) to place at the top of
-# the title page.
-# latex_logo = None
-
-# For "manual" documents, if this is true, then toplevel headings are parts,
-# not chapters.
-# latex_use_parts = False
-
-# If true, show page references in LaTeX output.
-# latex_show_pagerefs = False
-
-# If true, show URL addresses after external links in LaTeX output.
-# latex_show_urls = False
-
-# Documents to append as an appendix to all manuals.
-# latex_appendices = []
-
-# If false, no module index is generated.
-# latex_domain_indices = True
-
-# -- Options for manual page output ------------------------------------------
-
-# One entry per manual page. List of tuples
-# (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, 'urbancode', 'UrbanCode Documentation',
-     [author], 1)
-]
-
-# If true, show URL addresses after external links in manual page output.
-# man_show_urls = False
-
-# -- Options for Texinfo output ----------------------------------------------
-
-# Grouping the document tree into Texinfo files. List of tuples
-# (source start file, target name, title, author,
-#  dir menu entry, description, category)
-texinfo_documents = [
-    (master_doc, 'UrbanCode', 'UrbanCode Documentation',
-     author, 'UrbanCode', 'One line description of project.',
-     'Miscellaneous'),
-]
-
-# Documents to append as an appendix to all manuals.
-# texinfo_appendices = []
-
-# If false, no module index is generated.
-# texinfo_domain_indices = True
-
-# How to display URL addresses: 'footnote', 'no', or 'inline'.
-# texinfo_show_urls = 'footnote'
-
-# If true, do not generate a @detailmenu in the "Top" node's menu.
-# texinfo_no_detailmenu = False
-
-# -- Options for Epub output -------------------------------------------------
-
-# Bibliographic Dublin Core info.
-epub_title = project
-epub_author = author
-epub_publisher = author
-epub_copyright = copyright
-
-# The basename for the epub file. It defaults to the project name.
-# epub_basename = project
-
-# The HTML theme for the epub output.
-# Since the default themes are not optimized for small screen space,
-# using the same theme for HTML and epub output is usually not smart.
-# This defaults to 'epub', a theme designed to save visual space.
-epub_theme = 'epub'
-
-# The language of the text. It defaults to the language option
-# or en if the language is not set.
-# epub_language = ''
-
-# The scheme of the identifier. Typical schemes are ISBN or URL.
-# epub_scheme = ''
-
-# The unique identifier of the text. This can be a ISBN number
-# or the project homepage.
-# epub_identifier = ''
-
-# A unique identification for the text.
-# epub_uid = ''
-
-# A tuple containing the cover image and cover page html template.
-# epub_cover = ()
-
-# A sequence of (type, uri, title) tuples for the guide element of content.opf.
-# epub_guide = ()
-
-# HTML files that should be inserted before the pages created by sphinx.
-# The format is a list of tuples containing the path and title.
-# epub_pre_files = []
-
-# HTML files shat should be inserted after the pages created by sphinx.
-# The format is a list of tuples containing the path and title.
-# epub_post_files = []
-
-# A list of files that should not be packed into the epub file.
-epub_exclude_files = ['search.html']
-
-# The depth of the table of contents in toc.ncx.
-# epub_tocdepth = 3
-
-# Allow duplicate toc entries.
-# epub_tocdup = True
-
-# Choose between 'default' and 'includehidden'.
-# epub_tocscope = 'default'
-
-# Fix unsupported image types using the PIL.
-# epub_fix_images = False
-
-# Scale large images.
-# epub_max_image_width = 0
-
-# How to display URL addresses: 'footnote', 'no', or 'inline'.
-# epub_show_urls = 'inline'
-
-# If false, no index is generated.
-# epub_use_index = True
-
-# -- Extension configuration -------------------------------------------------
-
-# -- Options for intersphinx extension ---------------------------------------
-
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None),
-    'numpy': ('https://numpy.org/doc/stable/', None),
-    'pandas': ('https://pandas.pydata.org/docs/', None),
-    'torch': ('https://pytorch.org/docs/stable/', None),
-    'torchvision': ('https://pytorch.org/vision/stable/', None),
-}
-
-# Add this to create a custom shorthand for urbancode
-rst_prolog = """
-.. |uc| replace:: urbancode
-.. |uc.svi| replace:: :mod:`urbancode.svi`
-"""
-
-# Use intersphinx to create links
-intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None),
-}
-
-# Create a custom role for shortened module paths
 nitpicky = True
 nitpick_ignore = [
-    ('py:mod', 'uc'),
-    ('py:mod', 'uc.svi'),
+    ("py:class", "Path"),
+    ("py:class", "pathlib.Path"),
+    ("py:class", "Any"),
+    ("py:class", "Mapping"),
+    ("py:class", "Iterable"),
+    ("py:class", "LayerKind"),
+    ("py:class", "City"),
+    ("py:class", "urbancode.city.City"),
+    ("py:obj", "urbancode.city.City"),
+    ("py:obj", "urbancode.city.Layer"),
+    ("py:class", "numpy.ndarray"),
+    ("py:class", "optional"),
+    ("py:class", "pd.DataFrame"),
+    ("py:class", "DataFrame"),
+    ("py:class", "nx.MultiDiGraph"),
+    ("py:class", "networkx.MultiDiGraph"),
+    ("py:class", "networkx.classes.multidigraph.MultiDiGraph"),
+    ("py:class", "gpd.GeoDataFrame"),
+    ("py:class", "geopandas.GeoDataFrame"),
+    ("py:class", "geopandas.geodataframe.GeoDataFrame"),
+    ("py:class", "urbancode.errors.MissingExtraError"),
+    ("py:class", "Layer"),
+    ("py:class", "urbancode.city.Layer"),
+    ("py:class", "numpy.ndarray | Layer"),
+    ("py:class", "Path | Any"),
+    ("py:exc", "ContractError"),
+    ("py:exc", "urbancode.errors.MissingExtraError"),
 ]
+
+_WORKFLOW_REDIRECTS = {
+    "workflows/punggol_end_to_end.html": "punggol_urban_profile.html",
+    "workflows/climate_heat_stress.html": "heat_exposure.html",
+    "workflows/real_heat_stress.html": "heat_exposure.html",
+    "workflows/streetview_to_grid.html": "street_experience.html",
+    "workflows/multi_city_contract.html": "multi_city_comparison.html",
+    "workflows/real_multi_city.html": "multi_city_comparison.html",
+}
+
+
+def _sanitize_autodoc_signature(
+    app, what, name, obj, options, signature, return_annotation
+):
+    """Keep dataclass field defaults parseable by sphinx-immaterial."""
+    if signature:
+        signature = signature.replace("<factory>", "...")
+    return signature, return_annotation
+
+
+def setup(app) -> None:
+    app.connect("autodoc-process-signature", _sanitize_autodoc_signature)
+
+    def _write_redirects(app_obj, exception) -> None:
+        if exception is not None:
+            return
+        out = Path(app_obj.outdir)
+        for src, dest in _WORKFLOW_REDIRECTS.items():
+            path = out / src
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(
+                "<!DOCTYPE html><html><head>"
+                f'<meta http-equiv="refresh" content="0; url={dest}">'
+                f"<title>Moved</title></head><body><p>Moved to "
+                f'<a href="{dest}">{dest}</a>.</p></body></html>\n',
+                encoding="utf-8",
+            )
+
+    app.connect("build-finished", _write_redirects)

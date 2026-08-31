@@ -1,0 +1,44 @@
+{
+  "id": "heat_resilience_in_sight",
+  "title": "Heat Resilience in Sight — eight-city application",
+  "role": "eight-city application, not a validation of VATA, UTCI, or SHR",
+  "source": "Heat-Resilience-In-Sight committed summary tables",
+  "license": "derived research tables; raw street-view imagery not redistributed",
+  "citation": "Yang, S. et al. Heat Resilience in Sight: Climate-Conditioned Thermal Affordance of Streetscapes Across Cities and Seasons. Workshop draft. https://github.com/Sijie-Yang/Heat-Resilience-In-Sight",
+  "checksums": "checksums.sha256",
+  "n_images": 892466,
+  "singapore_hris_n": 21772,
+  "singapore_tcis_n": 92233,
+  "singapore_note": "HRIS Singapore is the 21,772-image panel. It is not the TCIS 92,233 survey set.",
+  "svi_jh": "Johannesburg, not Johor Bahru",
+  "anchor": {
+    "city": "Hong Kong",
+    "city_id": "svi_hk",
+    "months": [6, 7, 8],
+    "v_ref": 1.732,
+    "d_ref": 7.991,
+    "note": "Normative planning benchmark, not a physiological threshold."
+  },
+  "cache_version": "hourly_v1",
+  "climate": "Open-Meteo archive ERA5-Land hourly 2015-2024 city centroid; 10-17 local; SolarCal open-sun MRT",
+  "climate_note": "Hourly climatological proxy, not a street-canyon simulation.",
+  "quantities": {
+    "VATA": "visual thermal affordance supply (0-5); not measured comfort and not UTCI",
+    "UTCI": "physical heat-stress index from the climatological proxy",
+    "SHR": "city-mean VATA minus climate-adjusted VATA need; not UTCI and not VATA"
+  },
+  "tables": [
+    "city_vata_stats.csv",
+    "monthly_climate_vata.csv",
+    "annual_climate_vata.csv",
+    "calibration.json",
+    "robustness_summary.csv",
+    "robustness_sign_stability.csv",
+    "domain_shift.csv"
+  ],
+  "not_in_git": [
+    "per-image VATA CSVs (~892k rows)",
+    "hourly climate cache",
+    "raw street-view JPEGs"
+  ]
+}

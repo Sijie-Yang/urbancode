@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "urbancode_version": "0.3.0.dev0",
+  "created_at": "2026-08-16T03:17:08.409368+00:00",
+  "place": "Punggol, Singapore",
+  "boundary": null,
+  "layers": [
+    {
+      "name": "streets",
+      "kind": "graph",
+      "path": "layers/streets.graphml",
+      "crs": "EPSG:4326",
+      "source": "osm",
+      "metadata": {}
+    },
+    {
+      "name": "buildings",
+      "kind": "vector",
+      "path": "layers/buildings.gpkg",
+      "crs": "EPSG:4326",
+      "source": "osm",
+      "metadata": {}
+    },
+    {
+      "name": "parks",
+      "kind": "vector",
+      "path": "layers/parks.gpkg",
+      "crs": "EPSG:4326",
+      "source": "osm",
+      "metadata": {}
+    },
+    {
+      "name": "pois",
+      "kind": "vector",
+      "path": "layers/pois.gpkg",
+      "crs": "EPSG:4326",
+      "source": "osm",
+      "metadata": {}
+    },
+    {
+      "name": "sentinel2",
+      "kind": "raster",
+      "path": "layers/sentinel2.tif",
+      "crs": "EPSG:32648",
+      "source": "sentinel-2-l2a",
+      "metadata": {
+        "sentinel_item_ids": [
+          "S2C_MSIL2A_20260325T031541_R118_T48NUG_20260325T082919"
+        ],
+        "sentinel_datetime": "2026-03-25T03:15:41.025000Z",
+        "dem_item_ids": [
+          "Copernicus_DSM_COG_10_N01_00_E103_00_DEM"
+        ],
+        "time": "2025-08-16/2026-08-16"
+      },
+      "checksum": "fec5dc697cb82dff95f3b1461f9cb0066e73b28cb20126a6b5e478de7f2d5dd8",
+      "transform": [
+        10.0,
+        0.0,
+        378180.0,
+        0.0,
+        -10.0,
+        155880.0
+      ],
+      "width": 111,
+      "height": 111,
+      "dtype": "float32",
+      "nodata": NaN
+    },
+    {
+      "name": "dem",
+      "kind": "raster",
+      "path": "layers/dem.tif",
+      "crs": "EPSG:32648",
+      "source": "cop-dem-glo-30",
+      "metadata": {},
+      "checksum": "897765992e12946fc3e781c2142fb2745f53d58f3e577eac1ae7bb212ad3d8fd",
+      "transform": [
+        10.0,
+        0.0,
+        378180.0,
+        0.0,
+        -10.0,
+        155880.0
+      ],
+      "width": 111,
+      "height": 111,
+      "dtype": "float32",
+      "nodata": NaN
+    },
+    {
+      "name": "streetview",
+      "kind": "images",
+      "path": "layers/streetview.jpg",
+      "crs": null,
+      "source": "wikimedia-commons",
+      "metadata": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Punggol_Waterway_-_panoramio.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+        "page": "https://commons.wikimedia.org/wiki/File%3APunggol%20Waterway%20-%20panoramio.jpg",
+        "title": "File:Punggol Waterway - panoramio.jpg",
+        "license": "CC BY-SA 3.0",
+        "artist": "<a rel=\"nofollow\" class=\"external text\" href=\"https://web.archive.org/web/20161022044602/http://www.panoramio.com/user/3447566?with_photo_id=61344747\">Lee Jee Tshoon Lee</a>",
+        "credit": "<a rel=\"nofollow\" class=\"external free\" href=\"https://web.archive.org/web/20161022044600/http://www.panoramio.com/photo/61344747\">https://web.archive.org/web/20161022044600/http://www.panoramio.com/photo/61344747</a>"
+      }
+    },
+    {
+      "name": "comfort",
+      "kind": "table",
+      "path": "layers/comfort.csv",
+      "crs": null,
+      "source": "display",
+      "metadata": {}
+    }
+  ],
+  "metadata": {
+    "fixture": true,
+    "bbox": [
+      103.905,
+      1.4,
+      103.915,
+      1.41
+    ]
+  },
+  "errors": [],
+  "default_vector_crs": "EPSG:4326"
+}

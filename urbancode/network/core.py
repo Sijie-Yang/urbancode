@@ -1,28 +1,34 @@
 import osmnx as ox
 import networkx as nx
-import momepy
 import geopandas as gpd
 import os
 import time
 import hashlib
 from typing import Union, Dict, Optional
 
-# Default cache directory
-CACHE_DIR = os.path.join(os.path.expanduser("~"), ".urbancode", "cache")
+from urbancode.cache import network_dir
 
-def _get_cache_path(place: str, network_type: str, output_type: str) -> str:
+
+def _cache_root(cache_dir: Optional[str] = None) -> str:
+    if cache_dir:
+        os.makedirs(cache_dir, exist_ok=True)
+        return cache_dir
+    return str(network_dir())
+
+
+def _get_cache_path(
+    place: str,
+    network_type: str,
+    output_type: str,
+    cache_dir: Optional[str] = None,
+) -> str:
     """Generate cache file path based on place, network_type, and output_type."""
-    # Create cache directory if it doesn't exist
-    os.makedirs(CACHE_DIR, exist_ok=True)
-    
-    # Create a hash of the place and network_type for filename
+    root = _cache_root(cache_dir)
     cache_key = f"{place}_{network_type}_{output_type}"
     cache_hash = hashlib.md5(cache_key.encode()).hexdigest()
-    
     if output_type.lower() == 'graph':
-        return os.path.join(CACHE_DIR, f"{cache_hash}.graphml")
-    else:
-        return os.path.join(CACHE_DIR, f"{cache_hash}.gpkg")
+        return os.path.join(root, f"{cache_hash}.graphml")
+    return os.path.join(root, f"{cache_hash}.gpkg")
 
 def download_network(
     output_type: str, 
@@ -66,15 +72,8 @@ def download_network(
     if not place:
         raise ValueError("The place parameter must be specified")
     
-    # Set cache directory
-    global CACHE_DIR
-    if cache_dir:
-        CACHE_DIR = cache_dir
-        os.makedirs(CACHE_DIR, exist_ok=True)
-    
-    # Check cache first
     if use_cache:
-        cache_path = _get_cache_path(place, network_type, output_type)
+        cache_path = _get_cache_path(place, network_type, output_type, cache_dir)
         if os.path.exists(cache_path):
             print(f"Loading cached network for {place} ({network_type})...")
             try:
@@ -107,7 +106,7 @@ def download_network(
     
     # Save to cache
     if use_cache:
-        cache_path = _get_cache_path(place, network_type, output_type)
+        cache_path = _get_cache_path(place, network_type, output_type, cache_dir)
         try:
             if output_type.lower() == 'graph':
                 ox.save_graphml(G, cache_path)
@@ -192,20 +191,15 @@ def load_saved_network(filename: str) -> Union[nx.MultiDiGraph, gpd.GeoDataFrame
         raise ValueError(f"Unsupported file format: {file_extension}")
 
 def graph_to_gdf(G: nx.MultiDiGraph, element: str = 'edges') -> Union[gpd.GeoDataFrame, Dict[str, gpd.GeoDataFrame]]:
-    """
-    Convert the NetworkX graph to GeoDataFrame(s) of edges, nodes, or both using OSMnx.
-    
+    """Convert a NetworkX graph to GeoDataFrame(s) of edges, nodes, or both.
+
     Args:
-    G (nx.MultiDiGraph): The input graph.
-    element (str): Which elements to convert. Options are 'edges' (default), 'nodes', or 'both'.
-    
+        G: Input OSMnx / NetworkX graph.
+        element: ``edges`` (default), ``nodes``, or ``both``.
+
     Returns:
-    Union[gpd.GeoDataFrame, Dict[str, gpd.GeoDataFrame]]: 
-        If 'edges' or 'nodes': A GeoDataFrame containing edges or nodes respectively.
-        If 'both': A dictionary containing 'nodes' and 'edges' GeoDataFrames.
-    
-    Raises:
-    ValueError: If an invalid element type is specified.
+        A GeoDataFrame, or a dict with ``nodes`` and ``edges`` when
+        ``element='both'``.
     """
     if element.lower() not in ['edges', 'nodes', 'both']:
         raise ValueError("Invalid element type. Choose 'edges', 'nodes', or 'both'.")
@@ -219,19 +213,13 @@ def graph_to_gdf(G: nx.MultiDiGraph, element: str = 'edges') -> Union[gpd.GeoDat
         return ox.graph_to_gdfs(G, nodes=True, edges=False)
 
 def graph_from_gdf(gdf: Union[gpd.GeoDataFrame, Dict[str, gpd.GeoDataFrame]]) -> nx.MultiDiGraph:
-    """
-    Convert GeoDataFrame(s) to a NetworkX MultiDiGraph using momepy's primal approach.
+    """Convert edge GeoDataFrame(s) to a NetworkX graph via momepy.
 
     Args:
-    gdf (Union[gpd.GeoDataFrame, Dict[str, gpd.GeoDataFrame]]): 
-        Either a single GeoDataFrame of edges, or a dictionary containing 'edges' GeoDataFrame.
-        If a dictionary is provided, only the 'edges' GeoDataFrame will be used.
+        gdf: An edge GeoDataFrame, or a dict with an ``edges`` key.
 
     Returns:
-    nx.MultiGraph: A NetworkX MultiGraph representing the primal graph.
-
-    Raises:
-    ValueError: If the input is not a GeoDataFrame or a dictionary with the 'edges' key.
+        A primal NetworkX graph.
     """
     if isinstance(gdf, dict):
         if 'edges' not in gdf:
@@ -242,7 +230,8 @@ def graph_from_gdf(gdf: Union[gpd.GeoDataFrame, Dict[str, gpd.GeoDataFrame]]) ->
     else:
         raise ValueError("Input must be either a GeoDataFrame of edges or a dictionary with an 'edges' GeoDataFrame.")
 
-    # Use momepy to convert the edges GeoDataFrame to a NetworkX graph
+    import momepy
+
     G = momepy.gdf_to_nx(edges_gdf, approach="primal")
 
     return G
