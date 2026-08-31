@@ -31,15 +31,14 @@ __all__ = [
 
 def __getattr__(name: str) -> Any:
     if name == "fetch":
-        # Load fetch.py via `.fetch`, not `from . import fetch` (that recurses
-        # through this __getattr__). Caching the function makes
-        # `import urbancode.network.fetch` return the callable, same as
-        # `uc.network.fetch`. The submodule stays in sys.modules for
-        # `from urbancode.network.fetch import fetch`.
-        from .fetch import fetch as fetch_fn
+        # Load the submodule by path so this __getattr__ does not recurse.
+        # fetch.py makes that module callable; do not replace it with the
+        # function or ``patch("urbancode.network.fetch.fetch")`` breaks.
+        import sys
 
-        globals()["fetch"] = fetch_fn
-        return fetch_fn
+        from .fetch import fetch as _fetch_fn  # noqa: F401
+
+        return sys.modules[f"{__name__}.fetch"]
     if name in {"centrality", "accessibility", "clustering", "local_efficiency"}:
         from urbancode.errors import require_extra
 
