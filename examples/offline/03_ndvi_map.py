@@ -6,7 +6,7 @@ from pathlib import Path
 
 import urbancode as uc
 
-DATA = Path(__file__).resolve().parents[1] / "data" / "punggol_pocket"
+DATA = Path(__file__).resolve().parents[1] / "data" / "real" / "punggol"
 
 
 def main(out_dir: str | Path, *, add_basemap: bool = False) -> dict[str, Path]:

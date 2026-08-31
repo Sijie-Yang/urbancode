@@ -7,7 +7,7 @@ import pytest
 
 from urbancode.city import City, load
 
-FIXTURE = Path(__file__).resolve().parents[2] / "examples" / "data" / "punggol_pocket"
+FIXTURE = Path(__file__).resolve().parents[2] / "examples" / "data" / "real" / "punggol"
 
 
 def test_load_raster_only_does_not_need_geopandas(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -51,6 +51,24 @@ def test_lazy_table_materializes(tmp_path: Path) -> None:
     frame = loaded["scores"]
     assert list(frame["v"]) == [1, 2]
     assert loaded.layers["scores"].lazy is False
+
+
+def test_raster_materialize_requires_imagery(monkeypatch: pytest.MonkeyPatch) -> None:
+    from urbancode.errors import MissingExtraError
+
+    city = load(FIXTURE, layers=["dem"], lazy=True)
+    layer = city.layers["dem"]
+
+    def boom(*_args, **_kwargs):
+        raise MissingExtraError(
+            'rasterio is required for this feature. Install with: pip install "urbancode[imagery]"'
+        )
+
+    monkeypatch.setattr("urbancode.city._read_layer", boom)
+    with pytest.raises(MissingExtraError, match="urbancode\\[imagery\\]"):
+        layer.materialize()
+    assert layer.data is None
+    assert not isinstance(layer.data, str)
 
 
 def test_lazy_save_copies_files_without_materialize(tmp_path: Path) -> None:

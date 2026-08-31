@@ -12,7 +12,7 @@ from pathlib import Path
 import urbancode as uc
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "examples" / "data" / "punggol_pocket"
+DATA = ROOT / "examples" / "data" / "real" / "punggol"
 DEFAULT_OUT = ROOT / "docs" / "source" / "_static" / "tutorials"
 PLACE = "Punggol, Singapore"
 

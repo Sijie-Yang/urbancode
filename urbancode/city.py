@@ -21,6 +21,19 @@ SAFE_LAYER_NAME = re.compile(r"^[A-Za-z0-9._-]+$")
 _ABS_DRIVE = re.compile(r"^[A-Za-z]:")
 
 
+def _json_safe(value: Any) -> Any:
+    """Replace NaN/Inf with None so manifests stay standard JSON."""
+    if isinstance(value, float):
+        if value != value or value in {float("inf"), float("-inf")}:
+            return None
+        return value
+    if isinstance(value, dict):
+        return {key: _json_safe(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(item) for item in value]
+    return value
+
+
 def _require_geopandas():
     from urbancode.errors import require_extra
 
@@ -80,6 +93,15 @@ class Layer:
         }
         record.update(_raster_grid_fields(self))
         return record
+
+    def materialize(self) -> "Layer":
+        """Load a deferred payload in place.
+
+        Rasters require ``urbancode[imagery]``. Missing extras raise
+        :class:`~urbancode.errors.MissingExtraError` instead of leaving
+        a path string in ``data``.
+        """
+        return _materialize_layer(self)
 
     def plot(
         self,
@@ -179,7 +201,7 @@ class City:
     def layer(self, name: str) -> Layer:
         if name not in self.layers:
             raise KeyError(f"unknown layer {name!r}; have {self.keys()}")
-        return _materialize_layer(self.layers[name])
+        return self.layers[name].materialize()
 
     def add_layer(
         self,
@@ -395,7 +417,7 @@ class City:
             "default_vector_crs": DEFAULT_VECTOR_CRS,
         }
         manifest_path.write_text(
-            json.dumps(manifest, indent=2, default=str),
+            json.dumps(_json_safe(manifest), indent=2, default=str, allow_nan=False),
             encoding="utf-8",
         )
         return out
@@ -644,7 +666,7 @@ def _raster_grid_fields(layer: Layer) -> dict[str, Any]:
         "width": getattr(rio, "width", None),
         "height": getattr(rio, "height", None),
         "dtype": str(getattr(data, "dtype", "")),
-        "nodata": rio.nodata,
+        "nodata": _json_safe(rio.nodata),
     }
 
 
@@ -666,7 +688,7 @@ def _raster_file_fields(path: Path) -> dict[str, Any]:
             "width": src.width,
             "height": src.height,
             "dtype": src.dtypes[0],
-            "nodata": src.nodata,
+            "nodata": _json_safe(src.nodata),
         }
 
 
@@ -763,12 +785,19 @@ def _read_layer(kind: str, path: str, record: Mapping[str, Any] | None = None) -
             return pd.read_parquet(file_path)
         return pd.read_csv(file_path)
     if kind == "raster":
+        from urbancode.errors import MissingExtraError
+
         try:
             from urbancode.imagery.read import read
 
             return read(file_path, name=(record or {}).get("name")).data
-        except ImportError:
-            return str(file_path)
+        except MissingExtraError:
+            raise
+        except ImportError as exc:
+            raise MissingExtraError(
+                "rasterio is required for this feature. "
+                'Install with: pip install "urbancode[imagery]"'
+            ) from exc
     if kind == "graph":
         return _read_graphml(file_path)
     return str(file_path)

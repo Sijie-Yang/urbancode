@@ -24,10 +24,9 @@
     "MRT modelled as equal to air temperature (quality flag modelled_mrt)"
   ],
   "file_checksums": {
-    "observations.json": "58c84eaa5b4e3c26e2d488a2578688324015dd6c03fd5ea6f567543fd2e36e1a",
-    "manifest.json": "50fa0a781cfaef0e0f64fe846df01eaff2383d14c53c53612491bb357258b7a8",
     "LICENSE.md": "8f8fbea6cd76174ab0fef8197e3c96a92d6ce22b94943a0785c8d63cae33d0d6",
-    "README.md": "9733c35f955fc76b94cdb3fb77aa093aec7d09dcee1d2df0ab1fc3cbab2ce800"
+    "README.md": "9733c35f955fc76b94cdb3fb77aa093aec7d09dcee1d2df0ab1fc3cbab2ce800",
+    "observations.json": "58c84eaa5b4e3c26e2d488a2578688324015dd6c03fd5ea6f567543fd2e36e1a"
   },
   "generated_by": "scripts/data/build_climate_cases.py",
   "generated_at": "2026-08-16T09:05:50.038530+00:00",

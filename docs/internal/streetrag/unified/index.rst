@@ -67,7 +67,7 @@ What exists in UrbanCode today
 ``images``) plus ``manifest.json``. ``StudyArea``, ``AnalysisUnits``,
 ``IndicatorResult``, and provenance receipts exist in code. Named
 functions still return Layers; fusion writes the long indicator table.
-See the Punggol fixture at ``examples/data/punggol_pocket/``.
+See the Punggol fixture at ``examples/data/real/punggol/``.
 
 StreetRAG types, PSR IDs, ``UrbanKernel``, and UrbanPackage v3 export
 are **not** implemented. Those remain later interface work.

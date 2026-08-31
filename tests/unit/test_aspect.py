@@ -96,7 +96,7 @@ def test_aspect_nonsquare_pixels_and_grid_inheritance(tmp_path) -> None:
 
 def test_aspect_on_fixture() -> None:
     pytest.importorskip("rasterio")
-    fixture = Path(__file__).resolve().parents[2] / "examples" / "data" / "punggol_pocket"
+    fixture = Path(__file__).resolve().parents[2] / "examples" / "data" / "real" / "punggol"
     if not fixture.is_dir():
         pytest.skip("punggol fixture missing")
     import urbancode as uc

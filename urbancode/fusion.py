@@ -69,9 +69,7 @@ def aggregate(
     if stat not in _VALUE_STATS | _GEOMETRY_STATS:
         raise ValueError(f"unknown stat {stat!r}")
     if isinstance(source, Layer) and source.lazy and source.data is None:
-        from urbancode.city import _materialize_layer
-
-        source = _materialize_layer(source)
+        source = source.materialize()
     layer = source if isinstance(source, Layer) else None
     kind = layer.kind if layer is not None else None
     if kind == "raster" or (layer is None and hasattr(source, "rio")):

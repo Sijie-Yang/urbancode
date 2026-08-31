@@ -214,6 +214,34 @@ The case writes ``provenance.json`` next to the figures. Receipts
 include Singapore n, the TCIS 92,233 contrast, ``v_ref`` / ``d_ref``,
 and cache ``hourly_v1``.
 
+Reproducibility matrix
+----------------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 28 36 36
+
+   * - What
+     - Where
+     - Status
+   * - City-month / robustness CSVs
+     - ``examples/data/research_cases/heat_resilience_in_sight``
+     - Git-reproducible summaries
+   * - Teaching charts
+     - this page + ``examples/research_cases/heat_resilience_in_sight.py``
+     - Git-reproducible from those CSVs
+   * - Per-image VATA (~892k rows)
+     - external store
+     - Not in Git
+   * - ``hourly_v1`` climate cache
+     - external store
+     - Not in Git
+   * - Raw street-view JPEGs
+     - external store
+     - Not in Git
+
+Committed summaries are not a full replication package.
+
 Related pages
 -------------
 

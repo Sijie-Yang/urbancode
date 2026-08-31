@@ -61,6 +61,8 @@ Punggol (detail)
 * DEM: Copernicus GLO-30.
 * License: ODbL + Copernicus Sentinel + Copernicus DEM.
 * Recipes: network, imagery, units, fusion, punggol urban profile.
+* ``examples/data/punggol_pocket`` is an archived smaller extract
+  (different bbox and bands). Do not mix it with this fixture.
 
 Climate
 -------

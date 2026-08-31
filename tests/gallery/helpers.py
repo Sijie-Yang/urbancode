@@ -4,9 +4,14 @@ import importlib.util
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
-FIXTURE = REPO / "examples" / "data" / "punggol_pocket"
+FIXTURE = REPO / "examples" / "data" / "real" / "punggol"
 GALLERY_STATIC = REPO / "docs" / "source" / "_static" / "gallery"
-BBOX = (103.905, 1.400, 103.915, 1.410)
+BBOX = (
+    103.90101643295905,
+    1.3959501786810404,
+    103.91898363615519,
+    1.4140498401820776,
+)
 TITLE = "Punggol, Singapore"
 
 

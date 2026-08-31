@@ -58,7 +58,7 @@
       "name": "sentinel2",
       "kind": "raster",
       "path": "layers/sentinel2.tif",
-      "crs": null,
+      "crs": "EPSG:32648",
       "source": "sentinel-2-l2a",
       "metadata": {
         "sentinel_item_ids": [
@@ -91,13 +91,13 @@
       "width": 200,
       "height": 200,
       "dtype": "float32",
-      "nodata": NaN
+      "nodata": null
     },
     {
       "name": "dem",
       "kind": "raster",
       "path": "layers/dem.tif",
-      "crs": null,
+      "crs": "EPSG:32648",
       "source": "cop-dem-glo-30",
       "metadata": {},
       "checksum": "1184cdff285b04162336f5ed80b7c25aa8b199664010f490fc9a26ed359561d4",
@@ -112,7 +112,7 @@
       "width": 200,
       "height": 200,
       "dtype": "float32",
-      "nodata": NaN
+      "nodata": null
     },
     {
       "name": "water",

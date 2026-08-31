@@ -13,7 +13,7 @@ import urbancode as uc
 
 ROOT = Path(__file__).resolve().parents[1] / "data"
 POCKETS = {
-    "punggol": ROOT / "real" / "punggol" if (ROOT / "real" / "punggol" / "manifest.json").exists() else ROOT / "punggol_pocket",
+    "punggol": ROOT / "real" / "punggol",
     "helsinki": ROOT / "contracts" / "helsinki_synthetic",
     "nyc": ROOT / "contracts" / "nyc_synthetic",
 }

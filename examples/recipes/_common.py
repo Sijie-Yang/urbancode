@@ -13,14 +13,14 @@ STATIC_WORKFLOWS = ROOT / "docs" / "source" / "_static" / "workflows"
 
 
 def pocket(name: str = "punggol") -> Path:
-    """Return the registered real pocket, falling back to the legacy Punggol extract."""
-    candidates = [REAL / name]
-    if name == "punggol":
-        candidates.append(LEGACY_PUNGGOL)
-    for path in candidates:
-        if (path / "manifest.json").is_file():
-            return path
-    raise FileNotFoundError(f"no registered dataset for {name!r}")
+    """Return the canonical real pocket under ``examples/data/real/``."""
+    path = REAL / name
+    if (path / "manifest.json").is_file():
+        return path
+    raise FileNotFoundError(
+        f"no registered dataset for {name!r}; expected {path}. "
+        "examples/data/punggol_pocket is archived."
+    )
 
 
 def streetview_dir() -> Path:
