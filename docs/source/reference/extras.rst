@@ -19,11 +19,13 @@ is :doc:`/getting_started/installation`.
    * - ``climate``
      - :func:`urbancode.climate.utci`
    * - ``svi``
-     - :doc:`/domains/streetview`
+     - Local SVI / TCIS runtime (:doc:`/domains/streetview`). No ZenSVI
+   * - ``download``
+     - ``uc.svi.fetch`` adapters (ZenSVI, streetlevel)
    * - ``perception``
-     - :func:`urbancode.perception.thermal_affordance`
+     - :func:`urbancode.perception.thermal_affordance` (includes ``transformers``)
    * - ``research``
-     - Research-case extras (perception + svi + climate + viz)
+     - Research-case extras (perception + svi + climate + viz; no download)
    * - ``spatial-stats``
      - Phase 2 dependency group; no public stats API yet
    * - ``viz``
@@ -37,8 +39,9 @@ is :doc:`/getting_started/installation`.
    * - ``dev``
      - pytest and linters
 
-``streetview`` and ``download`` remain install aliases of ``svi``.
-``gallery`` is an alias of ``viz``. Torch is not in ``standard``.
+The ``streetview`` extra is an install alias of ``svi``.
+``download`` is a separate extra. ``gallery`` is an alias of ``viz``.
+Torch is not in ``standard``.
 
 There is no ``uc doctor`` command. Use
 :func:`urbancode.backends.status`.

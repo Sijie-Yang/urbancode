@@ -13,9 +13,10 @@ compatibility alias: every public name is the same object.
    predictions = uc.perception.thermal_affordance(images)  # Layer, preferred
    city = uc.svi.fetch("Punggol, Singapore", source="kartaview")
 
-Install extra: ``urbancode[svi]`` (``streetview`` and ``download`` remain
-aliases). CLI: ``uc svi comfort path/to.jpg`` (``uc streetview comfort``
-still works as a hidden alias).
+Install extra: ``urbancode[svi]`` for local color / TCIS.
+``uc.svi.fetch`` needs ``urbancode[download]``. The ``streetview`` extra
+is an install alias of ``svi``. CLI: ``uc svi comfort path/to.jpg``
+(``uc streetview comfort`` still works as a hidden alias).
 
 ``uc.svi.comfort()`` still returns a DataFrame and keeps the
 ``thermal_comfort`` column for one deprecation cycle. New code should

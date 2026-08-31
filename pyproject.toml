@@ -65,6 +65,7 @@ imagery = [
 climate = [
     "pythermalcomfort>=2.0.0",
 ]
+# Local SVI / TCIS runtime. No ZenSVI or streetlevel — those live in [download].
 streetview = [
     "torch>=2.0.0",
     "torchvision>=0.15.0",
@@ -77,8 +78,6 @@ streetview = [
     "safetensors>=0.3.1",
     "tqdm>=4.60.0",
     "tensorboard>=2.5.0",
-    "zensvi>=0.1.0",
-    "streetlevel>=0.12.0",
 ]
 svi = [
     "torch>=2.0.0",
@@ -92,8 +91,6 @@ svi = [
     "safetensors>=0.3.1",
     "tqdm>=4.60.0",
     "tensorboard>=2.5.0",
-    "zensvi>=0.1.0",
-    "streetlevel>=0.12.0",
 ]
 download = [
     "zensvi>=0.1.0",
@@ -114,6 +111,9 @@ perception = [
     "opencv-python>=4.5.0",
     "scikit-learn>=1.2.0",
     "scipy>=1.9.0",
+    "transformers>=4.30.0",
+    "accelerate>=0.20.0",
+    "safetensors>=0.3.1",
     "tqdm>=4.60.0",
 ]
 spatial-stats = [
@@ -128,9 +128,10 @@ research = [
     "opencv-python>=4.5.0",
     "scikit-learn>=1.2.0",
     "scipy>=1.9.0",
+    "transformers>=4.30.0",
+    "accelerate>=0.20.0",
+    "safetensors>=0.3.1",
     "tqdm>=4.60.0",
-    "zensvi>=0.1.0",
-    "streetlevel>=0.12.0",
     "pythermalcomfort>=2.0.0",
     "matplotlib>=3.8",
     "geopandas>=0.13.0",
