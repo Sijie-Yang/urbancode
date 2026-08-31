@@ -26,8 +26,19 @@ pip install "urbancode[standard]"     # vector + network + imagery + climate + v
 pip install "urbancode[svi]"          # TCIS + color
 ```
 
+Tutorials need the committed Punggol fixture, which is not in the
+wheel:
+
+```bash
+git clone --depth 1 https://github.com/Sijie-Yang/UrbanCode.git
+cd UrbanCode
+pip install -e ".[standard]"
+python -c "import urbancode as uc; print(uc.__version__); print(uc.backends.status())"
+```
+
 Python 3.10+. The core wheel is small. Torch is not in `[standard]`.
-Weights download into `~/.cache/urbancode/`.
+`uc.svi.fetch` needs `urbancode[download]`. Weights download into
+`~/.cache/urbancode/`.
 
 ## Examples
 

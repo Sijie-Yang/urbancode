@@ -35,9 +35,9 @@ Installation
 
    pip install "urbancode[svi]"
 
-This installs the image, model, and acquisition stack. Model weights
-are downloaded to the UrbanCode cache on first use; the package wheel
-does not bundle them.
+This installs the local image and TCIS stack. Live fetch needs
+``urbancode[download]``. Model weights are downloaded to the UrbanCode
+cache on first use; the package wheel does not bundle them.
 
 ``color`` needs OpenCV. Model functions need torch. Live fetch
 needs provider credentials and accepts the ``download`` extra alias.

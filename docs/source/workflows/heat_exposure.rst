@@ -81,12 +81,31 @@ land outside the study envelope.
 selects the existing ``ndvi`` records; ``combine`` does not calculate
 UTCI or apply the documentation-only MRT proxy.
 
-The panel figure uses a documented NDVI/NDBI MRT proxy **inside the
-docs builder**. ``tr=`` on ``uc.climate.utci`` can be a GeoTIFF if
-you have one. Weather date and Sentinel-2 date differ.
+3. Reproduce the hero figure
+----------------------------
+
+The panel above is ``examples/workflows/real_heat_stress.py``. Weather
+is Open-Meteo at **2024-07-15T14:00 UTC**. Sentinel-2 is
+**2024-07-28** (13-day gap). The spatial MRT proxy is
+
+``Tair + 6 * clip(NDBI, 0, 1) - 4 * clip(NDVI, 0, 1)``.
+
+Those coefficients are a documentation proxy, not a measured
+campaign. Every record carries ``modelled_mrt_proxy`` and
+``weather_imagery_date_gap``.
+
+.. literalinclude:: ../../../examples/workflows/real_heat_stress.py
+   :language: python
+   :start-after: # tutorial:start
+   :end-before: # tutorial:end
+
+``tr=`` on ``uc.climate.utci`` can be a GeoTIFF if you have one.
+UrbanCode does not ship a public MRT-proxy helper; this script is
+the documented example.
 
 Limitations
 -----------
 
 * The MRT formula is a proxy, not a measured campaign.
+* Weather and imagery dates differ by 13 days.
 * Not shade-resolved.

@@ -80,6 +80,57 @@ def test_coverage_out_of_range_raises() -> None:
         IndicatorRecord("a", "u1", "ndvi", 0.2, coverage=1.5)
 
 
+def test_duplicate_keep_preserves_both_rows() -> None:
+    result = IndicatorResult(
+        records=[
+            IndicatorRecord("a", "u1", "ndvi", 0.2),
+            IndicatorRecord("a", "u1", "ndvi", 0.3),
+        ],
+        on_duplicate="keep",
+    )
+    assert len(result.records) == 2
+    assert [rec.value for rec in result.records] == [0.2, 0.3]
+
+
+def test_on_duplicate_rejects_unknown_policy() -> None:
+    with pytest.raises(ValueError, match="unsupported on_duplicate"):
+        IndicatorResult(
+            records=[IndicatorRecord("a", "u1", "ndvi", 0.2)],
+            on_duplicate="last",
+        )
+
+
+def test_roundtrip_restores_units_metadata(tmp_path: Path) -> None:
+    pytest.importorskip("geopandas")
+    from urbancode.units import AnalysisUnits
+
+    gpd = pytest.importorskip("geopandas")
+    from shapely.geometry import box
+
+    frame = gpd.GeoDataFrame(
+        {"unit_id": ["u1"], "geometry": [box(0, 0, 1, 1)]},
+        crs="EPSG:32648",
+    )
+    units = AnalysisUnits(
+        frame=frame,
+        city_id="punggol",
+        kind="grid",
+        cell_size=250,
+        crs="EPSG:32648",
+        metric_crs="EPSG:32648",
+        metadata={"scheme": "world-origin", "note": "roundtrip"},
+    )
+    result = IndicatorResult(
+        records=[IndicatorRecord("punggol", "u1", "ndvi", 0.2, coverage=1.0)],
+        units=units,
+        metadata={"op": "test"},
+    )
+    loaded = IndicatorResult.load(result.save(tmp_path / "result"))
+    assert loaded.units is not None
+    assert loaded.units.metadata["scheme"] == "world-origin"
+    assert loaded.units.metadata["note"] == "roundtrip"
+
+
 def test_duplicate_keys_raise() -> None:
     with pytest.raises(ValueError, match="duplicate"):
         IndicatorResult(

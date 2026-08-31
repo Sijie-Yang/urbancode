@@ -17,8 +17,8 @@ _ADAPTERS: dict[str, tuple[str, str]] = {
     "networkx": ("networkx", "network"),
     "geopandas": ("geopandas", "vector"),
     "shapely": ("shapely", "vector"),
-    "zensvi": ("zensvi", "svi"),
-    "streetlevel": ("streetlevel", "svi"),
+    "zensvi": ("zensvi", "download"),
+    "streetlevel": ("streetlevel", "download"),
     "city2graph": ("city2graph", "graph"),
     "pythermalcomfort": ("pythermalcomfort", "climate"),
 }

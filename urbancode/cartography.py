@@ -427,9 +427,7 @@ def _layer(city: Any, name: str) -> Any:
         except Exception:
             return None
     if getattr(layer, "lazy", False) and getattr(layer, "data", None) is None:
-        from urbancode.city import _materialize_layer
-
-        return _materialize_layer(layer)
+        return layer.materialize()
     return layer
 
 

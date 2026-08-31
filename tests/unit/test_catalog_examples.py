@@ -8,7 +8,7 @@ import pytest
 
 import urbancode as uc
 
-FIXTURE = Path(__file__).resolve().parents[2] / "examples" / "data" / "punggol_pocket"
+FIXTURE = Path(__file__).resolve().parents[2] / "examples" / "data" / "real" / "punggol"
 
 
 def test_catalog_network_toys() -> None:

@@ -123,4 +123,5 @@ Limitations
 * The pocket is too small for city-wide ranking.
 * Street-view and climate are later workflows.
 
-Next: :doc:`/workflows/punggol_urban_profile`.
+Next: :doc:`choose_your_path`, then
+:doc:`/workflows/punggol_urban_profile`.

@@ -61,6 +61,33 @@ def test_green_accessibility(tmp_path: Path) -> None:
     assert {"ndvi", "park_near_m", "reachability"} <= set(out["result"].to_pandas()["indicator"])
 
 
+def test_street_experience(tmp_path: Path) -> None:
+    pytest.importorskip("geopandas")
+    pytest.importorskip("cv2")
+    pytest.importorskip("rasterio")
+    from examples.workflows.street_experience import main
+
+    out = main(tmp_path)
+    assert {"colorfulness", "photo_count", "ndvi"} <= set(
+        out["result"].to_pandas()["indicator"]
+    )
+    assert out["n"] >= 1
+
+
+def test_real_heat_stress(tmp_path: Path) -> None:
+    pytest.importorskip("geopandas")
+    pytest.importorskip("rasterio")
+    pytest.importorskip("pythermalcomfort")
+    from examples.workflows.real_heat_stress import main
+
+    out = main(tmp_path)
+    assert out["layer"].name == "utci"
+    flags = {flag for rec in out["result"].records for flag in rec.quality_flags}
+    assert "modelled_mrt_proxy" in flags
+    assert "weather_imagery_date_gap" in flags
+    assert out["result"].metadata["date_gap_days"] == 13
+
+
 def test_climate_heat_stress(tmp_path: Path) -> None:
     pytest.importorskip("geopandas")
     pytest.importorskip("rasterio")

@@ -1,5 +1,5 @@
 # Publish to PyPI using OIDC (no long-lived token in the repo).
-# PyPI project → Publishing → Add "GitHub" trusted publisher for this repo + workflow file.
+# Consumes the package artifact from a successful CI run on this commit.
 name: Publish to PyPI
 
 on:
@@ -9,10 +9,35 @@ on:
 
 permissions:
   contents: read
+  actions: read
   id-token: write
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      run-id: ${{ steps.find.outputs.run-id }}
+    steps:
+      - name: Require a successful CI package job on this commit
+        id: find
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          run_id=$(gh run list \
+            --repo "${{ github.repository }}" \
+            --workflow=CI \
+            --commit "${GITHUB_SHA}" \
+            --json databaseId,conclusion,status \
+            --jq '[.[] | select(.conclusion=="success")][0].databaseId // empty')
+          if [ -z "${run_id}" ]; then
+            echo "No successful CI run for ${GITHUB_SHA}. Merge to main and wait for CI."
+            exit 1
+          fi
+          echo "run-id=${run_id}" >> "$GITHUB_OUTPUT"
+
   publish:
+    needs: gate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,37 +46,35 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install build
-        run: python -m pip install --upgrade pip build
-
-      - name: Build sdist and wheel
-        run: python -m build
-
-      - name: Wheel must be small and weight-free
+      - name: Download CI package artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          mkdir -p dist
+          gh run download "${{ needs.gate.outputs.run-id }}" \
+            --repo "${{ github.repository }}" \
+            --name python-package-distributions \
+            --dir dist
+
+      - name: Wheel and sdist must be small and weight-free
+        run: python scripts/check_dist.py dist
+
+      - name: Install wheel and check metadata
+        run: |
+          pip install --upgrade pip
+          pip install dist/*.whl
+          uc --version
           python - <<'PY'
-          from pathlib import Path
-          import zipfile
-          wheels = list(Path("dist").glob("*.whl"))
-          assert wheels, "no wheel"
-          wheel = wheels[0]
-          size_mb = wheel.stat().st_size / (1024 * 1024)
-          assert size_mb < 5, f"wheel is {size_mb:.1f} MB"
-          with zipfile.ZipFile(wheel) as zf:
-              names = zf.namelist()
-          assert not any(n.endswith(".pth.tar") or n.endswith(".pth") for n in names)
-          print(f"{wheel.name} {size_mb:.2f} MB, {len(names)} files")
+          import importlib.metadata as md
+          import urbancode as uc
+          info = md.metadata("urbancode")
+          assert info["Name"] == "urbancode"
+          assert info["Version"] == uc.__version__
+          extras = md.metadata("urbancode").get_all("Provides-Extra") or []
+          for extra in ("standard", "perception", "svi", "download"):
+              assert extra in extras, extra
+          print("installed", info["Name"], info["Version"], "extras", extras)
           PY
-
-      - name: Install and run core unit tests
-        run: |
-          python -m pip install -e ".[dev]"
-          python -m pytest \
-            tests/unit/test_package_data.py \
-            tests/unit/test_old_api.py \
-            tests/unit/test_missing_extra.py \
-            tests/unit/test_public_api_catalog.py \
-            -q --tb=short -o addopts=
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

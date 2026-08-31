@@ -15,6 +15,8 @@ from urbancode.errors import require_extra
 from urbancode.provenance import is_missing, merge_flags, quality_flags, require_coverage
 from urbancode.units import AnalysisUnits
 
+_DUPLICATE_POLICIES = frozenset({"raise", "keep"})
+
 
 @dataclass
 class IndicatorRecord:
@@ -53,6 +55,11 @@ class IndicatorResult:
     on_duplicate: str = "raise"
 
     def __post_init__(self) -> None:
+        if self.on_duplicate not in _DUPLICATE_POLICIES:
+            raise ValueError(
+                f"unsupported on_duplicate={self.on_duplicate!r}; "
+                f"use one of {sorted(_DUPLICATE_POLICIES)}"
+            )
         self._check_keys()
 
     def _check_keys(self) -> None:
@@ -220,6 +227,7 @@ class IndicatorResult:
                 "crs": self.units.crs,
                 "metric_crs": self.units.metric_crs,
                 "scheme": (self.units.metadata or {}).get("scheme"),
+                "metadata": dict(self.units.metadata or {}),
             },
         }
         (out / "result.json").write_text(
@@ -268,6 +276,7 @@ class IndicatorResult:
                 cell_size=info.get("cell_size"),
                 crs=str(info.get("crs") or getattr(frame, "crs", "") or ""),
                 metric_crs=str(info.get("metric_crs") or ""),
+                metadata=dict(info.get("metadata") or {}),
             )
         return cls(records=records, units=units, metadata=meta)
 

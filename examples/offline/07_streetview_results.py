@@ -10,6 +10,8 @@ from pathlib import Path
 
 import urbancode as uc
 
+# Archived single-photo City (streetview.jpg + comfort.csv). New SVI
+# teaching uses examples/data/real/streetview and street_experience.py.
 DATA = Path(__file__).resolve().parents[1] / "data" / "punggol_pocket"
 
 

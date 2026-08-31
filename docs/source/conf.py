@@ -39,6 +39,7 @@ exclude_patterns = [
     "workflows/streetview_to_grid.rst",
     "workflows/multi_city_contract.rst",
     "workflows/real_multi_city.rst",
+    "_snippets/**",
 ]
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]

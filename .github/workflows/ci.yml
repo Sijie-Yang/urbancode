@@ -17,6 +17,40 @@ env:
   MPLCONFIGDIR: /tmp/urbancode-mpl
 
 jobs:
+  extras-smoke:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        extra: [core, standard, perception, svi, download]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Fresh-env extra smoke
+        run: |
+          python -m pip install --upgrade pip
+          if [ "${{ matrix.extra }}" = "core" ]; then
+            pip install -e .
+            python -c "import urbancode as uc; print(uc.__version__); print(uc.backends.available())"
+            python -c "import sys; assert 'torch' not in sys.modules; assert 'geopandas' not in sys.modules"
+          elif [ "${{ matrix.extra }}" = "download" ]; then
+            pip install -e ".[download]"
+            python -c "import urbancode as uc; print(uc.backends.info('streetlevel'))"
+          elif [ "${{ matrix.extra }}" = "standard" ]; then
+            pip install -e ".[standard]"
+            python -c "import geopandas, osmnx, rasterio, pythermalcomfort, matplotlib"
+            python -c "import urbancode as uc; print(uc.backends.status()['geopandas'])"
+          elif [ "${{ matrix.extra }}" = "perception" ]; then
+            pip install -e ".[perception]"
+            python -c "import torch, transformers, PIL, cv2"
+          else
+            pip install -e ".[svi]"
+            python -c "import torch, transformers, PIL, cv2"
+            python -c "import importlib.util; assert importlib.util.find_spec('zensvi') is None"
+          fi
+
   core:
     runs-on: ubuntu-latest
     strategy:
@@ -58,72 +92,26 @@ jobs:
             tests/unit/test_capability_imports.py \
             tests/unit/test_public_api_catalog.py \
             tests/unit/test_workflow_docs.py \
+            tests/unit/test_dataset_manifests.py \
             tests/integration/test_fetch_offline.py \
             -q --tb=short -o addopts=
 
-  network:
+  standard:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install network extra
-        run: python -m pip install --upgrade pip && pip install -e ".[dev,network]"
-      - name: Prove extras import
-        run: python -c "import geopandas, osmnx, shapely, networkx"
-      - name: Network tests (no skip)
-        env:
-          UC_FAIL_ON_SKIP: "1"
+      - name: Install standard extra
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,standard]" opencv-python
+      - name: All safe unit and integration tests
         run: |
-          python -m pytest \
-            tests/unit/test_osm_specs.py \
-            tests/unit/test_city.py \
-            tests/unit/test_city_contract.py \
-            tests/unit/test_network_metrics.py \
-            tests/unit/test_catalog_examples.py \
-            tests/integration/test_network_fetch_mock.py \
+          python -m pytest tests/unit tests/integration \
+            -m "not live and not heavy" \
             -q --tb=short -o addopts=
 
-  imagery:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install imagery extra
-        run: python -m pip install --upgrade pip && pip install -e ".[dev,imagery]"
-      - name: Prove extras import
-        run: python -c "import rasterio, rioxarray, geopy"
-      - name: Imagery tests (no skip)
-        env:
-          UC_FAIL_ON_SKIP: "1"
-        run: |
-          python -m pytest \
-            tests/integration/test_raster_pipeline.py \
-            tests/unit/test_indices.py \
-            tests/unit/test_aspect.py \
-            tests/unit/test_stac_helpers.py \
-            tests/unit/test_geocode.py \
-            -q --tb=short -o addopts=
-
-  fusion:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install network + imagery
-        run: python -m pip install --upgrade pip && pip install -e ".[dev,network,imagery]"
-      - name: Cross-modal grid aggregate
-        env:
-          UC_FAIL_ON_SKIP: "1"
-        run: |
-          python -m pytest tests/unit/test_fusion.py -q --tb=short -o addopts=
-
-  streetview:
+  perception:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -131,85 +119,19 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install perception extra
-        run: python -m pip install --upgrade pip && pip install -e ".[dev,perception]" transformers
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,perception]"
       - name: Prove extras import
-        run: python -c "import torch, PIL"
-      - name: Streetview contract and color (no skip)
+        run: python -c "import torch, transformers, PIL"
+      - name: Perception and SVI contract tests
         env:
           UC_FAIL_ON_SKIP: "1"
         run: |
           python -m pytest \
             tests/unit/test_comfort_contract.py \
             tests/unit/test_color_features.py \
-            tests/unit/test_tcis_smoke.py::test_manifest_sha_fields \
+            tests/unit/test_perception.py \
+            tests/unit/test_tcis_smoke.py \
             -q --tb=short -o addopts=
-      - name: TCIS golden smoke
-        env:
-          UC_FAIL_ON_SKIP: "1"
-        run: |
-          python -m pytest tests/unit/test_tcis_smoke.py::test_comfort_golden_image \
-            -q --tb=short -o addopts=
-
-  workflows:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install standard + docs + OpenCV
-        run: python -m pip install --upgrade pip && pip install -e ".[dev,standard,docs]" opencv-python
-      - name: Workflow scripts (no skip)
-        env:
-          UC_FAIL_ON_SKIP: "1"
-        run: |
-          python -m pytest \
-            tests/unit/test_workflows.py \
-            tests/unit/test_workflow_docs.py \
-            tests/unit/test_fusion.py \
-            tests/unit/test_units_contract.py \
-            tests/unit/test_study_area.py \
-            tests/unit/test_indicators.py \
-            tests/unit/test_provenance.py \
-            tests/unit/test_capability_imports.py \
-            tests/unit/test_recipe_coverage.py \
-            tests/unit/test_dataset_manifests.py \
-            tests/unit/test_recipe_figures.py \
-            tests/unit/test_recipes_offline.py \
-            tests/unit/test_images.py \
-            tests/unit/test_public_api_catalog.py \
-            tests/unit/test_aggregate_many.py \
-            -q --tb=short -o addopts=
-
-  wheel:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Build wheel
-        run: python -m pip install --upgrade pip build && python -m build
-      - name: Wheel must be small and weight-free
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import zipfile
-          wheels = list(Path("dist").glob("*.whl"))
-          assert wheels, "no wheel"
-          wheel = wheels[0]
-          size_mb = wheel.stat().st_size / (1024 * 1024)
-          assert size_mb < 5, f"wheel is {size_mb:.1f} MB"
-          with zipfile.ZipFile(wheel) as zf:
-              names = zf.namelist()
-          assert not any(n.endswith(".pth.tar") or n.endswith(".pth") for n in names)
-          print(f"{wheel.name} {size_mb:.2f} MB, {len(names)} files")
-          PY
-      - name: Install wheel and smoke CLI
-        run: |
-          pip install dist/*.whl
-          uc --version
-          python -c "import urbancode as uc; import sys; assert 'torch' not in sys.modules"
 
   docs:
     runs-on: ubuntu-latest
@@ -228,6 +150,28 @@ jobs:
         run: python scripts/build_docs_examples.py --check --require-catalog
       - name: Sphinx HTML
         run: sphinx-build -W --keep-going -b html docs/source docs/build/html
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build wheel and sdist
+        run: python -m pip install --upgrade pip build && python -m build
+      - name: Wheel and sdist must be small and weight-free
+        run: python scripts/check_dist.py dist
+      - name: Install wheel and smoke CLI
+        run: |
+          pip install dist/*.whl
+          uc --version
+          python -c "import urbancode as uc; import sys; assert 'torch' not in sys.modules"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+          if-no-files-found: error
 
   gallery-network:
     runs-on: ubuntu-latest

@@ -27,6 +27,7 @@ def main(out_dir: str | Path | None = None) -> dict:
     rows = [row for row in json.loads(catalog_path.read_text(encoding="utf-8")) if row.get("city_id") == "punggol"]
     if len(rows) < 1:
         raise RuntimeError("no geotagged Punggol photos; spatial street-experience stays blocked")
+    # tutorial:start
     frame = pd.DataFrame(rows)
     folder = REAL / "streetview" / "punggol"
     if not folder.is_dir():
@@ -56,6 +57,7 @@ def main(out_dir: str | Path | None = None) -> dict:
         indicator="reachability",
     )
     combined = uc.fusion.combine(units, color, count, ndvi, reach)
+    # tutorial:end
     dest = None
     figure = None
     if out_dir is not None:

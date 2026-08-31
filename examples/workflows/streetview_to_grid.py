@@ -1,7 +1,8 @@
 """Street-view color features → point Layer → 250 m grid.
 
-The fixture photo has no verified capture coordinate. The point is placed
-at the pocket bbox centre with location_quality='illustrative'.
+The chosen photo is placed at the pocket bbox centre with
+location_quality='illustrative'. Prefer street_experience.py when
+geotags are available.
 """
 
 from __future__ import annotations
@@ -10,22 +11,20 @@ from pathlib import Path
 
 import urbancode as uc
 
-DATA = Path(__file__).resolve().parents[1] / "data" / "punggol_pocket"  # licensed photo; location still illustrative
-PHOTO_DIR = DATA / "layers"
-PHOTO_NAME = "streetview.jpg"
+from examples.recipes._common import REAL, load_punggol
+
+PHOTO_DIR = REAL / "streetview" / "punggol"
 
 
 def main(out_dir: str | Path | None = None) -> dict:
-    city = uc.load(DATA, layers=["streetview"], lazy=True)
-    bbox = city.metadata["bbox"]
+    city = load_punggol()
+    bbox = city.study_area.bbox
     west, south, east, north = bbox
-    area = uc.StudyArea.from_bbox(*bbox, place=city.place, city_id="punggol")
-    city.study_area = area
     units = uc.units.grid(city, cell_size=250)
     catalog = uc.svi.filename(str(PHOTO_DIR))
-    catalog = catalog[catalog["Filename"] == PHOTO_NAME].reset_index(drop=True)
     if catalog.empty:
-        raise FileNotFoundError(PHOTO_DIR / PHOTO_NAME)
+        raise FileNotFoundError(PHOTO_DIR)
+    catalog = catalog.iloc[:1].reset_index(drop=True)
     features = uc.svi.color(catalog, folder_path=str(PHOTO_DIR))
     features = features.copy()
     features["lon"] = (west + east) / 2.0

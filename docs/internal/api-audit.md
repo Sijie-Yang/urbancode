@@ -29,15 +29,15 @@ Status values in the catalog: `stable | experimental | adapter-only | planned | 
 | uc.imagery.hillshade | urbancode.imagery.hillshade | imagery | stable | DEM | raster Layer | 1 | rasterio | imagery/hillshade_punggol | multi_city_comparison | recipes/imagery/terrain_punggol.png | yes | assumed sun |
 | uc.imagery.zonal_stats | urbancode.imagery.zonal_stats | imagery | stable | raster+polygons | vector Layer | source | rasterio | imagery/zonal_stats_punggol | punggol_urban_profile | recipes/imagery/zonal_stats_punggol.png | yes | coverage |
 | uc.climate.utci | urbancode.climate.utci | climate | experimental | T, MRT, RH, wind | raster Layer | °C | pythermalcomfort | climate/utci_real | heat_exposure | recipes/climate/utci_real.png | yes | modelled MRT |
-| uc.streetview.fetch | urbancode.streetview.fetch | streetview | experimental | study area | catalog | image | zensvi, streetlevel | blocked | street_experience | — | live-only | provider terms |
-| uc.streetview.filename | urbancode.streetview.filename | streetview | stable | image dir | DataFrame | filename | pandas | streetview/filename_punggol | street_experience | recipes/streetview/filename_punggol.png | yes | catalog only |
-| uc.streetview.color | urbancode.streetview.color | streetview | experimental | catalog | DataFrame | colorfulness | opencv | streetview/color_punggol | street_experience | recipes/streetview/color_punggol.png | yes | pixel stat |
-| uc.streetview.segmentation | urbancode.streetview.segmentation | streetview | experimental | photo | class shares | fraction | torch | blocked | street_experience | — | live/heavy | no committed masks |
-| uc.streetview.object_detection | urbancode.streetview.object_detection | streetview | experimental | photo | boxes | count | torch | blocked | street_experience | — | live/heavy | no committed boxes |
-| uc.streetview.scene_recognition | urbancode.streetview.scene_recognition | streetview | experimental | photo | probs | probability | torch | blocked | street_experience | — | live/heavy | no committed scores |
-| uc.streetview.comfort | urbancode.streetview.comfort | streetview | experimental | photo | scores | score | torch / TCIS | blocked | street_experience | — | live/heavy | no committed scores |
+| uc.svi.fetch | urbancode.streetview.fetch | streetview | experimental | study area | catalog | image | zensvi, streetlevel | blocked | street_experience | — | live-only | provider terms; extra=`download` |
+| uc.svi.filename | urbancode.streetview.filename | streetview | stable | image dir | DataFrame | filename | pandas | streetview/filename_punggol | street_experience | recipes/streetview/filename_punggol.png | yes | catalog only |
+| uc.svi.color | urbancode.streetview.color | streetview | experimental | catalog | DataFrame | colorfulness | opencv | streetview/color_punggol | street_experience | recipes/streetview/color_punggol.png | yes | pixel stat |
+| uc.svi.segmentation | urbancode.streetview.segmentation | streetview | experimental | photo | class shares | fraction | torch | blocked | street_experience | — | live/heavy | no committed masks |
+| uc.svi.object_detection | urbancode.streetview.object_detection | streetview | experimental | photo | boxes | count | torch | blocked | street_experience | — | live/heavy | no committed boxes |
+| uc.svi.scene_recognition | urbancode.streetview.scene_recognition | streetview | experimental | photo | probs | probability | torch | blocked | street_experience | — | live/heavy | no committed scores |
+| uc.svi.comfort | urbancode.streetview.comfort | streetview | experimental | photo | scores | score | torch / TCIS | blocked | street_experience | — | live/heavy | no committed scores |
 | uc.IndicatorResult.to_layer | urbancode.indicators.IndicatorResult.to_layer | fusion | stable | IndicatorResult | vector Layer | indicator | geopandas | fusion/combine_punggol | punggol_urban_profile | recipes/fusion/combine_punggol.png | yes | copies unit |
-| uc.streetview.as_layer | urbancode.streetview.as_layer | streetview | stable | lon/lat table | point Layer | point | geopandas | streetview/as_layer_punggol | street_experience | recipes/streetview/as_layer_punggol.png | yes | geotag quality |
+| uc.svi.as_layer | urbancode.streetview.as_layer | streetview | stable | lon/lat table | point Layer | point | geopandas | streetview/as_layer_punggol | street_experience | recipes/streetview/as_layer_punggol.png | yes | geotag quality |
 | uc.fusion.aggregate | urbancode.fusion.aggregate | fusion | stable | Layer+Units | IndicatorResult | stat | geopandas, rasterio | fusion/aggregate_punggol | punggol_urban_profile | recipes/fusion/aggregate_punggol.png | yes | receipts |
 | uc.fusion.combine | urbancode.fusion.combine | fusion | stable | IndicatorResults | IndicatorResult | mixed | pandas | fusion/combine_punggol | punggol_urban_profile | recipes/fusion/combine_punggol.png | yes | join checks |
 
@@ -45,13 +45,13 @@ Status values in the catalog: `stable | experimental | adapter-only | planned | 
 
 | name | status | note |
 |---|---|---|
-| uc.svi | compatibility | Identity shim of uc.streetview. Migration page only. |
+| uc.streetview | compatibility | Alias of uc.svi through 0.4.0. Teach uc.svi only. |
 | uc.imagery.utci | compatibility | Alias of uc.climate.utci. Climate domain only. |
 | uc.imagery.aspect_degrees / slope_degrees | compatibility | Same as aspect/slope. |
 | uc.network.download_network / save_network / load_saved_network | legacy | Prefer uc.network.fetch and City I/O. |
 | uc.network.graph_to_gdf / graph_from_gdf | compatibility | Graph interchange, not a metric. |
 | uc.network.*_radius / calculate_accessibility_metrics | legacy | Prefer centrality / accessibility / clustering / local_efficiency. |
-| CLI `uc svi` | compatibility | Hidden alias of `uc streetview`. |
+| CLI `uc streetview` | compatibility | Hidden alias of `uc svi`. Remove after 0.4.0. |
 
 ## CLI (real commands only)
 
@@ -61,7 +61,7 @@ Status values in the catalog: `stable | experimental | adapter-only | planned | 
 | uc fetch | uc.fetch | recipes/cli/fetch.png |
 | uc network fetch | uc.network.fetch | recipes/cli/network_fetch.png (if generated) |
 | uc imagery fetch | uc.imagery.fetch | recipes/cli/imagery_fetch.png |
-| uc streetview comfort | uc.streetview.comfort | recipes/cli/streetview_comfort.png (if generated) |
+| uc svi comfort | uc.svi.comfort | recipes/cli/streetview_comfort.png (if generated) |
 
 There is no `uc doctor`. Use `uc.backends.status()`.
 

@@ -46,7 +46,19 @@
     "Sentinel-2 L2A windowed read of B02,B03,B04,B08,B11",
     "Copernicus DEM GLO-30 resampled to the Sentinel grid"
   ],
-  "file_checksums": {},
+  "file_checksums": {
+    "LICENSE.md": "f408de88d29c5a27e7f7f52b5335b2bdea38d9357563032c5b47daed3d3a9dbd",
+    "README.md": "e785b1237e4772c420fe1a1d03b74e7be5c5df16103523b42661f6f3be660079",
+    "area/study_area.gpkg": "a8be2c4682544ae38306f7748720aebf6b0b0d73e856bbc79cacbd3eb89d746d",
+    "context/locator_boundary.gpkg": "5852176efc9edb3f471c10ad759f5e2d62f5b637f775182d74c999a534ce5948",
+    "layers/buildings.gpkg": "d0a84466fe742eaf11b29e3ba85e840ed123d10ee3b3d3c490acdb689d77a1c0",
+    "layers/dem.tif": "8e1a3f7198c012c349e0510213c2b0977b83671b1fe6cab0846683f89e9d36a7",
+    "layers/parks.gpkg": "b607dd8d7a04ebc1cdd0f3a99e9f840fd4fcff5bdc3d75b817ae7f78fea0141e",
+    "layers/pois.gpkg": "a18d5b5cbf01a5df822c9b1f45c170f00da42cba4d467950c559cfe46e8829df",
+    "layers/sentinel2.tif": "8d1a747097d248dfcf9240d889da6e4c2bf51c5c794539e7e9d0db0987184008",
+    "layers/streets.graphml": "e0f8d296f0cd4419090ee9103a6c458cd1818ddb890ab5551cef33c6b1f530be",
+    "layers/water.gpkg": "05aff0568dfedd66b4fd9d69384cfd7c3e8c1d9e810796757bc1a49f6d0bc028"
+  },
   "generated_by": "scripts/data/build_real_pockets.py",
   "generated_at": "2026-08-16T09:07:58.337338+00:00",
   "synthetic": false,

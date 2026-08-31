@@ -18,10 +18,19 @@ from examples.recipes._common import climate_dir, copy_workflow_static, load_pun
 CAPTION = "Punggol, Singapore — Heat exposure · 2 km × 2 km · 250 m units · EPSG:32648"
 
 
+# Documented spatial MRT proxy (not a measured campaign).
+# Coefficients: +6 °C * clip(NDBI, 0, 1), −4 °C * clip(NDVI, 0, 1).
+# Weather is 2024-07-15T14:00 UTC; Sentinel-2 is 2024-07-28 (13-day gap).
+MRT_BUILT_COEFF = 6.0
+MRT_VEG_COEFF = -4.0
+WEATHER_TIME = "2024-07-15T14:00"
+IMAGERY_TIME = "2024-07-28T03:15:19Z"
+
+
 def _mrt_proxy(tair: float, ndvi: np.ndarray, ndbi: np.ndarray) -> np.ndarray:
     veg = np.clip(np.asarray(ndvi, dtype=float), 0.0, 1.0)
     built = np.clip(np.asarray(ndbi, dtype=float), 0.0, 1.0)
-    return tair + 6.0 * built - 4.0 * veg
+    return tair + MRT_BUILT_COEFF * built + MRT_VEG_COEFF * veg
 
 
 def main(out_dir: str | Path | None = None) -> dict:
@@ -74,9 +83,26 @@ def main(out_dir: str | Path | None = None) -> dict:
             metadata=built_layer.metadata,
         )
     built_u = uc.fusion.aggregate(built_layer, units, stat="area_fraction", indicator="building_frac")
+    # tutorial:start
     combined = uc.fusion.combine(units, utci_u, ndvi_u, ndbi_u, built_u)
+    combined.metadata.update(
+        {
+            "weather_time": row["timestamp"],
+            "imagery_time": IMAGERY_TIME,
+            "date_gap_days": 13,
+            "mrt_proxy": {
+                "formula": "Tair + 6*clip(NDBI,0,1) - 4*clip(NDVI,0,1)",
+                "built_coeff": MRT_BUILT_COEFF,
+                "veg_coeff": MRT_VEG_COEFF,
+                "source": "documentation proxy, not a measured campaign",
+            },
+        }
+    )
     for rec in combined.records:
-        rec.quality_flags.append("modelled_mrt_proxy")
+        rec.quality_flags.extend(
+            ["modelled_mrt_proxy", "weather_imagery_date_gap"]
+        )
+    # tutorial:end
     dest = None
     figure = None
     if out_dir is not None:

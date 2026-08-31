@@ -266,6 +266,32 @@ next to the figures. Receipts include image checksums, TCIS model
 id / revision / weight hashes when the model ran, UrbanCode
 version, and the sample-size warning.
 
+Reproducibility matrix
+----------------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 28 36 36
+
+   * - What
+     - Where
+     - Status
+   * - Eight Commons photos + catalog
+     - ``examples/data/real/streetview``
+     - Git-reproducible
+   * - Committed predictions.csv
+     - ``examples/data/research_cases/thermal_comfort_in_sight``
+     - Git-reproducible smoke, not a full replica
+   * - TCIS weights / IF models
+     - user cache / Hugging Face
+     - Needs HF cache; not in Git
+   * - 92,233 Singapore JPEGs
+     - external store (Alienware / ual-chark)
+     - External data; receipts only in Git
+   * - Full parquet
+     - off Git (SHA-256 in receipts)
+     - Not a committed replication package
+
 Related API recipes
 -------------------
 
