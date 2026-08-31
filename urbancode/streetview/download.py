@@ -153,7 +153,7 @@ def _zensvi_download(
     place: str | None,
     api_key: str | None,
 ) -> None:
-    require_extra("zensvi", "streetview")
+    require_extra("zensvi", "svi")
     from zensvi.download import AMSDownloader, KVDownloader, MLYDownloader
 
     cls = {"mapillary": MLYDownloader, "kartaview": KVDownloader, "amsterdam": AMSDownloader}[
@@ -170,7 +170,7 @@ def _zensvi_download(
 
 
 def _streetlevel_google(out_dir: Path, *, lat: float, lon: float) -> None:
-    streetview = require_extra("streetlevel.streetview", "streetview")
+    streetview = require_extra("streetlevel.streetview", "svi")
     pano = streetview.find_panorama(lat, lon)
     if pano is None:
         raise ValueError(f"no Google panorama near lat={lat}, lon={lon}")

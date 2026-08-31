@@ -1,5 +1,5 @@
-Images recipes
-==============
+Image-observation recipes
+=========================
 
 .. toctree::
    :maxdepth: 1

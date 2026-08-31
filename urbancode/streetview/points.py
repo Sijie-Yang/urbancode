@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 from urbancode.city import Layer
@@ -24,10 +25,21 @@ def as_layer(
     """Build a georeferenced point Layer from a comfort/color/catalog table.
 
     Wraps :func:`urbancode.images.from_table` and sets
-    ``view_type="streetview"``.
+    ``view_type="streetview"``. ``frame`` may be a DataFrame or a
+    catalog path (``.json`` / ``.csv``).
     """
+    if isinstance(frame, (str, Path)):
+        layer = from_table(
+            frame,
+            view_type="streetview",
+            lon=lon,
+            lat=lat,
+            crs=crs,
+            name=name,
+        )
+        return _mark_as_layer(layer)
     if frame is None:
-        raise TypeError("as_layer needs a DataFrame")
+        raise TypeError("as_layer needs a DataFrame or catalog path")
     lon_col = lon or _first_column(frame, _LON)
     lat_col = lat or _first_column(frame, _LAT)
     if not lon_col or not lat_col:
@@ -58,6 +70,10 @@ def as_layer(
         name=name,
         id_strategy=id_strategy,
     )
+    return _mark_as_layer(layer)
+
+
+def _mark_as_layer(layer: Layer) -> Layer:
     layer.source = "urbancode.streetview.as_layer"
     processing = dict((layer.metadata or {}).get("processing") or {})
     processing["op"] = "as_layer"

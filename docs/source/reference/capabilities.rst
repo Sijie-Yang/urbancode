@@ -110,14 +110,14 @@ See :doc:`/reference/recipes/index` for the case pages.
      - climate
      - pythermalcomfort
      - :doc:`/reference/recipes/climate/utci_real`
-   * - ``uc.streetview.filename``
+   * - ``uc.svi.filename``
      - stable
-     - streetview
+     - svi
      - pandas
      - :doc:`/reference/recipes/streetview/filename_punggol`
-   * - ``uc.streetview.color``
+   * - ``uc.svi.color``
      - experimental
-     - streetview
+     - svi
      - opencv
      - :doc:`/reference/recipes/streetview/color_punggol`
    * - ``uc.images.from_table``
@@ -125,34 +125,34 @@ See :doc:`/reference/recipes/index` for the case pages.
      - vector
      - geopandas
      - :doc:`/reference/recipes/images/from_table_punggol`
-   * - ``uc.streetview.as_layer``
+   * - ``uc.svi.as_layer``
      - stable
      - vector
      - geopandas
      - :doc:`/reference/recipes/streetview/as_layer_punggol`
-   * - ``uc.streetview.fetch``
+   * - ``uc.svi.fetch``
      - experimental
      - download
      - zensvi
      - blocked: zensvi/Mapillary imagery cannot be redistributed in the docs fixture; live-only
-   * - ``uc.streetview.segmentation``
+   * - ``uc.svi.segmentation``
      - experimental
-     - streetview
+     - svi
      - torch
      - blocked: torch SegFormer weights and redistributable precomputed masks are not in the repo; live/heavy only
-   * - ``uc.streetview.object_detection``
+   * - ``uc.svi.object_detection``
      - experimental
-     - streetview
+     - svi
      - torch
      - blocked: torch detector weights and redistributable boxes are not in the repo; live/heavy only
-   * - ``uc.streetview.scene_recognition``
+   * - ``uc.svi.scene_recognition``
      - experimental
-     - streetview
+     - svi
      - torch
      - blocked: Places365 weights and redistributable scores are not in the repo; live/heavy only
-   * - ``uc.streetview.comfort``
+   * - ``uc.svi.comfort``
      - compatibility
-     - streetview
+     - svi
      - torch
      - blocked: Deprecated DataFrame entry; use uc.perception.thermal_affordance. Live/heavy only.
    * - ``uc.perception.thermal_affordance``

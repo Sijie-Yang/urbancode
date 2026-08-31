@@ -4,8 +4,7 @@ Street experience
 Urban question
 --------------
 
-How do street-level visual conditions relate to network position
-and neighbourhood context?
+How do street-level photos sit on the same units as NDVI?
 
 Result first
 ------------
@@ -14,71 +13,87 @@ Result first
    :alt: Sample photo, point coverage, grid counts, colorfulness, NDVI, and reachability
    :width: 100%
 
-   Punggol, Singapore — 2 km × 2 km · EPSG:32648. Sample photo,
-   geotagged points on streets/buildings, then grid counts.
-   Colorfulness is drawn only where photos exist. Illustrative
-   Commons sample, not a census. ML recipes stay live/heavy.
+   Eight licensed Commons photos, not a Punggol census.
 
-What you will learn
--------------------
+1. Inspect the catalog first
+----------------------------
 
-* How ``filename``, ``color``, and ``as_layer`` become units.
-* How to keep illustrative coordinates labelled.
-* How to join photo features with network or NDVI without
-  over-claiming coverage.
-
-Dataset
--------
-
-Wikimedia Commons photos under redistributable licenses, stored
-in ``examples/data/real/streetview``. Capture coordinates are used
-only when the catalog records them. Otherwise the workflow stays
-honest about missing geolocation.
-
-Installation
-------------
+The JSON has three cities. Image IDs are unique **inside** Punggol,
+not across the whole file.
 
 ::
 
-   pip install "urbancode[standard,streetview]"
+   import pandas as pd
 
-Step-by-step
-------------
+   catalog = pd.read_json("examples/data/real/streetview/catalog.json")
+   print(catalog["city_id"].value_counts().to_string())
 
-.. literalinclude:: ../../../examples/workflows/street_experience.py
-   :language: python
-   :caption: examples/workflows/street_experience.py
+::
 
-The older ``streetview_to_grid`` script remains as a shorter
-catalog → grid helper. Prefer this page for the research question.
+   punggol              8
+   kallio               8
+   greenwich_village    8
 
-Model steps (segmentation, detection, scene, comfort) have their
-own recipes. They use committed precomputed artifacts offline.
+2. One city → one Layer
+-----------------------
 
-Reading the result
-------------------
+::
 
-* A colourful photo is not a comfortable street.
-* Sparse points leave most cells null. Null is not zero.
-* Network centrality of the nearest node is context, not a cause
-  of the photo.
+   import urbancode as uc
+
+   punggol = catalog[catalog["city_id"] == "punggol"]
+   photos = uc.images.from_table(
+       punggol,
+       view_type="streetview",
+       image_root="examples/data/real/streetview",
+   )
+   print(photos.kind, photos.metadata["n_images"])
+   print(photos.data[["image_id", "longitude", "latitude"]].head(2))
+
+::
+
+   vector 8
+
+A point Layer in EPSG:4326. ``image_root`` resolves the relative
+``path`` column. Call ``photos.plot()``.
+
+3. Count photos onto the grid
+-----------------------------
+
+::
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   counts = uc.fusion.aggregate(
+       photos, units, stat="count", indicator="photo_count"
+   )
+   ndvi = uc.fusion.aggregate(
+       uc.imagery.ndvi(city.layers["sentinel2"]),
+       units, stat="mean", indicator="ndvi",
+   )
+   print(int((counts.to_pandas()["value"] > 0).sum()))
+
+::
+
+   3
+
+Eight photos land in 3 of 81 cells (one cell has six). Empty cells
+stay null. Null is not zero.
+
+::
+
+   result = uc.fusion.combine(units, counts, ndvi)
+   result.plot(indicator="photo_count")
+
+``result`` aligns ``photo_count`` and ``ndvi`` by unit ID. The plot
+selects the sparse count series; it does not fill unobserved cells or
+turn eight photos into area coverage.
+
+VATA is a different quantity. See
+:doc:`/workflows/research_cases/thermal_comfort_in_sight`.
 
 Limitations
 -----------
 
-* Not a complete survey of Punggol streets.
-* Provider archives cannot be committed here.
-* Model domain shift across cities is expected.
+* Not a survey of Punggol streets.
 * Faces and plates may appear; this is not a privacy-cleared set.
-
-Related pages
--------------
-
-* Domain: :doc:`/domains/streetview`
-* Recipes: :doc:`/reference/recipes/streetview/color_punggol`,
-  :doc:`/reference/recipes/streetview/as_layer_punggol`
-* Responsible use: :doc:`/domains/streetview`
-
-Use UrbanCode when photo rows must join a City grid.
-Use OpenCV or ZenSVI directly when you are inspecting one image
-or a live download.

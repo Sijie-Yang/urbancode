@@ -31,12 +31,29 @@ Installation
 
    pip install "urbancode[vector]"
 
+This installs the polygon and CRS stack used by all three unit
+constructors. It does not install imagery or network backends.
+
 UrbanCode API
 -------------
 
 * :func:`urbancode.units.grid`
 * :func:`urbancode.units.hexgrid`
 * :func:`urbancode.units.from_layer`
+
+::
+
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   grid = uc.units.grid(city, cell_size=250)
+   hexes = uc.units.hexgrid(city, cell_size=250)
+   parks = uc.units.from_layer(city.layer("parks"), study_area=city.study_area)
+   print(len(grid.frame), len(hexes.frame), len(parks.frame))
+
+::
+
+   81 38 48
 
 Backend stack
 -------------

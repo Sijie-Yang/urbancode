@@ -16,7 +16,7 @@ Precise definitions. Teaching lives in Get Started, Domains, and Workflows.
    city_format
    cli
 
-Migration: :doc:`/migration/svi-to-streetview`.
+Migration: :doc:`/migration/streetview-to-svi`.
 
 * :doc:`api/index` — signatures, types, and raises.
 * :doc:`capabilities` — generated catalog from ``capabilities.yaml``.

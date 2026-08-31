@@ -55,6 +55,24 @@ range are never treated as lon/lat. The object keeps:
 
 Also available: ``from_geometry`` and ``from_place``.
 
+Try it on the fixture::
+
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   print(city.place)
+   print(city.study_area.metric_crs)
+   print(city.layer("streets").kind)
+
+::
+
+   Punggol, Singapore
+   EPSG:32648
+   graph
+
+``city["streets"]`` is the NetworkX payload. ``city.layer("streets")``
+is the Layer with metadata.
+
 City
 ----
 

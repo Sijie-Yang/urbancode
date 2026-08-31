@@ -14,12 +14,30 @@ Real case
 - Extra: ``urbancode[vector]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.StudyArea.from_bbox(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   print(city.study_area.bbox)
+   area = uc.StudyArea.from_bbox(
+       *city.metadata["bbox"], city_id="punggol"
+   )
+
+``city.study_area.bbox`` is the stored west/south/east/north envelope. ``area`` is a new :class:`~urbancode.area.StudyArea` built from the same coordinates; no layers are copied into it.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/core/study_area_punggol.png
+   :alt: uc.StudyArea.from_bbox result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.StudyArea.from_bbox`` on dataset ``punggol``.
+   Unit: CRS. Backend: pyproj.
 
 Inputs
 ------
@@ -48,16 +66,6 @@ Output
 
 StudyArea with geographic CRS, metric CRS, and bbox.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/core/study_area_punggol.png
-   :alt: uc.StudyArea.from_bbox result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.StudyArea.from_bbox`` on dataset ``punggol``.
-   Unit: CRS. Backend: pyproj.
-
 How to read
 -----------
 
@@ -78,13 +86,6 @@ Limitations
 
 - four numbers outside the geographic range are not treated as lon/lat
 - the committed pocket is a 2 km extract, not the municipal boundary
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/core/study_area_punggol.py
-   :language: python
-   :caption: examples/recipes/core/study_area_punggol.py
 
 Related pages
 -------------

@@ -19,10 +19,27 @@ def centrality(
     radius: float | None = None,
     weight: str = "length",
 ) -> Layer:
-    """Compute a node centrality and return a graph :class:`~urbancode.city.Layer`.
+    """Compute betweenness or closeness on graph nodes.
 
-    ``metric`` is ``betweenness`` or ``closeness``. ``radius`` is an optional
-    distance cutoff in the same units as ``weight`` (metres on OSM graphs).
+    Args:
+        graph: NetworkX graph or graph :class:`~urbancode.city.Layer`.
+        metric: ``"betweenness"`` or ``"closeness"``.
+        radius: Optional shortest-path cutoff in the units of ``weight``;
+            normally metres for OSM walk graphs.
+        weight: Edge attribute used as distance. Geometry length is used when
+            possible if the named attribute is missing.
+
+    Returns:
+        A new graph :class:`~urbancode.city.Layer`. Its nodes carry an
+        attribute named after ``metric``; the input graph is not mutated.
+
+    Raises:
+        ValueError: If ``metric`` is not supported.
+        TypeError: If ``graph`` is not a graph or graph Layer.
+
+    Notes:
+        Values describe the supplied graph extract. A clipped study area can
+        strongly affect shortest paths, especially near its boundary.
     """
     if metric not in _CENTRALITY:
         raise ValueError(
@@ -75,7 +92,24 @@ def accessibility(
     metric: str = "reachability",
     weight: str = "length",
 ) -> Layer:
-    """Count reachable nodes (or another named access metric) within ``radius``."""
+    """Count other nodes reachable within a network-distance cutoff.
+
+    Args:
+        graph: NetworkX graph or graph :class:`~urbancode.city.Layer`.
+        radius: Non-negative path-length cutoff in the units of ``weight``;
+            normally metres for OSM walk graphs.
+        metric: Currently only ``"reachability"``.
+        weight: Edge attribute used as path length.
+
+    Returns:
+        A new graph :class:`~urbancode.city.Layer` whose nodes carry the
+        integer-like ``reachability`` attribute. The unit is a node count, not
+        population, jobs, or travel time.
+
+    Raises:
+        ValueError: If ``radius`` is negative or ``metric`` is unsupported.
+        TypeError: If ``graph`` is not a graph or graph Layer.
+    """
     if metric not in _ACCESS:
         raise ValueError(f"unknown accessibility metric {metric!r}; use 'reachability'")
     if radius < 0:

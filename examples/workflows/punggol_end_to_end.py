@@ -1,4 +1,8 @@
-"""Punggol core profile: native geometry first, then fused 250 m indicators."""
+"""Docs figure builder for the Punggol profile. Not a tutorial.
+
+Copy the snippet on docs/getting_started/quickstart instead of
+importing this file.
+"""
 
 from __future__ import annotations
 

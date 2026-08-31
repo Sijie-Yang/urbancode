@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[network]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.network.clustering(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   cluster = uc.network.clustering(city["streets"])
+   cluster.plot()
+
+``cluster`` is a graph :class:`~urbancode.city.Layer` whose nodes carry the dimensionless ``clustering`` coefficient. The plot is node-level.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/network/clustering_punggol.png
+   :alt: uc.network.clustering result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.network.clustering`` on dataset ``punggol``.
+   Unit: dimensionless. Backend: networkx.
 
 Inputs
 ------
@@ -48,16 +64,6 @@ Output
 
 Graph Layer. Node attribute ``clustering`` (Watts–Strogatz, dimensionless).
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/network/clustering_punggol.png
-   :alt: uc.network.clustering result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.network.clustering`` on dataset ``punggol``.
-   Unit: dimensionless. Backend: networkx.
-
 How to read
 -----------
 
@@ -78,13 +84,6 @@ Limitations
 
 - many degree-1 and degree-2 street nodes have clustering 0
 - experimental Watts-Strogatz local definition
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/network/clustering_punggol.py
-   :language: python
-   :caption: examples/recipes/network/clustering_punggol.py
 
 Related pages
 -------------

@@ -96,5 +96,6 @@ Related pages
 -------------
 
 * :doc:`thermal_comfort_in_sight`
+* :doc:`heat_resilience_in_sight`
 * :doc:`/concepts/image_observations`
 * :doc:`/development/roadmap`

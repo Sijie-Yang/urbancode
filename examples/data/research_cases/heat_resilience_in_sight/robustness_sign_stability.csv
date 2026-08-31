@@ -1,0 +1,9 @@
+city,short,sign_stable,always_surplus,always_deficit,min_shr,max_shr
+svi_capetown,Cape Town,True,True,False,0.6945645923950913,1.142866048863823
+svi_hk,Hong Kong,True,True,False,0.609991434764912,1.200857251167421
+svi_jh,Johannesburg,True,True,False,0.6436098883090072,1.3141507766319733
+svi_melbourne,Melbourne,True,True,False,1.396482593893175,1.728092371645725
+svi_ny,New York,True,True,False,0.8715306456900223,1.25103359480793
+svi_rio,Rio,False,False,False,-0.6385452413217285,0.6115290383385121
+svi_sg,Singapore,False,False,False,-0.4628638554126095,0.5855946151301238
+svi_tokyo,Tokyo,True,True,False,0.8085171874685836,1.1634059787942586

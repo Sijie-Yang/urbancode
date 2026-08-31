@@ -14,7 +14,10 @@ htmlcov/
 
 build/
 docs/build/
+docs/_build/
 examples/output/
 dist/
 .venv-publish/
 cache/
+*.pth
+*.pth.tar

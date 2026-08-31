@@ -14,12 +14,27 @@ Real case
 - Extra: ``urbancode[vector]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.load(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   city.plot(layers=["streets", "buildings", "parks"])
+
+``city`` is the lazily loaded :class:`~urbancode.city.City`. The call to ``city.plot`` renders three existing layers; it does not download or modify data.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/core/city_roundtrip_punggol.png
+   :alt: uc.load result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.load`` on dataset ``punggol``.
+   Unit: mixed. Backend: geopandas.
 
 Inputs
 ------
@@ -48,16 +63,6 @@ Output
 
 City with Layer inventory, CRS, and stamps.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/core/city_roundtrip_punggol.png
-   :alt: uc.load result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.load`` on dataset ``punggol``.
-   Unit: mixed. Backend: geopandas.
-
 How to read
 -----------
 
@@ -78,13 +83,6 @@ Limitations
 
 - lazy load defers raster and graph reads until a layer is used
 - the directory must include manifest.json
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/core/city_roundtrip_punggol.py
-   :language: python
-   :caption: examples/recipes/core/city_roundtrip_punggol.py
 
 Related pages
 -------------

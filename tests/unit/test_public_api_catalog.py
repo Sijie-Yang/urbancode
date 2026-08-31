@@ -83,7 +83,8 @@ def test_submodule_all_is_catalogued() -> None:
         PKG / "network" / "__init__.py": "uc.network",
         PKG / "imagery" / "__init__.py": "uc.imagery",
         PKG / "climate" / "__init__.py": "uc.climate",
-        PKG / "streetview" / "__init__.py": "uc.streetview",
+        PKG / "streetview" / "__init__.py": "uc.svi",
+        PKG / "svi" / "__init__.py": "uc.svi",
         PKG / "images.py": "uc.images",
         PKG / "perception" / "__init__.py": "uc.perception",
     }
@@ -124,9 +125,10 @@ def test_indicator_methods_are_catalogued() -> None:
     assert missing == []
 
 
-def test_svi_is_migration_only() -> None:
+def test_svi_is_the_catalogued_namespace() -> None:
     assert "svi" in _all_names(PKG / "__init__.py")
-    assert all(not item["function"].startswith("uc.svi") for item in load_catalog())
+    assert all(not item["function"].startswith("uc.streetview") for item in load_catalog())
+    assert any(item["function"].startswith("uc.svi.") for item in load_catalog())
 
 
 def test_blocked_items_have_no_fake_offline_figure() -> None:

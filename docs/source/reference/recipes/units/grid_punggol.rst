@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[vector]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.units.grid(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   print(len(units.frame), units.metric_crs)
+
+``units`` is an :class:`~urbancode.units.AnalysisUnits` object. ``units.frame`` contains clipped 250 m polygons with stable ``unit_id`` values in the reported metric CRS.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/units/units_punggol.png
+   :alt: uc.units.grid result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.units.grid`` on dataset ``punggol``.
+   Unit: metre. Backend: geopandas.
 
 Inputs
 ------
@@ -48,16 +64,6 @@ Output
 
 AnalysisUnits with IDs ``grid:<CRS>:<size>:<col>:<row>``.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/units/units_punggol.png
-   :alt: uc.units.grid result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.units.grid`` on dataset ``punggol``.
-   Unit: metre. Backend: geopandas.
-
 How to read
 -----------
 
@@ -78,13 +84,6 @@ Limitations
 
 - cell_size is metres in the metric CRS
 - edge cells are clipped to the study area
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/units/grid_punggol.py
-   :language: python
-   :caption: examples/recipes/units/grid_punggol.py
 
 Related pages
 -------------

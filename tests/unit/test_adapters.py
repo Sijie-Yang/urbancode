@@ -27,8 +27,8 @@ def test_unknown_adapter() -> None:
     ("name", "module", "extra"),
     [
         ("osmnx", "osmnx", "network"),
-        ("zensvi", "zensvi", "streetview"),
-        ("streetlevel", "streetlevel", "streetview"),
+        ("zensvi", "zensvi", "svi"),
+        ("streetlevel", "streetlevel", "svi"),
         ("city2graph", "city2graph", "graph"),
         ("pythermalcomfort", "pythermalcomfort", "climate"),
         ("geopandas", "geopandas", "vector"),

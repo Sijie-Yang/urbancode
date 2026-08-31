@@ -12,7 +12,7 @@ from typing import Any
 from urbancode._version import __version__
 
 __author__ = "Sijie Yang"
-__description__ = "A package for universal urban analysis"
+__description__ = "A library for reproducible, multimodal urban analysis"
 
 __all__ = [
     "AnalysisUnits",

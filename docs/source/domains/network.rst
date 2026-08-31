@@ -32,6 +32,9 @@ Installation
 
    pip install "urbancode[network]"
 
+This installs OSMnx, NetworkX, GeoPandas, and momepy. The example below
+is offline because it reads the committed GraphML layer.
+
 UrbanCode API
 -------------
 
@@ -42,6 +45,25 @@ UrbanCode API
 * :func:`urbancode.network.local_efficiency` (experimental)
 
 Legacy ``*_radius`` helpers stay on the API page as compatibility.
+
+::
+
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   reach = uc.network.accessibility(
+       city["streets"], radius=150, metric="reachability"
+   )
+   print(reach.kind, reach.data.number_of_nodes())
+   reach.plot()
+
+::
+
+   graph 1425
+
+``reach`` is a graph ``Layer``. Its 1,425 nodes carry a
+``reachability`` count measured within 150 m of network length; the
+plot remains node/edge support until ``uc.fusion.aggregate`` is called.
 
 Backend stack
 -------------

@@ -14,12 +14,30 @@ Real case
 - Extra: ``urbancode[vector]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.fusion.aggregate(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   ndvi = uc.imagery.ndvi(city.layers["sentinel2"])
+   result = uc.fusion.aggregate(ndvi, units, stat="mean", indicator="ndvi")
+   result.plot(indicator="ndvi")
+
+``units`` is the 250 m target grid, ``ndvi`` is the native raster, and ``result`` is an :class:`~urbancode.indicators.IndicatorResult` with one NDVI value and coverage field per unit.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/fusion/aggregate_punggol.png
+   :alt: uc.fusion.aggregate result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.fusion.aggregate`` on dataset ``punggol``.
+   Unit: stat-dependent. Backend: geopandas.
 
 Inputs
 ------
@@ -50,16 +68,6 @@ Output
 
 IndicatorResult with value, coverage, unit, quality_flags, provenance.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/fusion/aggregate_punggol.png
-   :alt: uc.fusion.aggregate result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.fusion.aggregate`` on dataset ``punggol``.
-   Unit: stat-dependent. Backend: geopandas.
-
 How to read
 -----------
 
@@ -80,13 +88,6 @@ Limitations
 
 - coverage is the fraction of the unit that intersected the source
 - missing stays null, not zero
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/fusion/aggregate_punggol.py
-   :language: python
-   :caption: examples/recipes/fusion/aggregate_punggol.py
 
 Related pages
 -------------

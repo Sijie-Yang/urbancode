@@ -26,14 +26,12 @@ def test_climate_and_streetview_are_lazy() -> None:
     subprocess.check_call([sys.executable, "-c", code], env=env)
 
 
-def test_streetview_aliases_svi() -> None:
-    import warnings
-
-    with warnings.catch_warnings(record=True) as caught:
-        warnings.simplefilter("always", DeprecationWarning)
-        assert uc.svi.comfort is uc.streetview.comfort
-        assert uc.svi.fetch is uc.streetview.fetch
-    assert any("uc.svi is deprecated" in str(w.message) for w in caught)
+def test_svi_aliases_streetview() -> None:
+    assert "svi" in uc.__all__
+    assert uc.svi.comfort is uc.streetview.comfort
+    assert uc.svi.fetch is uc.streetview.fetch
+    assert uc.svi.as_layer is uc.streetview.as_layer
+    assert uc.svi.filename is uc.streetview.filename
 
 
 def test_streetview_color_does_not_import_torch() -> None:

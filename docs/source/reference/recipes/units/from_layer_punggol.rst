@@ -14,12 +14,30 @@ Real case
 - Extra: ``urbancode[vector]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.units.from_layer(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.from_layer(
+       city.layer("parks"), study_area=city.study_area
+   )
+   print(len(units.frame), units.kind)
+
+``units`` is an :class:`~urbancode.units.AnalysisUnits` object built from park polygons. Its IDs fingerprint geometry; they are not copied row numbers.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/units/units_punggol.png
+   :alt: uc.units.from_layer result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.units.from_layer`` on dataset ``punggol``.
+   Unit: polygon. Backend: geopandas.
 
 Inputs
 ------
@@ -48,16 +66,6 @@ Output
 
 AnalysisUnits. IDs are geometry fingerprints unless a column is given.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/units/units_punggol.png
-   :alt: uc.units.from_layer result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.units.from_layer`` on dataset ``punggol``.
-   Unit: polygon. Backend: geopandas.
-
 How to read
 -----------
 
@@ -78,13 +86,6 @@ Limitations
 
 - unit IDs are geometry fingerprints
 - duplicate geometries raise
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/units/from_layer_punggol.py
-   :language: python
-   :caption: examples/recipes/units/from_layer_punggol.py
 
 Related pages
 -------------

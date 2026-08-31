@@ -11,4 +11,4 @@ See also
 
 * Concept: :doc:`/concepts/image_observations`
 * Recipe: :doc:`/reference/recipes/images/from_table_punggol`
-* Street-view wrapper: :func:`urbancode.streetview.as_layer`
+* Street-view wrapper: :func:`urbancode.svi.as_layer`

@@ -13,13 +13,14 @@ backend package computes, and when to call that package directly.
    imagery
    climate
    streetview
+   perception
    fusion
 
 Keep these modules distinct:
 
 * ``uc.imagery`` — continuous rasters (Sentinel-2, DEM, NDVI).
 * ``uc.images`` — discrete geotagged city photos.
-* ``uc.streetview`` — street-view acquisition and street features.
+* ``uc.svi`` — street-view imagery catalogs, color, and live fetch.
 * ``uc.perception`` — human-perception scores from photos.
 * ``uc.climate`` — UTCI and physical thermal indices.
 * ``uc.fusion`` — the same scores on shared analysis units.

@@ -25,7 +25,7 @@ def main(argv: list[str] | None = None) -> None:
     token = os.environ.get("MAPILLARY_TOKEN") or os.environ.get("MAPILLARY_API_KEY")
     if args.source == "mapillary" and not token:
         raise SystemExit("MAPILLARY_TOKEN must be set in the environment")
-    uc.streetview.fetch(
+    uc.svi.fetch(
         place=args.place,
         source=args.source,
         out=args.output_dir,

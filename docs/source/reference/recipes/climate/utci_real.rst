@@ -14,12 +14,27 @@ Real case
 - Extra: ``urbancode[climate]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.climate.utci(...)
+   import urbancode as uc
+
+   utci = uc.climate.utci(tdb=31.2, rh=74, v=1.8)
+   print(float(utci))
+
+``utci`` is a scalar UTCI value in degrees Celsius. Here ``tdb`` is air temperature, ``rh`` is relative humidity in percent, and ``v`` is wind speed in m/s; radiant temperature defaults to air temperature.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/climate/utci_real.png
+   :alt: uc.climate.utci result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.climate.utci`` on dataset ``climate``.
+   Unit: degree_celsius. Backend: pythermalcomfort.
 
 Inputs
 ------
@@ -48,16 +63,6 @@ Output
 
 Raster Layer ``utci`` in °C.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/climate/utci_real.png
-   :alt: uc.climate.utci result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.climate.utci`` on dataset ``climate``.
-   Unit: degree_celsius. Backend: pythermalcomfort.
-
 How to read
 -----------
 
@@ -78,13 +83,6 @@ Limitations
 
 - mean radiant temperature is modelled, not measured
 - weather is one archive timestamp, not a climate normal
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/climate/utci_real.py
-   :language: python
-   :caption: examples/recipes/climate/utci_real.py
 
 Related pages
 -------------

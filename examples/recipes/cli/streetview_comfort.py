@@ -10,7 +10,7 @@ def main(out_dir: str | Path) -> dict:
     dest = Path(out_dir)
     (dest / "command.txt").write_text(
         "uc streetview comfort path/to.jpg --out comfort.csv\n"
-        "Python: uc.streetview.comfort(...)\n",
+        "Python: uc.svi.comfort(...)\n",
         encoding="utf-8",
     )
     return out

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "urbancode"
 dynamic = ["version"]
-description = "A package for universal urban analysis"
+description = "A library for reproducible, multimodal urban analysis"
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Sijie Yang", email = "sijiey@u.nus.edu" }]
@@ -178,8 +178,8 @@ dev = [
     "wheel>=0.41",
 ]
 docs = [
-    "sphinx>=7.0",
-    "sphinx-rtd-theme>=2.0",
+    "sphinx>=7.0,<9",
+    "sphinx-immaterial>=0.12",
     "sphinx-copybutton>=0.5",
 ]
 all = [
@@ -244,7 +244,12 @@ urbancode = [
 ]
 
 [tool.setuptools.exclude-package-data]
-urbancode = ["streetview/data/*.pth", "streetview/data/*.pth.tar"]
+urbancode = [
+    "streetview/data/*.pth",
+    "streetview/data/*.pth.tar",
+    "svi/data/*.pth",
+    "svi/data/*.pth.tar",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

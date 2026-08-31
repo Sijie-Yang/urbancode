@@ -1,18 +1,19 @@
-Street view
-===========
+Street-view imagery (SVI)
+=========================
 
-Official street-view namespace. Need ``urbancode[streetview]``.
-Download helpers also accept the ``download`` extra alias. Compatibility
-notes: :doc:`/migration/svi-to-streetview`.
+Official public namespace: ``uc.svi``. Need ``urbancode[svi]``.
+Download helpers also accept the ``download`` extra alias.
+The implementation module remains a compatibility alias; see
+:doc:`/migration/streetview-to-svi`.
 
-.. autofunction:: urbancode.streetview.fetch
-.. autofunction:: urbancode.streetview.filename
-.. autofunction:: urbancode.streetview.color
-.. autofunction:: urbancode.streetview.segmentation
-.. autofunction:: urbancode.streetview.object_detection
-.. autofunction:: urbancode.streetview.scene_recognition
-.. autofunction:: urbancode.streetview.comfort
-.. autofunction:: urbancode.streetview.as_layer
+.. autofunction:: urbancode.svi.fetch
+.. autofunction:: urbancode.svi.filename
+.. autofunction:: urbancode.svi.color
+.. autofunction:: urbancode.svi.segmentation
+.. autofunction:: urbancode.svi.object_detection
+.. autofunction:: urbancode.svi.scene_recognition
+.. autofunction:: urbancode.svi.comfort
+.. autofunction:: urbancode.svi.as_layer
 
 ``comfort`` is deprecated. Prefer :func:`urbancode.perception.thermal_affordance`.
 ``as_layer`` wraps :func:`urbancode.images.from_table` with
@@ -24,4 +25,4 @@ See also
 * Domain: :doc:`/domains/streetview`
 * Recipes: :doc:`/reference/recipes/streetview/index`
 * Workflow: :doc:`/workflows/street_experience`
-* Migration: :doc:`/migration/svi-to-streetview`
+* Migration: :doc:`/migration/streetview-to-svi`

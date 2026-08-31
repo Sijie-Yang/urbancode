@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[imagery]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.imagery.hillshade(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   shade = uc.imagery.hillshade(city.layers["dem"])
+   shade.plot()
+
+``shade`` is a 0--255 raster :class:`~urbancode.city.Layer`. It visualises relief under assumed illumination and is not a solar-access result.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/imagery/terrain_punggol.png
+   :alt: uc.imagery.hillshade result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.imagery.hillshade`` on dataset ``punggol``.
+   Unit: dimensionless. Backend: rasterio.
 
 Inputs
 ------
@@ -48,16 +64,6 @@ Output
 
 Raster Layer hillshade 0–255.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/imagery/terrain_punggol.png
-   :alt: uc.imagery.hillshade result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.imagery.hillshade`` on dataset ``punggol``.
-   Unit: dimensionless. Backend: rasterio.
-
 How to read
 -----------
 
@@ -78,13 +84,6 @@ Limitations
 
 - illumination is assumed, not a local sun position
 - shading is not a solar-access model
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/imagery/hillshade_punggol.py
-   :language: python
-   :caption: examples/recipes/imagery/hillshade_punggol.py
 
 Related pages
 -------------

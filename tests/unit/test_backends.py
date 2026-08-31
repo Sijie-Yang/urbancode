@@ -50,5 +50,5 @@ def test_backends_require_missing(monkeypatch: pytest.MonkeyPatch) -> None:
         )
 
     monkeypatch.setattr("urbancode.backends.require_extra", boom)
-    with pytest.raises(MissingExtraError, match="urbancode\\[streetview\\]"):
+    with pytest.raises(MissingExtraError, match="urbancode\\[svi\\]"):
         uc.backends.require("torch")

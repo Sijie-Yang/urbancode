@@ -22,17 +22,34 @@ def utci(
     wind_speed: Any | None = None,
     relative_humidity: Any | None = None,
 ) -> np.ndarray | Layer:
-    """Universal Thermal Climate Index (°C).
+    """Compute the Universal Thermal Climate Index in degrees Celsius.
 
-    ``tdb`` / ``air_temperature`` is dry-bulb air temperature.
-    ``tr`` / ``mean_radiant_temperature`` defaults to air temperature.
-    ``v`` / ``wind_speed`` defaults to 0.5 m/s.
-    ``rh`` / ``relative_humidity`` defaults to 50 percent.
+    Args:
+        tdb: Dry-bulb air temperature in °C. Alias: ``air_temperature``.
+        tr: Mean radiant temperature in °C. Defaults to ``tdb``. Alias:
+            ``mean_radiant_temperature``.
+        v: Wind speed in m/s. Defaults to 0.5. Alias: ``wind_speed``.
+        rh: Relative humidity in percent. Defaults to 50. Alias:
+            ``relative_humidity``.
+        air_temperature: Keyword alias for ``tdb``.
+        mean_radiant_temperature: Keyword alias for ``tr``.
+        wind_speed: Keyword alias for ``v``.
+        relative_humidity: Keyword alias for ``rh``.
 
-    Arrays return an ndarray. A georeferenced raster Layer or GeoTIFF
-    path returns a raster :class:`~urbancode.city.Layer` that inherits
-    the grid.
-    Need ``urbancode[climate]`` (pythermalcomfort).
+    Returns:
+        A NumPy array for scalar/array inputs, or a raster
+        :class:`~urbancode.city.Layer` when ``tdb`` is a georeferenced Layer or
+        GeoTIFF path. Raster output inherits the air-temperature grid and
+        records any defaulted inputs as quality flags.
+
+    Raises:
+        TypeError: If air temperature is missing.
+        urbancode.errors.MissingExtraError: If ``urbancode[climate]`` is not
+            installed.
+
+    Notes:
+        UTCI is a thermal index, not medical advice. Copying air temperature to
+        radiant temperature is an explicit assumption, not a measurement.
     """
     comfort = require_extra("pythermalcomfort.models", "climate")
     tdb = air_temperature if tdb is None else tdb

@@ -14,13 +14,12 @@ ROOT = Path(__file__).resolve().parents[2]
 DOCS = ROOT / "docs" / "source"
 MIGRATION = DOCS / "migration"
 FORBIDDEN = (
-    "uc.svi",
-    "uc svi",
-    "urbancode[svi]",
+    "uc.streetview",
+    "uc streetview",
+    "urbancode[streetview]",
     "svi_results",
     "svi_photo",
     "uc.imagery.lst",
-    "uc.streetview.places",
     "uc.network.download",
     "uc.indicators.load",
 )
@@ -206,7 +205,7 @@ def test_capabilities_yaml_schema() -> None:
     allowed = {"stable", "experimental", "adapter-only", "planned", "compatibility", "legacy"}
     for item in catalog["capabilities"]:
         assert item["status"] in allowed
-        assert not str(item["function"]).startswith("uc.svi")
+        assert not str(item["function"]).startswith("uc.streetview")
 
 
 def test_roadmap_does_not_claim_core_objects_missing() -> None:

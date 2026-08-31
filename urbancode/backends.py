@@ -20,9 +20,9 @@ _BACKENDS: dict[str, tuple[str, str]] = {
     "rioxarray": ("rioxarray", "imagery"),
     "xarray": ("xarray", "imagery"),
     "pythermalcomfort": ("pythermalcomfort", "climate"),
-    "zensvi": ("zensvi", "streetview"),
-    "streetlevel": ("streetlevel", "streetview"),
-    "torch": ("torch", "streetview"),
+    "zensvi": ("zensvi", "svi"),
+    "streetlevel": ("streetlevel", "svi"),
+    "torch": ("torch", "svi"),
     "matplotlib": ("matplotlib", "viz"),
     "city2graph": ("city2graph", "graph"),
 }

@@ -14,12 +14,29 @@ Real case
 - Extra: ``urbancode[imagery]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.imagery.zonal_stats(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   ndvi = uc.imagery.ndvi(city.layers["sentinel2"])
+   stats = uc.imagery.zonal_stats(ndvi, units.frame)
+
+``units`` contains the 250 m polygons, ``ndvi`` contains native pixels, and ``stats`` is a vector :class:`~urbancode.city.Layer` with one row per zone and the requested raster summaries.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/imagery/zonal_stats_punggol.png
+   :alt: uc.imagery.zonal_stats result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.imagery.zonal_stats`` on dataset ``punggol``.
+   Unit: dimensionless. Backend: rasterio.
 
 Inputs
 ------
@@ -48,16 +65,6 @@ Output
 
 Vector Layer with the statistic column and a coverage fraction.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/imagery/zonal_stats_punggol.png
-   :alt: uc.imagery.zonal_stats result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.imagery.zonal_stats`` on dataset ``punggol``.
-   Unit: dimensionless. Backend: rasterio.
-
 How to read
 -----------
 
@@ -78,13 +85,6 @@ Limitations
 
 - park polygons are OSM leisure/natural tags
 - mean ignores within-park structure
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/imagery/zonal_stats_punggol.py
-   :language: python
-   :caption: examples/recipes/imagery/zonal_stats_punggol.py
 
 Related pages
 -------------

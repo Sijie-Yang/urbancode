@@ -56,6 +56,7 @@ jobs:
             tests/unit/test_climate_streetview.py \
             tests/unit/test_docs_streetview.py \
             tests/unit/test_capability_imports.py \
+            tests/unit/test_public_api_catalog.py \
             tests/unit/test_workflow_docs.py \
             tests/integration/test_fetch_offline.py \
             -q --tb=short -o addopts=
@@ -129,8 +130,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install streetview extra
-        run: python -m pip install --upgrade pip && pip install -e ".[dev,streetview]"
+      - name: Install svi extra
+        run: python -m pip install --upgrade pip && pip install -e ".[dev,svi]"
       - name: Prove extras import
         run: python -c "import torch, PIL"
       - name: Streetview contract and color (no skip)
@@ -175,6 +176,9 @@ jobs:
             tests/unit/test_dataset_manifests.py \
             tests/unit/test_recipe_figures.py \
             tests/unit/test_recipes_offline.py \
+            tests/unit/test_images.py \
+            tests/unit/test_public_api_catalog.py \
+            tests/unit/test_aggregate_many.py \
             -q --tb=short -o addopts=
 
   wheel:

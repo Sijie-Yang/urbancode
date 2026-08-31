@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[imagery]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.imagery.slope(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   slope = uc.imagery.slope(city.layers["dem"])
+   slope.plot()
+
+``slope`` is a raster :class:`~urbancode.city.Layer` in degrees, derived from ``city.layers['dem']``. It follows the DEM grid and nodata mask.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/imagery/terrain_punggol.png
+   :alt: uc.imagery.slope result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.imagery.slope`` on dataset ``punggol``.
+   Unit: degree. Backend: rasterio.
 
 Inputs
 ------
@@ -48,16 +64,6 @@ Output
 
 Raster Layer ``slope``. Resolution follows the DEM (30 m here).
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/imagery/terrain_punggol.png
-   :alt: uc.imagery.slope result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.imagery.slope`` on dataset ``punggol``.
-   Unit: degree. Backend: rasterio.
-
 How to read
 -----------
 
@@ -78,13 +84,6 @@ Limitations
 
 - Copernicus DEM GLO-30 is a 30 m product resampled to the pocket grid
 - buildings are not a DSM
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/imagery/slope_punggol.py
-   :language: python
-   :caption: examples/recipes/imagery/slope_punggol.py
 
 Related pages
 -------------

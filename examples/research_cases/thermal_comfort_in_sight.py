@@ -1,4 +1,7 @@
-"""Thermal Comfort in Sight research case, rewritten on UrbanCode objects.
+"""Docs figure builder for Thermal Comfort in Sight. Not a tutorial.
+
+Copy the snippet on docs/workflows/research_cases/thermal_comfort_in_sight
+instead of importing this file.
 
 VATA (thermal_affordance) is visual thermal affordance. UTCI is a
 physical heat-stress index. They can be compared; they are not substitutes.

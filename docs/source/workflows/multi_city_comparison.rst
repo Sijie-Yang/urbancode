@@ -15,101 +15,61 @@ Result first
    :alt: Streets, buildings, parks, and water for three 2 km pockets
    :width: 100%
 
-   Punggol, Singapore (EPSG:32648), Kallio, Helsinki (EPSG:32635),
-   and Greenwich Village, New York (EPSG:32618). Each panel is a
-   2 km × 2 km pocket with a parent-city locator.
+   Each panel is a 2 km × 2 km pocket. Metric CRS differs.
 
 .. figure:: /_static/workflows/real_multi_city.png
    :alt: NDVI, reachability, park fraction, and building fraction with city context
    :width: 100%
 
-   Same 250 m constructor. Grid fill is semi-transparent over
-   streets and buildings. Dates differ; this is not a city ranking.
-   Script: ``examples/workflows/real_multi_city.py``.
+   Same 250 m constructor. Dates differ; this is not a city ranking.
 
-What you will learn
--------------------
-
-* Same physical area (2 km × 2 km), same 250 m grid constructor,
-  same network radius, same missing-value rule.
-* How to keep source dates visible.
-* The difference between raw values, within-city percentiles, and
-  cross-city scores.
-
-Cities
-------
-
-.. list-table::
-   :header-rows: 1
-   :widths: 22 26 26 26
-
-   * - Pocket
-     - Place
-     - Metric CRS
-     - Notes
-   * - punggol
-     - Punggol, Singapore
-     - EPSG:32648
-     - Equatorial; July Sentinel-2
-   * - kallio
-     - Kallio, Helsinki
-     - UTM (Finland)
-     - Boreal summer window
-   * - greenwich_village
-     - Greenwich Village, New York
-     - UTM (New York)
-     - Northern-summer window
-
-Manifests: :doc:`/reference/datasets`.
-
-Installation
-------------
+1. Each City already knows its CRS
+----------------------------------
 
 ::
 
-   pip install "urbancode[standard]"
+   import urbancode as uc
 
-Step-by-step
-------------
+   for name in ("punggol", "kallio", "greenwich_village"):
+       city = uc.load(f"examples/data/real/{name}", lazy=True)
+       print(name, city.place, city.study_area.metric_crs)
 
-.. literalinclude:: ../../../examples/workflows/real_multi_city.py
-   :language: python
-   :caption: examples/workflows/real_multi_city.py
+::
 
-Compared fields include vegetation (NDVI), built-up / park area
-fractions, and network reachability when the layer exists.
-A radar chart is omitted unless you explicitly normalize; raw
-NDVI is not a rank.
+   punggol Punggol, Singapore EPSG:32648
+   kallio Kallio, Helsinki EPSG:32635
+   greenwich_village Greenwich Village, New York EPSG:32618
 
-The synthetic three-city contract script
-(``examples/workflows/multi_city_contract.py``) only proves that
-unit IDs and schemas align. It is not a real-city ranking.
+Do not reuse Punggol unit IDs in Helsinki.
 
-Reading the result
-------------------
+2. Repeat the same constructor
+------------------------------
 
-* Punggol NDVI is a July equatorial scene. Kallio and Greenwich
-  Village are June–August scenes at higher latitudes. Do not call
-  the highest mean “the greenest city”.
-* Built-up fraction follows OSM completeness as much as form.
-* Coverage can differ when a layer is missing; missing is not
-  zero.
+::
+
+   city = uc.load("examples/data/real/kallio", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   ndvi = uc.fusion.aggregate(
+       uc.imagery.ndvi(city.layers["sentinel2"]),
+       units, stat="mean", indicator="ndvi",
+   )
+   print(len(units.frame), round(float(ndvi.to_pandas()["value"].mean()), 3))
+   ndvi.plot(indicator="ndvi")
+
+::
+
+   81 0.166
+
+Kallio: 81 cells, mean NDVI about 0.166 (boreal summer window).
+Punggol mean NDVI is 0.208 (28 July). Greenwich Village is about
+0.112 (northern summer). The highest mean is not “the greenest
+city”.
+
+Loop the same two calls for the other pockets if you want a table
+of means. Built-up fraction follows OSM completeness as much as form.
 
 Limitations
 -----------
 
 * Different OSM vintages and Sentinel-2 items.
 * 2 km pockets are not municipal extents.
-* Terrain and heat are only comparable when the same product and
-  timestamp strategy exist for every city.
-
-Related pages
--------------
-
-* Concept: :doc:`/concepts/analysis_units`
-* Domain: :doc:`/domains/units`, :doc:`/domains/fusion`
-* Dataset: :doc:`/reference/datasets`
-
-Use UrbanCode when the comparison is a repeated contract.
-Use a notebook of ad-hoc maps when the unit rules are still
-moving.

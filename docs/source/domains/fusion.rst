@@ -31,6 +31,9 @@ Installation
 
    pip install "urbancode[vector]"
 
+This installs the vector overlay needed by fusion. Add the extra for
+each source modality whose layers you aggregate.
+
 Network and imagery layers still need their extras.
 
 UrbanCode API
@@ -41,6 +44,26 @@ UrbanCode API
 
 Fusion is not a DataFrame ``merge``. It is a spatial alignment
 plus a typed indicator table.
+
+::
+
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   ndvi = uc.imagery.ndvi(city.layers["sentinel2"])
+   result = uc.fusion.aggregate(ndvi, units, stat="mean", indicator="ndvi")
+   print(len(result.records), round(float(result.to_pandas()["value"].mean()), 3))
+   result.plot(indicator="ndvi")
+
+::
+
+   81 0.208
+
+``units`` is the target grid, ``ndvi`` is the native raster, and
+``result`` is an ``IndicatorResult`` with 81 values plus coverage and
+provenance. The plot reads geometry from ``units``; it does not alter
+the raster.
 
 Backend stack
 -------------

@@ -11,7 +11,7 @@ from examples.recipes.streetview._precomputed import load_or_run, photo_path
 def _run(photo: Path) -> dict:
     import urbancode as uc
 
-    result = uc.streetview.scene_recognition(str(photo))
+    result = uc.svi.scene_recognition(str(photo))
     return {"repr": str(result)[:800]}
 
 

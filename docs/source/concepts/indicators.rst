@@ -55,6 +55,23 @@ Two modalities, one table
 
 The shared object is the unit ID, not the original pixel or node.
 
+Try it::
+
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   result = uc.fusion.aggregate(
+       uc.imagery.ndvi(city.layers["sentinel2"]),
+       units, stat="mean", indicator="ndvi",
+   )
+   rec = result.records[0]
+   print(rec.indicator, round(rec.value, 3), rec.coverage)
+
+::
+
+   ndvi 0.146 1.0
+
 Export
 ------
 

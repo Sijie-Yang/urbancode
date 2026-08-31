@@ -172,6 +172,154 @@ COPY = {
     ),
 }
 
+# These notes sit directly below the runnable block.  They deliberately name
+# the variables a reader will see in the snippet; a generic "print the object"
+# instruction made the old recipe pages look complete while leaving the code
+# unexplained.
+EXAMPLE_NOTES = {
+    "core.load": (
+        "``city`` is the lazily loaded :class:`~urbancode.city.City`. The call "
+        "to ``city.plot`` renders three existing layers; it does not download or "
+        "modify data."
+    ),
+    "core.fetch": (
+        "``city`` is the downloaded :class:`~urbancode.city.City`. Because this "
+        "is a live call, its layer inventory and OSM/STAC timestamps can differ "
+        "from the committed figure below."
+    ),
+    "core.study_area": (
+        "``city.study_area.bbox`` is the stored west/south/east/north envelope. "
+        "``area`` is a new :class:`~urbancode.area.StudyArea` built from the same "
+        "coordinates; no layers are copied into it."
+    ),
+    "network.fetch": (
+        "``streets`` is the graph :class:`~urbancode.city.Layer` already stored "
+        "in ``city``. ``streets.plot()`` draws the graph in native support; the "
+        "code does not aggregate it to a grid."
+    ),
+    "network.centrality": (
+        "``between`` is a graph :class:`~urbancode.city.Layer`. Its NetworkX "
+        "nodes carry a new ``betweenness`` attribute; ``between.plot()`` colours "
+        "the native nodes/edges by that value."
+    ),
+    "network.accessibility": (
+        "``reach`` is a graph :class:`~urbancode.city.Layer`. Each node gets a "
+        "``reachability`` count of other nodes within 150 m of network length; "
+        "``reach.plot()`` stays on graph nodes rather than grid cells."
+    ),
+    "network.clustering": (
+        "``cluster`` is a graph :class:`~urbancode.city.Layer` whose nodes carry "
+        "the dimensionless ``clustering`` coefficient. The plot is node-level."
+    ),
+    "network.local_efficiency": (
+        "``eff`` is a graph :class:`~urbancode.city.Layer` whose nodes carry "
+        "``local_efficiency``. The value describes neighbour redundancy, not "
+        "travel speed."
+    ),
+    "imagery.read": (
+        "``raster`` is a raster :class:`~urbancode.city.Layer` opened from the "
+        "GeoTIFF path. It retains the file CRS, transform, bands, and nodata; "
+        "``raster.plot()`` only renders those stored values."
+    ),
+    "imagery.fetch": (
+        "``city`` is the live imagery result. The STAC item, acquisition date, "
+        "cloud filter, and asset URLs are recorded in layer metadata; the figure "
+        "below uses the pinned offline item instead."
+    ),
+    "imagery.ndvi": (
+        "``ndvi`` is a dimensionless raster :class:`~urbancode.city.Layer` on "
+        "the Sentinel-2 pixel grid. ``ndvi.plot()`` shows pixels, not 250 m "
+        "analysis units."
+    ),
+    "imagery.ndwi": (
+        "``ndwi`` is a dimensionless raster :class:`~urbancode.city.Layer` on "
+        "the Sentinel-2 pixel grid. Positive pixels are water candidates, not "
+        "validated water polygons."
+    ),
+    "imagery.ndbi": (
+        "``ndbi`` is a dimensionless raster :class:`~urbancode.city.Layer` on "
+        "the Sentinel-2 pixel grid. High values can represent built-up surface "
+        "or bare soil."
+    ),
+    "imagery.slope": (
+        "``slope`` is a raster :class:`~urbancode.city.Layer` in degrees, derived "
+        "from ``city.layers['dem']``. It follows the DEM grid and nodata mask."
+    ),
+    "imagery.aspect": (
+        "``aspect`` is a raster :class:`~urbancode.city.Layer` in degrees "
+        "clockwise from north. Flat DEM cells remain nodata."
+    ),
+    "imagery.hillshade": (
+        "``shade`` is a 0--255 raster :class:`~urbancode.city.Layer`. It visualises "
+        "relief under assumed illumination and is not a solar-access result."
+    ),
+    "imagery.zonal_stats": (
+        "``units`` contains the 250 m polygons, ``ndvi`` contains native pixels, "
+        "and ``stats`` is a vector :class:`~urbancode.city.Layer` with one row per "
+        "zone and the requested raster summaries."
+    ),
+    "climate.utci": (
+        "``utci`` is a scalar UTCI value in degrees Celsius. Here ``tdb`` is air "
+        "temperature, ``rh`` is relative humidity in percent, and ``v`` is wind "
+        "speed in m/s; radiant temperature defaults to air temperature."
+    ),
+    "streetview.filename": (
+        "``table`` is a pandas DataFrame with one row per discovered image file. "
+        "It contains filenames and paths only--no coordinates or perception "
+        "scores are inferred."
+    ),
+    "streetview.color": (
+        "``table`` is the input file catalog. ``color`` is a copy augmented with "
+        "pixel-statistic columns such as ``Colorfulness``; these are image-level "
+        "features, not comfort measurements."
+    ),
+    "images.from_table": (
+        "``catalog`` is the three-city source table. ``photos`` is the eight-row "
+        "Punggol point :class:`~urbancode.city.Layer`; ``n_images`` counts catalog "
+        "rows and ``photos.plot()`` maps their coordinates."
+    ),
+    "streetview.as_layer": (
+        "``catalog`` is filtered to Punggol before conversion. ``photos`` is an "
+        "eight-row point :class:`~urbancode.city.Layer`; rows without usable "
+        "coordinates are not invented."
+    ),
+    "perception.thermal_affordance": (
+        "``photos`` is the geolocated input image layer. ``vata`` is a point "
+        ":class:`~urbancode.city.Layer` with TCIS VATA/VPI model outputs attached "
+        "to each successfully scored image."
+    ),
+    "fusion.aggregate": (
+        "``units`` is the 250 m target grid, ``ndvi`` is the native raster, and "
+        "``result`` is an :class:`~urbancode.indicators.IndicatorResult` with one "
+        "NDVI value and coverage field per unit."
+    ),
+    "fusion.aggregate_many": (
+        "``photos`` is the point observation layer and ``units`` is the target "
+        "grid. ``result`` is a long :class:`~urbancode.indicators.IndicatorResult` "
+        "containing the requested summaries for each populated unit."
+    ),
+    "fusion.combine": (
+        "``ndvi`` and ``reach`` are already aggregated IndicatorResults on the "
+        "same ``units``. ``result`` concatenates their records; ``combine`` does "
+        "not resample either source."
+    ),
+    "units.grid": (
+        "``units`` is an :class:`~urbancode.units.AnalysisUnits` object. "
+        "``units.frame`` contains clipped 250 m polygons with stable ``unit_id`` "
+        "values in the reported metric CRS."
+    ),
+    "units.hexgrid": (
+        "``units`` is an :class:`~urbancode.units.AnalysisUnits` object containing "
+        "clipped pointy-top hexagons. ``cell_size`` is centre-to-vertex distance "
+        "in metres."
+    ),
+    "units.from_layer": (
+        "``units`` is an :class:`~urbancode.units.AnalysisUnits` object built from "
+        "park polygons. Its IDs fingerprint geometry; they are not copied row "
+        "numbers."
+    ),
+}
+
 TEACHING = {
     "network.accessibility": {
         "parameters": (
@@ -406,9 +554,6 @@ def render(item: dict) -> str:
     teach = TEACHING.get(item["id"], {})
     recipe = item["recipe"]
     figure = item["figure"]
-    script = f"examples/recipes/{recipe}.py"
-    depth = 4 + recipe.count("/")
-    include = "../" * depth + script
     image = "../" * (2 + recipe.count("/")) + f"_static/{figure}"
     limitations = "\n".join(f"- {line}" for line in item.get("limitations") or [])
     parameters = teach.get(
@@ -429,6 +574,11 @@ def render(item: dict) -> str:
         "Missing extras raise ``MissingExtraError``. Invalid parameters raise ``ValueError``.",
     )
     support = teach.get("spatial_support") or _default_support(item)
+    snippet = _command_snippet(item).lstrip("\n")
+    example_note = EXAMPLE_NOTES.get(
+        item["id"],
+        f"The last assignment is the recipe result: {output_fields}",
+    )
     return f"""{item['function']}
 {'=' * len(item['function'])}
 
@@ -445,12 +595,24 @@ Real case
 - Extra: ``urbancode[{item.get('extra')}]``
 - Offline: {item.get('offline')}
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   {item['function']}(...)
+{snippet}
+
+{example_note}
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: {image}
+   :alt: {item['function']} result for the registered dataset
+   :width: 100%
+
+   Output of ``{item['function']}`` on dataset ``{item.get('dataset')}``.
+   Unit: {item.get('unit')}. Backend: {item.get('backend')}.
 
 Inputs
 ------
@@ -479,16 +641,6 @@ Output
 
 {output_fields}
 
-Figure
-------
-
-.. figure:: {image}
-   :alt: {item['function']} result for the registered dataset
-   :width: 100%
-
-   Output of ``{item['function']}`` on dataset ``{item.get('dataset')}``.
-   Unit: {item.get('unit')}. Backend: {item.get('backend')}.
-
 How to read
 -----------
 
@@ -508,13 +660,6 @@ Limitations
 -----------
 
 {limitations}
-
-Complete script
----------------
-
-.. literalinclude:: {include}
-   :language: python
-   :caption: {script}
 
 Related pages
 -------------
@@ -575,6 +720,8 @@ def _update_indexes(written: list[Path]) -> None:
         "imagery": "Imagery recipes",
         "climate": "Climate recipes",
         "streetview": "Street-view recipes",
+        "images": "Image-observation recipes",
+        "perception": "Perception recipes",
         "fusion": "Fusion recipes",
         "cli": "CLI recipes",
     }
@@ -594,6 +741,313 @@ def _update_indexes(written: list[Path]) -> None:
             lines.append(f"   {name}")
         lines.append("")
         index.write_text("\n".join(lines), encoding="utf-8")
+
+
+def _command_snippet(item: dict) -> str:
+    """Short public-API example. Figure builders stay out of the page."""
+    snippets = {
+        "core.load": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   city.plot(layers=["streets", "buildings", "parks"])
+""",
+        "core.fetch": """
+   import urbancode as uc
+
+   # Live download. The docs figure uses the committed pocket instead.
+   city = uc.fetch("Punggol, Singapore")
+""",
+        "core.study_area": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   print(city.study_area.bbox)
+   area = uc.StudyArea.from_bbox(
+       *city.metadata["bbox"], city_id="punggol"
+   )
+""",
+        "network.fetch": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   streets = city.layer("streets")
+   streets.plot()
+""",
+        "network.centrality": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   between = uc.network.centrality(city["streets"], metric="betweenness")
+   between.plot()
+""",
+        "network.accessibility": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   reach = uc.network.accessibility(
+       city["streets"], radius=150, metric="reachability"
+   )
+   reach.plot()
+""",
+        "network.clustering": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   cluster = uc.network.clustering(city["streets"])
+   cluster.plot()
+""",
+        "network.local_efficiency": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   eff = uc.network.local_efficiency(city["streets"])
+   eff.plot()
+""",
+        "imagery.read": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   raster = uc.imagery.read(city.layers["sentinel2"].path)
+   raster.plot()
+""",
+        "imagery.fetch": """
+   import urbancode as uc
+
+   # Live STAC search. The docs figure uses the committed GeoTIFF.
+   city = uc.imagery.fetch(place="Punggol, Singapore")
+""",
+        "imagery.ndvi": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   ndvi = uc.imagery.ndvi(city.layers["sentinel2"])
+   ndvi.plot()
+""",
+        "imagery.ndwi": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   ndwi = uc.imagery.ndwi(city.layers["sentinel2"])
+   ndwi.plot()
+""",
+        "imagery.ndbi": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   ndbi = uc.imagery.ndbi(city.layers["sentinel2"])
+   ndbi.plot()
+""",
+        "imagery.slope": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   slope = uc.imagery.slope(city.layers["dem"])
+   slope.plot()
+""",
+        "imagery.aspect": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   aspect = uc.imagery.aspect(city.layers["dem"])
+   aspect.plot()
+""",
+        "imagery.hillshade": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   shade = uc.imagery.hillshade(city.layers["dem"])
+   shade.plot()
+""",
+        "imagery.zonal_stats": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   ndvi = uc.imagery.ndvi(city.layers["sentinel2"])
+   stats = uc.imagery.zonal_stats(ndvi, units.frame)
+""",
+        "climate.utci": """
+   import urbancode as uc
+
+   utci = uc.climate.utci(tdb=31.2, rh=74, v=1.8)
+   print(float(utci))
+""",
+        "streetview.filename": """
+   import urbancode as uc
+
+   table = uc.svi.filename("examples/data/real/streetview/punggol")
+   print(table.head())
+""",
+        "streetview.color": """
+   import urbancode as uc
+
+   table = uc.svi.filename("examples/data/real/streetview/punggol")
+   color = uc.svi.color(
+       table, folder_path="examples/data/real/streetview/punggol"
+   )
+   print(color.head())
+""",
+        "images.from_table": """
+   import pandas as pd
+   import urbancode as uc
+
+   catalog = pd.read_json("examples/data/real/streetview/catalog.json")
+   photos = uc.images.from_table(
+       catalog[catalog["city_id"] == "punggol"],
+       view_type="streetview",
+       image_root="examples/data/real/streetview",
+   )
+   print(photos.kind, photos.metadata["n_images"])
+   photos.plot()
+""",
+        "streetview.as_layer": """
+   import pandas as pd
+   import urbancode as uc
+
+   catalog = pd.read_json("examples/data/real/streetview/catalog.json")
+   photos = uc.svi.as_layer(catalog[catalog["city_id"] == "punggol"])
+   print(photos.kind, photos.metadata["n_images"])
+   photos.plot()
+""",
+        "perception.thermal_affordance": """
+   import pandas as pd
+   import urbancode as uc
+
+   catalog = pd.read_json("examples/data/real/streetview/catalog.json")
+   photos = uc.images.from_table(
+       catalog[catalog["city_id"] == "punggol"],
+       view_type="streetview",
+       image_root="examples/data/real/streetview",
+   )
+   vata = uc.perception.thermal_affordance(photos)
+   vata.plot()
+""",
+        "fusion.aggregate": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   ndvi = uc.imagery.ndvi(city.layers["sentinel2"])
+   result = uc.fusion.aggregate(ndvi, units, stat="mean", indicator="ndvi")
+   result.plot(indicator="ndvi")
+""",
+        "fusion.aggregate_many": """
+   import pandas as pd
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   catalog = pd.read_json("examples/data/real/streetview/catalog.json")
+   photos = uc.images.from_table(
+       catalog[catalog["city_id"] == "punggol"],
+       view_type="streetview",
+       image_root="examples/data/real/streetview",
+   )
+   result = uc.fusion.aggregate_many(photos, units, stat="count")
+   print(len(result.records))
+""",
+        "fusion.combine": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   ndvi = uc.fusion.aggregate(
+       uc.imagery.ndvi(city.layers["sentinel2"]),
+       units,
+       stat="mean",
+       indicator="ndvi",
+   )
+   reach = uc.fusion.aggregate(
+       uc.network.accessibility(
+           city["streets"], radius=150, metric="reachability"
+       ),
+       units,
+       stat="mean",
+       indicator="reachability",
+   )
+   result = uc.fusion.combine(units, ndvi, reach)
+   result.plot(indicator="ndvi")
+""",
+        "units.grid": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   print(len(units.frame), units.metric_crs)
+""",
+        "units.hexgrid": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.hexgrid(city, cell_size=250)
+   print(len(units.frame), units.kind)
+""",
+        "units.from_layer": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.from_layer(
+       city.layer("parks"), study_area=city.study_area
+   )
+   print(len(units.frame), units.kind)
+""",
+        "indicators.save": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   result = uc.fusion.aggregate(
+       uc.imagery.ndvi(city.layers["sentinel2"]),
+       units,
+       stat="mean",
+       indicator="ndvi",
+   )
+   result.save("punggol_indicators")
+""",
+        "indicators.load": """
+   import urbancode as uc
+
+   result = uc.IndicatorResult.load("punggol_indicators")
+   print(result.to_pandas().head())
+""",
+        "indicators.plot": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   result = uc.fusion.aggregate(
+       uc.imagery.ndvi(city.layers["sentinel2"]),
+       units,
+       stat="mean",
+       indicator="ndvi",
+   )
+   result.plot(indicator="ndvi")
+""",
+        "indicators.to_layer": """
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   result = uc.fusion.aggregate(
+       uc.imagery.ndvi(city.layers["sentinel2"]),
+       units,
+       stat="mean",
+       indicator="ndvi",
+   )
+   layer = result.to_layer(indicator="ndvi")
+   layer.plot()
+""",
+    }
+    text = snippets.get(item["id"])
+    if text is None:
+        text = f"""
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   # {item['function']}
+"""
+    return text.strip("\n")
 
 
 def _default_support(item: dict) -> str:

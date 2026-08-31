@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[imagery]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.imagery.aspect(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   aspect = uc.imagery.aspect(city.layers["dem"])
+   aspect.plot()
+
+``aspect`` is a raster :class:`~urbancode.city.Layer` in degrees clockwise from north. Flat DEM cells remain nodata.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/imagery/terrain_punggol.png
+   :alt: uc.imagery.aspect result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.imagery.aspect`` on dataset ``punggol``.
+   Unit: degree. Backend: rasterio.
 
 Inputs
 ------
@@ -48,16 +64,6 @@ Output
 
 Raster Layer ``aspect`` in degrees 0–360.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/imagery/terrain_punggol.png
-   :alt: uc.imagery.aspect result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.imagery.aspect`` on dataset ``punggol``.
-   Unit: degree. Backend: rasterio.
-
 How to read
 -----------
 
@@ -78,13 +84,6 @@ Limitations
 
 - cyclic 0-360 degrees from north
 - flat cells are nodata
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/imagery/aspect_punggol.py
-   :language: python
-   :caption: examples/recipes/imagery/aspect_punggol.py
 
 Related pages
 -------------

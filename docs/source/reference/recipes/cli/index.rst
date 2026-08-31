@@ -2,7 +2,7 @@ CLI recipes
 ===========
 
 ``uc --version``, ``uc fetch``, ``uc network fetch``, ``uc imagery fetch``,
-and ``uc streetview comfort``. Offline pages use committed fixtures.
+and ``uc svi comfort``. Offline pages use committed fixtures.
 
 .. toctree::
    :maxdepth: 1

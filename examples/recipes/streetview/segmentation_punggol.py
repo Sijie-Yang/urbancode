@@ -11,7 +11,7 @@ from examples.recipes.streetview._precomputed import load_or_run, photo_path
 def _run(photo: Path) -> dict:
     import urbancode as uc
 
-    result = uc.streetview.segmentation(str(photo))
+    result = uc.svi.segmentation(str(photo))
     if hasattr(result, "to_dict"):
         return result.to_dict()
     return {"result": str(type(result)), "repr": str(result)[:500]}

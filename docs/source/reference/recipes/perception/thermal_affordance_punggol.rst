@@ -14,91 +14,88 @@ Real case
 - Extra: ``urbancode[perception]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.perception.thermal_affordance(...)
+   import pandas as pd
+   import urbancode as uc
+
+   catalog = pd.read_json("examples/data/real/streetview/catalog.json")
+   photos = uc.images.from_table(
+       catalog[catalog["city_id"] == "punggol"],
+       view_type="streetview",
+       image_root="examples/data/real/streetview",
+   )
+   vata = uc.perception.thermal_affordance(photos)
+   vata.plot()
+
+``photos`` is the geolocated input image layer. ``vata`` is a point :class:`~urbancode.city.Layer` with TCIS VATA/VPI model outputs attached to each successfully scored image.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/perception/thermal_affordance_punggol.png
+   :alt: uc.perception.thermal_affordance result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.perception.thermal_affordance`` on dataset ``streetview``.
+   Unit: score_0_5. Backend: torch.
 
 Inputs
 ------
 
-A geolocated image Layer from ``uc.images.from_table``.
+geolocated image Layer
 
 Spatial support
 ---------------
 
-Native support: photo point. Fusion support: unit mean only where
-photos exist. Unobserved units stay empty.
+See :doc:`/concepts/spatial_support_and_maps` for native vs aggregated geometry.
 
 Parameters
 ----------
 
-``device`` is ``cpu`` or ``cuda``. ``include_features`` keeps TCIS
-initial-feature columns (default True).
+See the signature of ``uc.perception.thermal_affordance`` in the API reference. The recipe uses the committed fixture and does not hard-code result values.
 
 Method
 ------
 
-The TCIS backend extracts image features, runs the two-stage
-network, and returns a Layer. The canonical score is
-``thermal_affordance`` (VATA). ``thermal_comfort`` is only a
-compatibility alias on the deprecated DataFrame entry.
+TCIS VATA and VPI heads as a Layer. Weights stay in the user cache.
 
 Backend: ``torch``. Output unit: ``score_0_5``.
 
 Output
 ------
 
-Point Layer with ``image_id``, VATA, VPI heads, and model
-provenance (weights SHA-256, stats SHA-256, device, UrbanCode
-version).
-
-Figure
-------
-
-.. figure:: ../../../_static/recipes/perception/thermal_affordance_punggol.png
-   :alt: VATA on eight Punggol photo points and 250 m units
-   :width: 100%
-
-   Output of TCIS VATA on eight Commons photos. Unit: score 0–5.
-   Unobserved units are hatched. This is not a city-scale map.
+point Layer. Unit: score_0_5.
 
 How to read
 -----------
 
-A high score is the model's visual thermal affordance. It is not
-measured personal comfort and not UTCI.
+thermal_affordance is visual affordance, not measured comfort and not UTCI.
 
 Parameters and sensitivity
 --------------------------
 
-Changing device should not change the score. Changing the photo
-crop or JPEG quality will.
+Change one parameter at a time (radius, cell size, date) and compare coverage.
 
 Failure modes
 -------------
 
-Missing weights raise after a failed download. Missing image files
-raise. Importing ``urbancode.perception`` does not import torch.
+Missing extras raise ``MissingExtraError``. Invalid parameters raise ``ValueError``.
 
 Limitations
 -----------
 
 - VATA is visual thermal affordance, not measured comfort and not UTCI
-- eight Commons photos are a sample, not a Punggol census
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/perception/thermal_affordance_punggol.py
-   :language: python
-   :caption: examples/recipes/perception/thermal_affordance_punggol.py
+- eight Commons photos are a tiny out-of-distribution fixture, not the flagship 92,233 Singapore result
+- dataset-scale runs use output/chunk_size/resume on this same function
 
 Related pages
 -------------
 
+- Domain: :doc:`/reference/api/perception`
 - API: :doc:`/reference/api/perception`
 - Workflow: :doc:`/workflows/research_cases/thermal_comfort_in_sight`
 - Dataset: :doc:`/reference/datasets`

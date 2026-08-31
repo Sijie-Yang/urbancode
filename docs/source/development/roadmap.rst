@@ -7,7 +7,7 @@ Shipped
 * ``StudyArea``, ``City`` / ``Layer``, ``AnalysisUnits``
 * ``IndicatorResult`` with coverage, quality flags, and receipts
 * ``fusion.aggregate`` for raster, graph, polygon, point, and table
-* ``uc.streetview`` as the official street-view implementation
+* ``uc.svi`` as the official street-view implementation
 * Five research workflows on real 2 km pockets (Punggol, Kallio,
   Greenwich Village)
 * ``uc.images.from_table``, ``uc.perception.thermal_affordance``,

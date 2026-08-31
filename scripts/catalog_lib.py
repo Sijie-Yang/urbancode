@@ -100,8 +100,8 @@ def validate_item(item: dict[str, Any]) -> list[str]:
     status = item.get("status")
     if status not in STATUSES:
         errors.append(f"{item.get('id', '?')}: bad status {status!r}")
-    if str(item.get("function", "")).startswith("uc.svi"):
-        errors.append(f"{item.get('id', '?')}: catalog must not list uc.svi")
+    if str(item.get("function", "")).startswith("uc.streetview"):
+        errors.append(f"{item.get('id', '?')}: catalog must list uc.svi, not uc.streetview")
     if status == "adapter-only":
         if not item.get("interop"):
             errors.append(f"{item.get('id')}: adapter-only needs interop")

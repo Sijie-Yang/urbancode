@@ -4,6 +4,13 @@ Installation
 UrbanCode requires Python 3.10 or newer on macOS, Linux, or Windows.
 The core wheel is small. GIS and deep-learning stacks are extras.
 
+Tutorials and the Punggol pocket need the GIS extra set:
+
+::
+
+   pip install "urbancode[standard]"
+   python -c "import urbancode as uc; print(uc.__version__); print(uc.backends.status())"
+
 There is no ``uc doctor`` command. After install, probe extras with
 :func:`urbancode.backends.status` or :func:`urbancode.backends.available`.
 
@@ -47,7 +54,7 @@ Extras
      - :doc:`/domains/climate`
      - pythermalcomfort
      - UTCI (rasters still need ``imagery``)
-   * - ``streetview``
+   * - ``svi``
      - :doc:`/domains/streetview`
      - Pillow, OpenCV, PyTorch, ZenSVI
      - Color, live fetch, deprecated comfort
@@ -56,7 +63,7 @@ Extras
      - PyTorch, TorchVision, OpenCV
      - TCIS VATA / VPI
    * - ``research``
-     - perception + streetview + climate + viz
+     - perception + svi + climate + viz
      - Torch plus GIS extras
      - Research-case reproduction
    * - ``spatial-stats``
@@ -72,7 +79,7 @@ Extras
      - GIS stack, no torch
      - :doc:`/workflows/punggol_urban_profile`
    * - ``all``
-     - standard + streetview + perception + survey + graph
+     - standard + svi + perception + survey + graph
      - torch, ZenSVI, city2graph
      - Full local development
    * - ``dev``
@@ -81,10 +88,10 @@ Extras
      - Package tests
    * - ``docs``
      - Sphinx HTML
-     - sphinx, sphinx-rtd-theme
+     - sphinx, sphinx-immaterial
      - ``sphinx-build -W``
 
-``svi`` and ``download`` remain install aliases of ``streetview``.
+``streetview`` and ``download`` remain install aliases of ``svi``.
 ``gallery`` is an alias of ``viz``. Torch is not in ``standard``.
 
 When to install ``all``
@@ -101,9 +108,9 @@ Heavyweight notes
 
 * Rasterio / GDAL wheels usually install from PyPI. If your platform
   needs a system GDAL, follow the Rasterio install guide.
-* ``streetview`` pulls PyTorch. CPU wheels are large; GPU builds are
+* ``svi`` pulls PyTorch. CPU wheels are large; GPU builds are
   your choice, not an UrbanCode extra.
-* Live ``uc.fetch`` and ``uc.streetview.fetch`` need network access.
+* Live ``uc.fetch`` and ``uc.svi.fetch`` need network access.
   Offline docs and CI use committed fixtures under
   ``examples/data/real/``.
 

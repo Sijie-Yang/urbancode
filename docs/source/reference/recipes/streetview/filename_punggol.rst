@@ -1,5 +1,5 @@
-uc.streetview.filename
-======================
+uc.svi.filename
+===============
 
 Urban question
 --------------
@@ -11,15 +11,30 @@ Real case
 
 - Dataset: ``streetview``
 - Domain: streetview
-- Extra: ``urbancode[streetview]``
+- Extra: ``urbancode[svi]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.streetview.filename(...)
+   import urbancode as uc
+
+   table = uc.svi.filename("examples/data/real/streetview/punggol")
+   print(table.head())
+
+``table`` is a pandas DataFrame with one row per discovered image file. It contains filenames and paths only--no coordinates or perception scores are inferred.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/streetview/filename_punggol.png
+   :alt: uc.svi.filename result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.svi.filename`` on dataset ``streetview``.
+   Unit: filename. Backend: pandas.
 
 Inputs
 ------
@@ -48,16 +63,6 @@ Output
 
 DataFrame with Filename and path. Not a spatial sample.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/streetview/filename_punggol.png
-   :alt: uc.streetview.filename result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.streetview.filename`` on dataset ``streetview``.
-   Unit: filename. Backend: pandas.
-
 How to read
 -----------
 
@@ -78,13 +83,6 @@ Limitations
 
 - catalog only; no perception scores
 - photo locations are recorded separately
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/streetview/filename_punggol.py
-   :language: python
-   :caption: examples/recipes/streetview/filename_punggol.py
 
 Related pages
 -------------

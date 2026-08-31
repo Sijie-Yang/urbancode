@@ -31,8 +31,8 @@ def main(out_dir: str | Path | None = None) -> dict:
     folder = REAL / "streetview" / "punggol"
     if not folder.is_dir():
         folder = streetview_dir()
-    catalog = uc.streetview.filename(str(folder))
-    features = uc.streetview.color(catalog, folder_path=str(folder))
+    catalog = uc.svi.filename(str(folder))
+    features = uc.svi.color(catalog, folder_path=str(folder))
     features["stem"] = features["Filename"].map(lambda name: Path(name).stem)
     frame = frame.copy()
     frame["stem"] = frame["path"].map(lambda name: Path(name).stem.replace(".jpg", ""))
@@ -40,7 +40,7 @@ def main(out_dir: str | Path | None = None) -> dict:
     if merged.empty:
         merged = frame.copy()
         merged["Colorfulness"] = float("nan")
-    points = uc.streetview.as_layer(merged, name="streetview_points")
+    points = uc.svi.as_layer(merged, name="streetview_points")
     city = load_punggol()
     units = uc.units.grid(city, cell_size=250)
     color = uc.fusion.aggregate(

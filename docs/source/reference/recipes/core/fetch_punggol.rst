@@ -14,12 +14,27 @@ Real case
 - Extra: ``urbancode[network]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.fetch(...)
+   import urbancode as uc
+
+   # Live download. The docs figure uses the committed pocket instead.
+   city = uc.fetch("Punggol, Singapore")
+
+``city`` is the downloaded :class:`~urbancode.city.City`. Because this is a live call, its layer inventory and OSM/STAC timestamps can differ from the committed figure below.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/cli/fetch.png
+   :alt: uc.fetch result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.fetch`` on dataset ``punggol``.
+   Unit: mixed. Backend: osmnx.
 
 Inputs
 ------
@@ -48,16 +63,6 @@ Output
 
 City directory. This recipe uses the committed pocket, not a live Overpass call.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/cli/fetch.png
-   :alt: uc.fetch result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.fetch`` on dataset ``punggol``.
-   Unit: mixed. Backend: osmnx.
-
 How to read
 -----------
 
@@ -78,13 +83,6 @@ Limitations
 
 - the offline recipe plots the committed pocket, not a live download
 - live refresh is a Tier 2 network job
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/core/fetch_punggol.py
-   :language: python
-   :caption: examples/recipes/core/fetch_punggol.py
 
 Related pages
 -------------

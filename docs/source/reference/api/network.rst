@@ -1,8 +1,10 @@
 Network
 =======
 
-Need ``urbancode[network]``. Prefer :func:`urbancode.network.fetch` for new
-code. Layer names: :doc:`/concepts/study_area_city_layer`.
+Need ``urbancode[network]``. Prefer :func:`urbancode.network.fetch`,
+:func:`urbancode.network.centrality`, and
+:func:`urbancode.network.accessibility` for new code.
+Layer names: :doc:`/concepts/study_area_city_layer`.
 
 .. autofunction:: urbancode.network.fetch
 .. autofunction:: urbancode.network.centrality

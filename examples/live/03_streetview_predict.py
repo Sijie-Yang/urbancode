@@ -16,7 +16,7 @@ def main(out_dir: str | Path, *, add_basemap: bool = False) -> dict[str, Path]:
 
     city = uc.City.from_dir(DATA_DIR)
     image = Path(city.layer("streetview").path)
-    scores = uc.streetview.comfort(str(image), mode="image")
+    scores = uc.svi.comfort(str(image), mode="image")
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     dest = out / "03_streetview_predict.csv"

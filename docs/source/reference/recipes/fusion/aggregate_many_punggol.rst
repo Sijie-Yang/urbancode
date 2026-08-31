@@ -14,82 +14,84 @@ Real case
 - Extra: ``urbancode[vector]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.fusion.aggregate_many(...)
+   import pandas as pd
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   catalog = pd.read_json("examples/data/real/streetview/catalog.json")
+   photos = uc.images.from_table(
+       catalog[catalog["city_id"] == "punggol"],
+       view_type="streetview",
+       image_root="examples/data/real/streetview",
+   )
+   result = uc.fusion.aggregate_many(photos, units, stat="count")
+   print(len(result.records))
+
+``photos`` is the point observation layer and ``units`` is the target grid. ``result`` is a long :class:`~urbancode.indicators.IndicatorResult` containing the requested summaries for each populated unit.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/fusion/aggregate_many_punggol.png
+   :alt: uc.fusion.aggregate_many result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.fusion.aggregate_many`` on dataset ``streetview``.
+   Unit: mixed. Backend: geopandas.
 
 Inputs
 ------
 
-A prediction Layer, AnalysisUnits, and a column map.
+Layer plus column map plus AnalysisUnits
 
 Spatial support
 ---------------
 
-Output support: AnalysisUnits. Units with no photos stay null.
+Output support: AnalysisUnits (grid/hex/polygons). Context layers (streets, buildings, water) should remain visible.
 
 Parameters
 ----------
 
-``columns`` maps a source column to ``indicator`` and ``unit``.
-``stat`` defaults to ``mean``.
+See the signature of ``uc.fusion.aggregate_many`` in the API reference. The recipe uses the committed fixture and does not hard-code result values.
 
 Method
 ------
 
-Calls ``aggregate`` once per column, then ``combine``. Users do not
-write twenty separate aggregates.
+Aggregates several columns from one Layer, then combines them.
 
 Backend: ``geopandas``. Output unit: ``mixed``.
 
 Output
 ------
 
-One ``IndicatorResult`` with one row per city / unit / indicator,
-plus coverage, quality flags, and parent receipts.
-
-Figure
-------
-
-.. figure:: ../../../_static/recipes/fusion/aggregate_many_punggol.png
-   :alt: Mean VATA from aggregate_many on 250 m units
-   :width: 100%
-
-   Mean ``thermal_affordance`` after ``aggregate_many``. Unobserved
-   units are empty, not zero.
+IndicatorResult. Unit: mixed.
 
 How to read
 -----------
 
-Read the value with coverage. A high mean on one photo is thin.
+Units with no photos stay null, not zero.
 
 Parameters and sensitivity
 --------------------------
 
-``mean`` vs ``median`` moves cells that contain one outlier photo.
-Cell size changes which photos share a unit (MAUP).
+Change one parameter at a time (radius, cell size, date) and compare coverage.
 
 Failure modes
 -------------
 
-An empty ``columns`` map raises. Unknown source columns yield
-empty values, not invented scores.
+Missing extras raise ``MissingExtraError``. Invalid parameters raise ``ValueError``.
 
 Limitations
 -----------
 
 - each column is aggregated separately, then combined
 - units with no photos stay null, not zero
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/fusion/aggregate_many_punggol.py
-   :language: python
-   :caption: examples/recipes/fusion/aggregate_many_punggol.py
 
 Related pages
 -------------

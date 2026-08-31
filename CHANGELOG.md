@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Changed
+- Public street-view namespace is `uc.svi` / `urbancode[svi]`. `uc.streetview` and the `streetview` extra stay as aliases
+- Documentation uses the Material theme (same family as momepy): library homepage, User guide / Examples / API nav, measure-grouped API tables
+- Tutorials teach in small blocks: code, then print / inspect / plot. Figure-builder scripts stay out of Get Started, workflows, research cases, and recipes
+- Every generated recipe now places a variable/return-value explanation and the matching figure directly after its runnable code block
+- Public docstrings for units, fusion, network metrics, and UTCI now state inputs, return contracts, units, failure modes, and interpretation limits
+
+### Fixed
+- `uc.units.grid` and `uc.units.hexgrid` now clip edge geometry to the StudyArea envelope, matching the documented contract and preventing out-of-study area from entering coverage and area-fraction denominators
+- The docs figure refresher accepts recipes that already wrote directly to their final `_static` path instead of raising `SameFileError`
+
+### Added
+- `uc.images.from_table` and `uc.streetview.as_layer` accept a catalog path (JSON/CSV/parquet)
+- Heat Resilience in Sight research case from committed city-month summaries (Singapore n = 21,772, not the TCIS 92,233 survey set). No public SHR helper.
+
 ## [0.3.0] - 2026-08-20
 
 ### Fixed

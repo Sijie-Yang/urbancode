@@ -1,0 +1,107 @@
+{
+  "u0_utci_c": 26.0,
+  "calibrate_city": "svi_hk",
+  "calibrate_months": [
+    6,
+    7,
+    8
+  ],
+  "calibration_slope": 1.0,
+  "demand_column": "demand",
+  "v_ref": 1.7324007431443411,
+  "d_ref": 7.99114305622864,
+  "daytime_hours_local": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ],
+  "tdb_proxy": "hourly_temperature_2m",
+  "tmrt_open_sun": "T_air + SolarCal delta_mrt (standardised open-sun pedestrian)",
+  "tmrt_shaded": "T_air",
+  "demand": "mean of daily daytime-max max(UTCI-26, 0); open-sun unless demand_column is shaded",
+  "solar_assumptions": {
+    "posture": "standing",
+    "asw": 0.7,
+    "floor_reflectance": 0.2,
+    "f_svv": 1.0,
+    "f_bes": 0.5,
+    "sol_transmittance": 1.0,
+    "sharp": 90.0,
+    "hours_local": "10-17",
+    "daily_utci": "maximum of daytime hours"
+  },
+  "cache_version": "hourly_v1",
+  "climate_source": "Open-Meteo archive ERA5-land hourly 2015-2024 city centroid",
+  "vata_note": "Singapore-trained TCIS two-stage MTNNL; aligned 1024x512 inference",
+  "cities": {
+    "svi_sg": {
+      "label": "Singapore",
+      "short": "Singapore",
+      "lat": 1.3521,
+      "lon": 103.8198,
+      "koppen": "Af",
+      "hemisphere": "N"
+    },
+    "svi_jh": {
+      "label": "Johannesburg",
+      "short": "Johannesburg",
+      "lat": -26.2041,
+      "lon": 28.0473,
+      "koppen": "Cwb",
+      "hemisphere": "S"
+    },
+    "svi_hk": {
+      "label": "Hong Kong",
+      "short": "Hong Kong",
+      "lat": 22.3193,
+      "lon": 114.1694,
+      "koppen": "Cwa",
+      "hemisphere": "N"
+    },
+    "svi_tokyo": {
+      "label": "Tokyo",
+      "short": "Tokyo",
+      "lat": 35.6762,
+      "lon": 139.6503,
+      "koppen": "Cfa",
+      "hemisphere": "N"
+    },
+    "svi_ny": {
+      "label": "New York",
+      "short": "New York",
+      "lat": 40.7128,
+      "lon": -74.006,
+      "koppen": "Cfa",
+      "hemisphere": "N"
+    },
+    "svi_melbourne": {
+      "label": "Melbourne",
+      "short": "Melbourne",
+      "lat": -37.8136,
+      "lon": 144.9631,
+      "koppen": "Cfb",
+      "hemisphere": "S"
+    },
+    "svi_rio": {
+      "label": "Rio de Janeiro",
+      "short": "Rio",
+      "lat": -22.9068,
+      "lon": -43.1729,
+      "koppen": "Aw",
+      "hemisphere": "S"
+    },
+    "svi_capetown": {
+      "label": "Cape Town",
+      "short": "Cape Town",
+      "lat": -33.9249,
+      "lon": 18.4241,
+      "koppen": "Csb",
+      "hemisphere": "S"
+    }
+  }
+}

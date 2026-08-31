@@ -20,6 +20,7 @@ _EXTRA_MODULES = {
     "network": "osmnx",
     "imagery": "rasterio",
     "climate": "pythermalcomfort",
+    "svi": "torch",
     "streetview": "torch",
     "perception": "torch",
     "download": "zensvi",

@@ -7,8 +7,8 @@ huggingface_hub>=0.20.0
 platformdirs>=3.0.0
 
 # Documentation
-sphinx>=6.0
-sphinx-rtd-theme>=1.0.0
+sphinx>=6.0,<9
+sphinx-immaterial>=0.12.0
 sphinx-autodoc-typehints>=1.19.5
 sphinx-copybutton>=0.5.0
 sphinxcontrib-napoleon>=0.7

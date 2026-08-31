@@ -22,17 +22,17 @@ def main(out_dir: str | Path | None = None) -> dict:
     area = uc.StudyArea.from_bbox(*bbox, place=city.place, city_id="punggol")
     city.study_area = area
     units = uc.units.grid(city, cell_size=250)
-    catalog = uc.streetview.filename(str(PHOTO_DIR))
+    catalog = uc.svi.filename(str(PHOTO_DIR))
     catalog = catalog[catalog["Filename"] == PHOTO_NAME].reset_index(drop=True)
     if catalog.empty:
         raise FileNotFoundError(PHOTO_DIR / PHOTO_NAME)
-    features = uc.streetview.color(catalog, folder_path=str(PHOTO_DIR))
+    features = uc.svi.color(catalog, folder_path=str(PHOTO_DIR))
     features = features.copy()
     features["lon"] = (west + east) / 2.0
     features["lat"] = (south + north) / 2.0
     features["location_quality"] = "illustrative"
     features["source"] = "wikimedia-commons"
-    points = uc.streetview.as_layer(features, name="streetview_points")
+    points = uc.svi.as_layer(features, name="streetview_points")
     result = uc.fusion.aggregate(
         points,
         units,

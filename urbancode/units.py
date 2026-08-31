@@ -129,7 +129,28 @@ def grid(
     metric_crs: str | None = None,
     geographic_crs: str = "EPSG:4326",
 ) -> AnalysisUnits:
-    """Square grid in metres. IDs use a world origin, not the pocket min-corner."""
+    """Build square analysis units in a projected CRS.
+
+    Args:
+        city: City whose study-area envelope is covered by the grid.
+        cell_size: Square side length in metres.
+        metric_crs: Projected CRS used for construction. Defaults to the
+            StudyArea metric CRS or a UTM CRS derived from the bbox centre.
+        geographic_crs: CRS of a bbox stored as longitude/latitude.
+
+    Returns:
+        :class:`AnalysisUnits` containing square polygons and stable IDs of the
+        form ``grid:<CRS>:<size>:<column>:<row>``.
+
+    Raises:
+        ValueError: If the size is non-positive, the CRS is geographic, or the
+            city has no usable envelope.
+
+    Notes:
+        IDs use a world origin, not the pocket's minimum corner. Edge-cell
+        geometry is clipped to the study envelope, so area-based denominators
+        use only the in-study portion.
+    """
     if cell_size <= 0:
         raise ValueError("cell_size must be positive metres")
     gpd = require_extra("geopandas", "vector")
@@ -142,6 +163,7 @@ def grid(
         crs=geographic_crs,
     ).to_crs(target_crs)
     minx, miny, maxx, maxy = envelope.total_bounds
+    area_poly = envelope.geometry.iloc[0]
     size = float(cell_size)
     col0 = math.floor(minx / size)
     col1 = math.floor((maxx - 1e-9) / size)
@@ -157,7 +179,10 @@ def grid(
         for row in range(row0, row1 + 1):
             x = col * size
             y = row * size
-            geometries.append(box(x, y, x + size, y + size))
+            clipped = box(x, y, x + size, y + size).intersection(area_poly)
+            if clipped.is_empty:
+                continue
+            geometries.append(clipped)
             unit_ids.append(f"grid:{crs_key}:{size_key}:{col}:{row}")
             cols.append(col)
             rows.append(row)
@@ -200,7 +225,28 @@ def hexgrid(
     metric_crs: str | None = None,
     geographic_crs: str = "EPSG:4326",
 ) -> AnalysisUnits:
-    """Pointy-top hexagons. ``cell_size`` is the centre-to-vertex radius in metres."""
+    """Build pointy-top hexagonal analysis units in a projected CRS.
+
+    Args:
+        city: City whose study-area envelope is covered by the hexagons.
+        cell_size: Centre-to-vertex radius in metres; it is not the flat-to-flat
+            width.
+        metric_crs: Projected construction CRS. Defaults like :func:`grid`.
+        geographic_crs: CRS of a bbox stored as longitude/latitude.
+
+    Returns:
+        :class:`AnalysisUnits` containing intersecting hexagons and stable,
+        scheme-specific IDs.
+
+    Raises:
+        ValueError: If the size is non-positive, the CRS is geographic, or the
+            envelope cannot produce any cells.
+
+    Notes:
+        Hex IDs are not interchangeable with square-grid IDs, even when both
+        constructors receive the same ``cell_size``. Edge-cell geometry is
+        clipped to the study envelope.
+    """
     if cell_size <= 0:
         raise ValueError("cell_size must be positive metres")
     gpd = require_extra("geopandas", "vector")
@@ -234,7 +280,7 @@ def hexgrid(
             hex_poly = _hexagon(cx, cy, radius)
             if not hex_poly.intersects(area_poly):
                 continue
-            geometries.append(hex_poly)
+            geometries.append(hex_poly.intersection(area_poly))
             unit_ids.append(f"hex:{crs_key}:{size_key}:{q}:{r}")
             qs.append(q)
             rs.append(r)
@@ -288,7 +334,28 @@ def from_layer(
     metric_crs: str | None = None,
     study_area: StudyArea | None = None,
 ) -> AnalysisUnits:
-    """Use existing polygons as units. Reprojects geographic frames."""
+    """Turn an existing polygon layer into analysis units.
+
+    Args:
+        layer: Vector :class:`~urbancode.city.Layer` or GeoDataFrame.
+        id_column: Existing unique identifier. If omitted, geometry
+            fingerprints become stable unit IDs.
+        city_id: City identifier written to the result.
+        metric_crs: Projected target CRS.
+        study_area: Optional source of ``metric_crs`` and study-area ID.
+
+    Returns:
+        :class:`AnalysisUnits` with polygons in the projected target CRS.
+
+    Raises:
+        TypeError: If ``layer`` is not a vector layer or GeoDataFrame.
+        ValueError: If no projected CRS is available, geometry is invalid, or
+            fingerprinted geometries are duplicated.
+
+    Notes:
+        Geometry fingerprints change when geometry or precision changes; they
+        are not row numbers and are not silently suffixed for duplicates.
+    """
     gpd = require_extra("geopandas", "vector")
     frame = layer.data if isinstance(layer, Layer) else layer
     if frame is None or not hasattr(frame, "geometry"):

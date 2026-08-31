@@ -14,12 +14,30 @@ Real case
 - Extra: ``urbancode[network]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.network.accessibility(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   reach = uc.network.accessibility(
+       city["streets"], radius=150, metric="reachability"
+   )
+   reach.plot()
+
+``reach`` is a graph :class:`~urbancode.city.Layer`. Each node gets a ``reachability`` count of other nodes within 150 m of network length; ``reach.plot()`` stays on graph nodes rather than grid cells.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/network/accessibility_punggol.png
+   :alt: uc.network.accessibility result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.network.accessibility`` on dataset ``punggol``.
+   Unit: count. Backend: networkx.
 
 Inputs
 ------
@@ -52,16 +70,6 @@ Output
 
 Graph Layer. Node attribute ``reachability`` is a count of other nodes reachable within ``radius``. Unit: count. CRS is the source graph CRS (usually EPSG:4326); metric work happens on edge lengths, not degrees.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/network/accessibility_punggol.png
-   :alt: uc.network.accessibility result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.network.accessibility`` on dataset ``punggol``.
-   Unit: count. Backend: networkx.
-
 How to read
 -----------
 
@@ -82,13 +90,6 @@ Limitations
 
 - this is network reachability (node count), not population or jobs access
 - radius is graph length, not a door-to-door walk
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/network/accessibility_punggol.py
-   :language: python
-   :caption: examples/recipes/network/accessibility_punggol.py
 
 Related pages
 -------------

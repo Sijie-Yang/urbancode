@@ -89,6 +89,17 @@ def test_from_table_without_coords_is_table_layer() -> None:
     assert set(layer.data["view_type"]) == {"windowview"}
 
 
+def test_from_table_reads_json_catalog(tmp_path) -> None:
+    catalog = tmp_path / "catalog.json"
+    catalog.write_text(
+        '[{"image_id":"a","path":"a.jpg","longitude":103.91,"latitude":1.406}]',
+        encoding="utf-8",
+    )
+    layer = uc.images.from_table(catalog, view_type="streetview")
+    assert layer.metadata["n_images"] == 1
+    assert Path(layer.data["image_path"].iloc[0]) == tmp_path / "a.jpg"
+
+
 def test_from_table_image_root_resolves_relative_paths(tmp_path) -> None:
     frame = _frame()
     frame["relative_path"] = ["a.jpg", "b.jpg"]
@@ -104,6 +115,17 @@ def test_from_table_image_root_resolves_relative_paths(tmp_path) -> None:
     assert Path(layer.data["image_path"].iloc[0]) == tmp_path / "a.jpg"
     assert layer.metadata["image_root_provided"] is True
     assert "image_root" not in layer.metadata
+
+
+def test_streetview_as_layer_reads_json_catalog(tmp_path) -> None:
+    catalog = tmp_path / "catalog.json"
+    catalog.write_text(
+        '[{"image_id":"a","path":"a.jpg","longitude":103.91,"latitude":1.406}]',
+        encoding="utf-8",
+    )
+    points = uc.streetview.as_layer(catalog)
+    assert points.source == "urbancode.streetview.as_layer"
+    assert points.metadata["n_images"] == 1
 
 
 def test_streetview_as_layer_wraps_images_contract() -> None:

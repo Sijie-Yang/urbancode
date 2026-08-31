@@ -46,6 +46,22 @@ def test_hexgrid_has_stable_ids() -> None:
     assert all(i.startswith("hex:") for i in units.unit_ids)
 
 
+@pytest.mark.parametrize("constructor", [grid, hexgrid])
+def test_regular_units_are_clipped_to_study_envelope(constructor) -> None:
+    area = StudyArea.from_bbox(103.905, 1.4, 103.915, 1.41, place="Punggol")
+    city = City(area)
+    city.metadata["bbox"] = list(area.bbox)
+
+    units = constructor(city, cell_size=250)
+    envelope = gpd.GeoDataFrame(
+        geometry=[box(*area.bbox)], crs="EPSG:4326"
+    ).to_crs(units.metric_crs).geometry.iloc[0]
+
+    union = units.frame.geometry.union_all()
+    assert union.difference(envelope).area == pytest.approx(0.0, abs=1e-6)
+    assert any(geom.area < 250 * 250 for geom in units.frame.geometry)
+
+
 def test_from_layer_polygons() -> None:
     frame = gpd.GeoDataFrame(
         {"name": ["a"]},

@@ -14,12 +14,43 @@ Real case
 - Extra: ``urbancode[vector]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.fusion.combine(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   ndvi = uc.fusion.aggregate(
+       uc.imagery.ndvi(city.layers["sentinel2"]),
+       units,
+       stat="mean",
+       indicator="ndvi",
+   )
+   reach = uc.fusion.aggregate(
+       uc.network.accessibility(
+           city["streets"], radius=150, metric="reachability"
+       ),
+       units,
+       stat="mean",
+       indicator="reachability",
+   )
+   result = uc.fusion.combine(units, ndvi, reach)
+   result.plot(indicator="ndvi")
+
+``ndvi`` and ``reach`` are already aggregated IndicatorResults on the same ``units``. ``result`` concatenates their records; ``combine`` does not resample either source.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/fusion/combine_punggol.png
+   :alt: uc.fusion.combine result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.fusion.combine`` on dataset ``punggol``.
+   Unit: mixed. Backend: pandas.
 
 Inputs
 ------
@@ -48,16 +79,6 @@ Output
 
 One long IndicatorResult. combine does not re-aggregate.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/fusion/combine_punggol.png
-   :alt: uc.fusion.combine result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.fusion.combine`` on dataset ``punggol``.
-   Unit: mixed. Backend: pandas.
-
 How to read
 -----------
 
@@ -78,13 +99,6 @@ Limitations
 
 - combine checks city_id, unit IDs, CRS, and scheme
 - it does not spatially re-aggregate
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/fusion/combine_punggol.py
-   :language: python
-   :caption: examples/recipes/fusion/combine_punggol.py
 
 Related pages
 -------------

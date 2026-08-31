@@ -13,7 +13,7 @@ from examples.recipes.streetview._precomputed import load_or_run, photo_path
 def _run(photo: Path) -> dict:
     import urbancode as uc
 
-    table = uc.streetview.comfort(str(photo.parent), output_filename=None)
+    table = uc.svi.comfort(str(photo.parent), output_filename=None)
     row = table.iloc[0].to_dict() if hasattr(table, "iloc") else dict(table)
     return {"photo": photo.name, "scores": {k: row[k] for k in row}}
 
@@ -26,7 +26,7 @@ def main(out_dir: str | Path) -> dict:
         payload = load_or_run("comfort", _run)
     except Exception as exc:
         raise RuntimeError(
-            "comfort recipe needs urbancode[streetview] or "
+            "comfort recipe needs urbancode[svi] or "
             "examples/data/real/streetview/precomputed/comfort.json"
         ) from exc
     fig, axes = plt.subplots(1, 2, figsize=(9, 4))

@@ -58,6 +58,10 @@ Installation
 
    pip install "urbancode[vector]"
 
+This installs the GeoPandas/Shapely stack used by ``City`` vector
+layers, unit construction, and vector-to-unit aggregation. It does not
+install OSMnx or the raster stack.
+
 ``uc.network.fetch`` also needs ``urbancode[network]``.
 
 UrbanCode API
@@ -125,7 +129,21 @@ Step-by-step
 Load the pocket and plot source layers::
 
    import urbancode as uc
-   city = uc.load("examples/data/real/punggol", layers=["buildings", "parks", "pois"])
+
+   city = uc.load(
+       "examples/data/real/punggol",
+       layers=["buildings", "parks", "pois"],
+   )
+   print(city.keys())
+   city.plot(layers=["parks", "buildings"])
+
+::
+
+   ['buildings', 'parks', 'pois']
+
+``city`` contains only the three requested layers. ``city.keys()``
+reports that inventory; the final line draws the park and building
+geometry in native vector support.
 
 .. figure:: /_static/recipes/units/units_punggol.png
    :alt: Grid, hexgrid, and park polygons as analysis units

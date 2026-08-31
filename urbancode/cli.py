@@ -16,11 +16,11 @@ app = typer.Typer(
 )
 network_app = typer.Typer(help="OSM / street-network commands.")
 imagery_app = typer.Typer(help="Satellite and raster commands.")
-streetview_app = typer.Typer(help="Street-view perception commands.")
+svi_app = typer.Typer(help="Street-view imagery (SVI) commands.")
 app.add_typer(network_app, name="network")
 app.add_typer(imagery_app, name="imagery")
-app.add_typer(streetview_app, name="streetview")
-app.add_typer(streetview_app, name="svi", hidden=True)
+app.add_typer(svi_app, name="svi")
+app.add_typer(svi_app, name="streetview", hidden=True)
 
 
 def _split_csv(value: Optional[str]) -> list[str] | None:
@@ -140,8 +140,8 @@ def imagery_fetch_cmd(
     typer.echo(f"Wrote imagery layers to {out}")
 
 
-@streetview_app.command("comfort")
-def streetview_comfort_cmd(
+@svi_app.command("comfort")
+def svi_comfort_cmd(
     path: Path = typer.Argument(..., help="Image file or folder."),
     out: Path = typer.Option(Path("comfort.csv"), "--out"),
     mode: Optional[str] = typer.Option(None, "--mode", help="image|folder"),

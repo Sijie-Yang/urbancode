@@ -13,62 +13,80 @@ Result first
    :alt: Punggol UTCI, NDVI, NDBI, building fraction, and high-UTCI/low-NDVI overlap
    :width: 100%
 
-   Punggol, Singapore — 2 km × 2 km · 250 m units · EPSG:32648.
    Observed Open-Meteo weather at 2024-07-15T14:00 UTC plus a modelled
-   spatial MRT proxy. Native NDVI/NDBI rasters sit beside the 250 m
-   UTCI surface. Overlap is high UTCI ∩ low NDVI, not a causal proof.
+   spatial MRT proxy. Punggol 2 km pocket, 250 m units. Overlap is not
+   a causal proof.
 
-What you will learn
--------------------
-
-* How to keep observed weather and modelled MRT distinct.
-* How a vegetation / built-up proxy creates spatial UTCI contrast.
-* How to join UTCI, NDVI, NDBI, and building fraction on units.
-
-Dataset
--------
-
-* Weather: Open-Meteo archive at the pocket centre (T, RH, wind observed).
-* MRT: modelled NDVI/NDBI proxy, flag ``modelled_mrt_proxy``.
-* Imagery: Sentinel-2 L2A 2024-07-28 (different date from the weather).
-* Buildings: OSM footprints.
-
-Installation
-------------
+1. The public index is a number
+-------------------------------
 
 ::
 
-   pip install "urbancode[standard]"
+   import urbancode as uc
 
-Step-by-step
-------------
+   utci = uc.climate.utci(tdb=31.2, rh=74, v=1.8)
+   print(float(utci))
 
-.. literalinclude:: ../../../examples/workflows/real_heat_stress.py
-   :language: python
-   :caption: examples/workflows/real_heat_stress.py
+::
 
-APIs: :func:`urbancode.climate.utci`, :func:`urbancode.imagery.ndvi`,
-:func:`urbancode.imagery.ndbi`, :func:`urbancode.fusion.aggregate`,
-:func:`urbancode.fusion.combine`.
+   34.0
 
-Reading the result
-------------------
+``tdb`` is air temperature (°C), ``rh`` percent, ``v`` wind (m/s).
+Mean radiant temperature defaults to air temperature unless you pass
+``tr=``. This is not medical advice.
 
-* Spatial contrast comes from the MRT proxy, not from the point weather.
-* Low-NDVI / high-NDBI cells can show higher UTCI. That is overlap.
-* Air temperature itself is a constant field and is labelled as such.
+2. Vegetation and built-up on the grid
+--------------------------------------
+
+A spatial UTCI map needs a temperature **raster**. UrbanCode does
+not ship a public MRT-proxy helper. You can still join NDVI, NDBI,
+and building fraction on units:
+
+::
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.grid(city, cell_size=250)
+   ndvi = uc.fusion.aggregate(
+       uc.imagery.ndvi(city.layers["sentinel2"]),
+       units, stat="mean", indicator="ndvi",
+   )
+   ndbi = uc.fusion.aggregate(
+       uc.imagery.ndbi(city.layers["sentinel2"]),
+       units, stat="mean", indicator="ndbi",
+   )
+   buildings = uc.fusion.aggregate(
+       city.layer("buildings"),
+       units, stat="area_fraction", indicator="building_fraction",
+   )
+   print(ndvi.to_pandas()["value"].mean().round(3))
+   print(ndbi.to_pandas()["value"].mean().round(3))
+   print(buildings.to_pandas()["value"].mean().round(3))
+
+::
+
+   0.208
+   -0.027
+   0.175
+
+Building fraction is OSM footprint area / clipped cell area, mean
+0.175. The clipped denominator prevents edge cells from including
+land outside the study envelope.
+
+::
+
+   result = uc.fusion.combine(units, ndvi, ndbi, buildings)
+   result.plot(indicator="ndvi")
+
+``result`` contains 243 records (81 units × 3 indicators). The plot
+selects the existing ``ndvi`` records; ``combine`` does not calculate
+UTCI or apply the documentation-only MRT proxy.
+
+The panel figure uses a documented NDVI/NDBI MRT proxy **inside the
+docs builder**. ``tr=`` on ``uc.climate.utci`` can be a GeoTIFF if
+you have one. Weather date and Sentinel-2 date differ.
 
 Limitations
 -----------
 
-* The MRT formula is a documented proxy, not a measured campaign.
-* Weather and Sentinel-2 dates differ.
-* Not shade-resolved and not medical advice.
-* Wind is 10 m Open-Meteo; confirm the UTCI height convention.
-
-Related pages
--------------
-
-* Domain: :doc:`/domains/climate`
-* Recipe: :doc:`/reference/recipes/climate/utci_real`
-* Concept: :doc:`/concepts/provenance_quality`
+* The MRT formula is a proxy, not a measured campaign.
+* Not shade-resolved.

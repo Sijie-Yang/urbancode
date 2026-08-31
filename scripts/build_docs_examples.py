@@ -32,7 +32,11 @@ def _copy_figures(result: dict) -> list[Path]:
         if docs_path:
             dest = FIGURES / docs_path
             dest.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, dest)
+        # Several recipe helpers already write directly to their documented
+        # static path. Treat that as a successful copy instead of failing with
+        # SameFileError during a full docs refresh.
+        if src.resolve() != dest.resolve():
+            shutil.copy2(src, dest)
         copied.append(dest)
     return copied
 

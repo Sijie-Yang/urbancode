@@ -75,7 +75,7 @@ Street view
 
 ``examples/data/real/streetview`` — geotagged, redistributable
 Wikimedia Commons photos. This is not a Mapillary dump and not a
-street-level census. ``uc.streetview.fetch`` stays live-only.
+street-level census. ``uc.svi.fetch`` stays live-only.
 
 Research cases
 --------------
@@ -85,6 +85,11 @@ citation, and checksums for the Thermal Comfort in Sight case.
 Photos stay in the streetview fixture. Eight Punggol Commons
 photos are a sample, not a city-scale map. TCIS weights are not
 committed.
+
+``examples/data/research_cases/heat_resilience_in_sight`` — city-month
+SHR summaries for an eight-city **application**, not a validation.
+Singapore n = 21,772 is not the TCIS 92,233 survey set. Per-image
+VATA and the hourly climate cache stay out of Git.
 
 Synthetic / contracts
 ---------------------

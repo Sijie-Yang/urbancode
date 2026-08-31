@@ -37,10 +37,34 @@ def aggregate(
     weight: str | None = None,
     part: str = "nodes",
 ) -> IndicatorResult:
-    """Summarize a Layer onto ``units``.
+    """Summarize native spatial data on a shared unit frame.
 
-    Supports raster, graph nodes/edges, vector polygons, points, and
-    georeferenced tables. Missing cells stay null, not 0.
+    Raster pixels, graph nodes or edges, vector geometry, points, and
+    georeferenced tables all produce the same long-form result contract.
+    Missing cells stay null rather than being silently converted to zero.
+
+    Args:
+        source: A :class:`~urbancode.city.Layer` or compatible spatial
+            object. Its native support is preserved until this call.
+        units: Target polygons and stable unit IDs.
+        stat: Summary name. Value summaries are ``mean``, ``min``, ``max``,
+            ``median``/``p50``, ``sum``, ``count``, and ``weighted_mean``.
+            Geometry summaries are ``coverage``, ``area_fraction``,
+            ``length_density``, ``presence``, and ``nearest_distance``.
+        indicator: Name written to every output record. Defaults to the
+            source layer name where possible.
+        column: Attribute to summarize for vector or graph inputs.
+        weight: Weight column used by ``weighted_mean``.
+        part: ``"nodes"`` or ``"edges"`` for graph inputs.
+
+    Returns:
+        An :class:`~urbancode.indicators.IndicatorResult` with one record per
+        unit, including ``value``, ``coverage``, method parameters, and
+        provenance. Read ``value`` together with ``coverage``.
+
+    Raises:
+        ValueError: If ``stat`` is unknown or required data are invalid.
+        TypeError: If ``source`` has no supported spatial representation.
     """
     if stat not in _VALUE_STATS | _GEOMETRY_STATS:
         raise ValueError(f"unknown stat {stat!r}")
@@ -510,11 +534,26 @@ def aggregate_many(
     columns: dict[str, dict[str, Any] | str],
     stat: str = "mean",
 ) -> IndicatorResult:
-    """Aggregate several columns from one Layer into one IndicatorResult.
+    """Aggregate several attributes from one source onto the same units.
 
-    ``columns`` maps source column name to either an indicator name or
-    ``{"indicator": ..., "unit": ...}``. Internally this calls
-    :func:`aggregate` and :func:`combine`.
+    Args:
+        source: Spatial layer or compatible object containing every requested
+            source column.
+        units: Shared target polygons.
+        columns: Mapping from source column to an indicator name, or to a
+            mapping with ``indicator`` and optional ``unit`` keys.
+        stat: Summary applied independently to every requested column.
+
+    Returns:
+        One long :class:`~urbancode.indicators.IndicatorResult` containing all
+        requested indicators. Units with no observations remain null.
+
+    Raises:
+        ValueError: If ``columns`` is empty or the selected statistic fails.
+
+    Notes:
+        This is a convenience wrapper around :func:`aggregate` followed by
+        :func:`combine`; it does not calculate relationships between columns.
     """
     if not columns:
         raise ValueError("aggregate_many needs a non-empty columns mapping")
@@ -552,7 +591,25 @@ def aggregate_many(
 
 
 def combine(units: AnalysisUnits, *results: IndicatorResult) -> IndicatorResult:
-    """Concatenate IndicatorResults that share the same unit frame."""
+    """Concatenate results that already share one unit frame.
+
+    Args:
+        units: Authoritative target units for the combined result.
+        *results: Indicator results created on those units.
+
+    Returns:
+        A long :class:`~urbancode.indicators.IndicatorResult` containing every
+        input record and a combined provenance receipt.
+
+    Raises:
+        ValueError: If city ID, CRS, unit scheme, resolution, or unit IDs do
+            not match.
+
+    Notes:
+        ``combine`` does no spatial work and computes no composite score. Use
+        :func:`aggregate` first when a source is still on pixels, nodes, or
+        vector geometry.
+    """
     expected = _units_signature(units)
     for result in results:
         if result.units is None:

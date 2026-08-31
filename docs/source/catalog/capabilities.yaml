@@ -329,10 +329,10 @@ capabilities:
       - mean radiant temperature is modelled, not measured
       - weather is one archive timestamp, not a climate normal
   - id: streetview.filename
-    function: uc.streetview.filename
+    function: uc.svi.filename
     status: stable
     domain: streetview
-    extra: streetview
+    extra: svi
     backend: pandas
     urban_question: Which image files are in this folder?
     input: image directory
@@ -347,10 +347,10 @@ capabilities:
       - catalog only; no perception scores
       - photo locations are recorded separately
   - id: streetview.color
-    function: uc.streetview.color
+    function: uc.svi.color
     status: experimental
     domain: streetview
-    extra: streetview
+    extra: svi
     backend: opencv
     urban_question: How colourful are these street photos?
     input: image catalog
@@ -383,7 +383,7 @@ capabilities:
       - image_id must be unique; one location can have several photos
       - window-view photos use view_type=windowview, not streetview
   - id: streetview.as_layer
-    function: uc.streetview.as_layer
+    function: uc.svi.as_layer
     status: stable
     domain: streetview
     extra: vector
@@ -401,7 +401,7 @@ capabilities:
       - only geotagged photos are real observations
       - illustrative coordinates must stay labelled illustrative
   - id: streetview.fetch
-    function: uc.streetview.fetch
+    function: uc.svi.fetch
     status: experimental
     domain: streetview
     extra: download
@@ -420,10 +420,10 @@ capabilities:
       - provider terms forbid committing fetched photos
       - coverage is the provider archive, not a census
   - id: streetview.segmentation
-    function: uc.streetview.segmentation
+    function: uc.svi.segmentation
     status: experimental
     domain: streetview
-    extra: streetview
+    extra: svi
     backend: torch
     urban_question: What share of the photo is sky, vegetation, building, or road?
     input: street photo
@@ -439,10 +439,10 @@ capabilities:
       - class taxonomy is the packaged model, not a field survey
       - no offline result figure until artifacts are committed
   - id: streetview.object_detection
-    function: uc.streetview.object_detection
+    function: uc.svi.object_detection
     status: experimental
     domain: streetview
-    extra: streetview
+    extra: svi
     backend: torch
     urban_question: Which objects does the detector mark in the photo?
     input: street photo
@@ -458,10 +458,10 @@ capabilities:
       - detector classes are not a traffic or pedestrian count
       - no offline result figure until artifacts are committed
   - id: streetview.scene_recognition
-    function: uc.streetview.scene_recognition
+    function: uc.svi.scene_recognition
     status: experimental
     domain: streetview
-    extra: streetview
+    extra: svi
     backend: torch
     urban_question: Which Places365 scenes does the photo resemble?
     input: street photo
@@ -477,10 +477,10 @@ capabilities:
       - Places365 is a scene prior, not a land-use survey
       - no offline result figure until artifacts are committed
   - id: streetview.comfort
-    function: uc.streetview.comfort
+    function: uc.svi.comfort
     status: compatibility
     domain: streetview
-    extra: streetview
+    extra: svi
     backend: torch
     urban_question: How does the TCIS model score this street photo?
     input: street photo
@@ -492,7 +492,7 @@ capabilities:
     workflow: workflows/street_experience
     offline: false
     blocked: "Deprecated DataFrame entry; use uc.perception.thermal_affordance. Live/heavy only."
-    migration: /migration/svi-to-streetview
+    migration: /migration/streetview-to-svi
     limitations:
       - thermal_comfort is a compatibility alias for thermal_affordance (VATA)
       - not measured personal comfort and not UTCI

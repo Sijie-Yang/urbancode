@@ -1,5 +1,5 @@
-uc.streetview.as_layer
-======================
+uc.svi.as_layer
+===============
 
 Urban question
 --------------
@@ -14,12 +14,30 @@ Real case
 - Extra: ``urbancode[vector]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.streetview.as_layer(...)
+   import pandas as pd
+   import urbancode as uc
+
+   catalog = pd.read_json("examples/data/real/streetview/catalog.json")
+   photos = uc.svi.as_layer(catalog[catalog["city_id"] == "punggol"])
+   print(photos.kind, photos.metadata["n_images"])
+   photos.plot()
+
+``catalog`` is filtered to Punggol before conversion. ``photos`` is an eight-row point :class:`~urbancode.city.Layer`; rows without usable coordinates are not invented.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/streetview/as_layer_punggol.png
+   :alt: uc.svi.as_layer result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.svi.as_layer`` on dataset ``streetview``.
+   Unit: point. Backend: geopandas.
 
 Inputs
 ------
@@ -48,16 +66,6 @@ Output
 
 Point Layer. CRS EPSG:4326 unless given.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/streetview/as_layer_punggol.png
-   :alt: uc.streetview.as_layer result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.streetview.as_layer`` on dataset ``streetview``.
-   Unit: point. Backend: geopandas.
-
 How to read
 -----------
 
@@ -78,13 +86,6 @@ Limitations
 
 - only geotagged photos are real observations
 - illustrative coordinates must stay labelled illustrative
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/streetview/as_layer_punggol.py
-   :language: python
-   :caption: examples/recipes/streetview/as_layer_punggol.py
 
 Related pages
 -------------

@@ -8,6 +8,7 @@ acquisition (``uc.streetview``). Window-view photos use
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -45,17 +46,25 @@ def from_table(
     id_strategy: str | None = None,
     image_root: str | Path | None = None,
 ) -> Layer:
-    """Build a geolocated image-observation Layer from a table.
+    """Build a geolocated image-observation Layer from a table or catalog file.
+
+    ``frame`` may be a DataFrame or a path to ``.json``, ``.csv``,
+    ``.tsv``, or ``.parquet``. A file path uses that file's parent as
+    ``image_root`` unless you pass one.
 
     Research cases should pass an explicit ``image_id``. Automatic IDs
     are allowed only with ``id_strategy="uri_hash"`` or ``"checksum"``.
 
-    ``image_root`` resolves relative paths at runtime. Catalogs should
-    store ``relative_path``; do not persist machine-specific absolute
-    roots in exported predictions or docs.
+    Catalogs should store relative paths. Do not persist
+    machine-specific absolute roots in exported predictions or docs.
     """
+    if isinstance(frame, (str, Path)):
+        catalog = Path(frame)
+        if image_root is None:
+            image_root = catalog.parent
+        frame = _read_catalog_table(catalog)
     if frame is None:
-        raise TypeError("images.from_table needs a DataFrame")
+        raise TypeError("images.from_table needs a DataFrame or catalog path")
     if view_type not in VIEW_TYPES:
         raise ValueError(
             f"view_type must be one of {VIEW_TYPES}; got {view_type!r}"
@@ -198,6 +207,36 @@ def _resolve_under_root(relative: Any, current: Any, root: Path) -> str:
     if current_path.is_absolute():
         return str(current_path)
     return str(root / str(relative).replace("\\", "/"))
+
+
+def _read_catalog_table(path: Path) -> Any:
+    import pandas as pd
+
+    if not path.is_file():
+        raise FileNotFoundError(str(path))
+    suffix = path.suffix.lower()
+    if suffix == ".json":
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            for key in ("images", "records", "rows"):
+                if key in payload:
+                    payload = payload[key]
+                    break
+            else:
+                payload = [payload]
+        if not isinstance(payload, list):
+            raise ValueError(f"catalog JSON must be a list of rows: {path}")
+        return pd.DataFrame(payload)
+    if suffix == ".parquet":
+        return pd.read_parquet(path)
+    if suffix == ".tsv":
+        return pd.read_csv(path, sep="\t")
+    if suffix == ".csv":
+        return pd.read_csv(path)
+    raise ValueError(
+        "images.from_table can read .json, .csv, .tsv, or .parquet; "
+        f"got {path.suffix!r}"
+    )
 
 
 def _fill(frame: Any, column: str, value: Any) -> Any:

@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[imagery]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.imagery.read(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   raster = uc.imagery.read(city.layers["sentinel2"].path)
+   raster.plot()
+
+``raster`` is a raster :class:`~urbancode.city.Layer` opened from the GeoTIFF path. It retains the file CRS, transform, bands, and nodata; ``raster.plot()`` only renders those stored values.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/imagery/read_punggol.png
+   :alt: uc.imagery.read result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.imagery.read`` on dataset ``punggol``.
+   Unit: source units. Backend: rasterio.
 
 Inputs
 ------
@@ -48,16 +64,6 @@ Output
 
 Raster Layer with CRS, transform, band names, and nodata in metadata.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/imagery/read_punggol.png
-   :alt: uc.imagery.read result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.imagery.read`` on dataset ``punggol``.
-   Unit: source units. Backend: rasterio.
-
 How to read
 -----------
 
@@ -78,13 +84,6 @@ Limitations
 
 - preview is not a radiometric product
 - band names come from the fixture metadata
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/imagery/read_punggol.py
-   :language: python
-   :caption: examples/recipes/imagery/read_punggol.py
 
 Related pages
 -------------

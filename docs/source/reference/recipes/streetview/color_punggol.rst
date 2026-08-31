@@ -1,5 +1,5 @@
-uc.streetview.color
-===================
+uc.svi.color
+============
 
 Urban question
 --------------
@@ -11,15 +11,33 @@ Real case
 
 - Dataset: ``streetview``
 - Domain: streetview
-- Extra: ``urbancode[streetview]``
+- Extra: ``urbancode[svi]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.streetview.color(...)
+   import urbancode as uc
+
+   table = uc.svi.filename("examples/data/real/streetview/punggol")
+   color = uc.svi.color(
+       table, folder_path="examples/data/real/streetview/punggol"
+   )
+   print(color.head())
+
+``table`` is the input file catalog. ``color`` is a copy augmented with pixel-statistic columns such as ``Colorfulness``; these are image-level features, not comfort measurements.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/streetview/color_punggol.png
+   :alt: uc.svi.color result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.svi.color`` on dataset ``streetview``.
+   Unit: colorfulness. Backend: opencv.
 
 Inputs
 ------
@@ -48,16 +66,6 @@ Output
 
 DataFrame columns include Colorfulness. Unit is a pixel statistic.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/streetview/color_punggol.png
-   :alt: uc.streetview.color result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.streetview.color`` on dataset ``streetview``.
-   Unit: colorfulness. Backend: opencv.
-
 How to read
 -----------
 
@@ -78,13 +86,6 @@ Limitations
 
 - Colorfulness is a pixel statistic, not a comfort score
 - camera processing affects the value
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/streetview/color_punggol.py
-   :language: python
-   :caption: examples/recipes/streetview/color_punggol.py
 
 Related pages
 -------------

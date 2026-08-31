@@ -16,88 +16,86 @@ Result first
    :width: 100%
 
    Punggol, Singapore — 2 km × 2 km · 250 m units · EPSG:32648.
-   Context map first (water, parks, buildings, streets), then
-   native rasters and a fused reachability surface. Core profile,
-   not all-domain end-to-end. Script:
-   ``examples/workflows/punggol_end_to_end.py``.
+   Context map first, then native rasters and fused reachability.
 
-What you will learn
--------------------
-
-* How to load every committed Punggol layer.
-* How to run one metric per domain without pasting every recipe.
-* How to export a combined indicator table and receipts.
-
-Dataset
--------
-
-``examples/data/real/punggol``. OSM (ODbL), Sentinel-2 L2A
-2024-07-28, Copernicus DEM GLO-30. Details:
-:doc:`/reference/datasets`.
-
-Installation
-------------
+1. Context map
+--------------
 
 ::
 
-   pip install "urbancode[standard]"
+   import urbancode as uc
 
-Step-by-step
-------------
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   city.plot(layers=["water", "parks", "buildings", "streets"])
 
-Core chain (load → units → NDVI → reachability → combine):
+``city`` is the lazy container; the plot reads four existing layers
+without downloading data. This is OSM geometry, not a satellite
+product. Parks are OSM tags.
 
-.. literalinclude:: ../../../examples/workflows/punggol_end_to_end.py
-   :language: python
-   :start-after: def main
-   :end-before: return {
+2. Four native measures
+-----------------------
 
-Expand with recipes, do not duplicate them here:
+::
 
-* Vector context — :doc:`/reference/recipes/core/city_roundtrip_punggol`
-* Network — :doc:`/reference/recipes/network/centrality_punggol`
-* Imagery — :doc:`/reference/recipes/imagery/ndvi_punggol`
-* Terrain — :doc:`/reference/recipes/imagery/slope_punggol`
-* Units / fusion — :doc:`/reference/recipes/fusion/aggregate_punggol`
-* Climate (separate) — :doc:`/workflows/heat_exposure`
-* Street view (separate) — :doc:`/workflows/street_experience`
+   ndvi = uc.imagery.ndvi(city.layers["sentinel2"])
+   ndbi = uc.imagery.ndbi(city.layers["sentinel2"])
+   slope = uc.imagery.slope(city.layers["dem"])
+   reach = uc.network.accessibility(
+       city["streets"], radius=150, metric="reachability"
+   )
+   print(ndvi.kind, ndbi.kind, slope.kind, reach.kind)
 
-.. figure:: /_static/recipes/network/accessibility_punggol.png
-   :alt: Punggol walk-graph reachability
-   :width: 100%
+::
 
-   Reachability before aggregation.
+   raster raster raster graph
+
+NDVI/NDBI are 10 m Sentinel-2 (28 July 2024). Slope is DEM
+degrees. Reachability is 1,425 graph nodes.
 
 .. figure:: /_static/recipes/imagery/indices_punggol.png
    :alt: Punggol NDVI, NDWI, and NDBI
    :width: 100%
 
-   Spectral context for the same pocket.
+.. figure:: /_static/recipes/network/accessibility_punggol.png
+   :alt: Punggol walk-graph reachability
+   :width: 100%
 
-Reading the result
-------------------
+3. Fuse onto one grid
+---------------------
 
-* Greener cells follow parks and tree cover on 28 July 2024.
-* Reachable cells follow the walk graph, not the water edge.
-* Combined rows share unit IDs so the two maps can be compared
-  without claiming causation.
+::
+
+   units = uc.units.grid(city, cell_size=250)
+   result = uc.fusion.combine(
+       units,
+       uc.fusion.aggregate(ndvi, units, stat="mean", indicator="ndvi"),
+       uc.fusion.aggregate(ndbi, units, stat="mean", indicator="ndbi"),
+       uc.fusion.aggregate(slope, units, stat="mean", indicator="slope"),
+       uc.fusion.aggregate(reach, units, stat="mean", indicator="reachability"),
+   )
+   print(result.to_pandas().groupby("indicator")["value"].mean().round(3))
+
+::
+
+   indicator
+   ndbi            -0.027
+   ndvi             0.208
+   reachability    16.030
+   slope            4.977
+   Name: value, dtype: float64
+
+``result`` contains four aligned indicator series on the same unit
+IDs. On this fixture 49 of 81 cells have a street node.
+Call ``result.plot(indicator="ndvi")`` and
+``result.save("punggol_indicators")``.
+
+Climate and street-view stay on their own pages.
 
 Limitations
 -----------
 
-* This profile is a 2 km extract, not Punggol planning units.
-* Climate and street-view are linked, not inlined, so this page
-  stays short.
+* 2 km extract, not Punggol planning units.
 * One satellite date is not a year of vegetation.
 
-Related pages
--------------
-
-* Get started: :doc:`/getting_started/first_project`
-* Domains: :doc:`/domains/fusion`, :doc:`/domains/network`,
-  :doc:`/domains/imagery`
-* Dataset: :doc:`/reference/datasets`
-
-Use UrbanCode when you want this profile to be rerun on Kallio or
-Greenwich Village with the same unit rule.
-Use a single backend when you only need one map.
+Next: :doc:`green_accessibility`. Recipes for each command live
+under :doc:`/reference/recipes/index`.

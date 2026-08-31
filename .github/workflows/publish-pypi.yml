@@ -27,5 +27,31 @@ jobs:
       - name: Build sdist and wheel
         run: python -m build
 
+      - name: Wheel must be small and weight-free
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          wheels = list(Path("dist").glob("*.whl"))
+          assert wheels, "no wheel"
+          wheel = wheels[0]
+          size_mb = wheel.stat().st_size / (1024 * 1024)
+          assert size_mb < 5, f"wheel is {size_mb:.1f} MB"
+          with zipfile.ZipFile(wheel) as zf:
+              names = zf.namelist()
+          assert not any(n.endswith(".pth.tar") or n.endswith(".pth") for n in names)
+          print(f"{wheel.name} {size_mb:.2f} MB, {len(names)} files")
+          PY
+
+      - name: Install and run core unit tests
+        run: |
+          python -m pip install -e ".[dev]"
+          python -m pytest \
+            tests/unit/test_package_data.py \
+            tests/unit/test_old_api.py \
+            tests/unit/test_missing_extra.py \
+            tests/unit/test_public_api_catalog.py \
+            -q --tb=short -o addopts=
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

@@ -1,4 +1,7 @@
-"""Street-view imagery, features, and deprecated TCIS comfort.
+"""Street-view imagery implementation module.
+
+The taught public namespace is ``uc.svi``. This module stays importable
+as ``uc.streetview`` for compatibility.
 
 Prefer ``uc.perception.thermal_affordance`` for Layer-returning scores.
 Heavy deps load on first use.

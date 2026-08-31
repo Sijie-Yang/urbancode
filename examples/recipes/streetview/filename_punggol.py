@@ -15,7 +15,7 @@ def main(out_dir: str | Path) -> dict:
     dest = Path(out_dir)
     dest.mkdir(parents=True, exist_ok=True)
     folder = streetview_dir()
-    catalog = uc.streetview.filename(str(folder))
+    catalog = uc.svi.filename(str(folder))
     catalog.to_csv(dest / "catalog.csv", index=False)
     images = list(folder.glob("*.jpg"))[:6]
     n = max(len(images), 1)

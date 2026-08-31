@@ -1,8 +1,14 @@
-"""Deprecated alias of ``urbancode.streetview``. Do not add new APIs here."""
+"""Street-view imagery (SVI): catalogs, features, fetch, and deprecated comfort.
+
+This is the official public namespace. ``uc.streetview`` is a
+compatibility alias of the same implementation.
+
+Prefer ``uc.perception.thermal_affordance`` for Layer-returning scores.
+Heavy deps load on first use.
+"""
 
 from __future__ import annotations
 
-import warnings
 from typing import Any
 
 __all__ = [
@@ -13,30 +19,15 @@ __all__ = [
     "scene_recognition",
     "comfort",
     "fetch",
+    "as_layer",
 ]
-
-_WARNED = False
-
-
-def _warn_once() -> None:
-    global _WARNED
-    if _WARNED:
-        return
-    _WARNED = True
-    warnings.warn(
-        "uc.svi is deprecated; use uc.streetview. "
-        "See docs/source/migration/svi-to-streetview.rst",
-        DeprecationWarning,
-        stacklevel=3,
-    )
 
 
 def __getattr__(name: str) -> Any:
-    _warn_once()
-    import urbancode.streetview as streetview
-
     if name not in __all__:
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    import urbancode.streetview as streetview
+
     value = getattr(streetview, name)
     globals()[name] = value
     return value

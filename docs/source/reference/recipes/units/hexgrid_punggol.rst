@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[vector]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.units.hexgrid(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   units = uc.units.hexgrid(city, cell_size=250)
+   print(len(units.frame), units.kind)
+
+``units`` is an :class:`~urbancode.units.AnalysisUnits` object containing clipped pointy-top hexagons. ``cell_size`` is centre-to-vertex distance in metres.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/units/units_punggol.png
+   :alt: uc.units.hexgrid result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.units.hexgrid`` on dataset ``punggol``.
+   Unit: metre. Backend: shapely.
 
 Inputs
 ------
@@ -48,16 +64,6 @@ Output
 
 AnalysisUnits with hex IDs. Not interchangeable with square grid IDs.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/units/units_punggol.png
-   :alt: uc.units.hexgrid result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.units.hexgrid`` on dataset ``punggol``.
-   Unit: metre. Backend: shapely.
-
 How to read
 -----------
 
@@ -78,13 +84,6 @@ Limitations
 
 - hex size is metres
 - IDs are scheme-specific and not interchangeable with square grid IDs
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/units/hexgrid_punggol.py
-   :language: python
-   :caption: examples/recipes/units/hexgrid_punggol.py
 
 Related pages
 -------------

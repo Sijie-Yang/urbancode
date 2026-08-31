@@ -29,14 +29,14 @@ def main(out_dir: str | Path) -> dict:
         import pandas as pd
 
         folder = streetview_dir()
-        frame = uc.streetview.filename(str(folder))
+        frame = uc.svi.filename(str(folder))
         west, south, east, north = city.metadata["bbox"]
         frame = frame.copy()
         frame["longitude"] = (west + east) / 2.0
         frame["latitude"] = (south + north) / 2.0
         frame["location_quality"] = "illustrative"
         quality = "illustrative"
-    points = uc.streetview.as_layer(frame, name="streetview_points")
+    points = uc.svi.as_layer(frame, name="streetview_points")
     title = (
         "Geotagged Commons photos"
         if quality != "illustrative"

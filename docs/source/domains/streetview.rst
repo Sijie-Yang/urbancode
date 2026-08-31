@@ -21,7 +21,7 @@ Result first
 What you will learn
 -------------------
 
-* The official namespace is ``uc.streetview``.
+* The official namespace is ``uc.svi``.
   Perception scores now live in ``uc.perception``. Window-view
   photos are ``uc.images`` with ``view_type="windowview"``.
 * The pipeline from catalog to Layer to units.
@@ -33,7 +33,11 @@ Installation
 
 ::
 
-   pip install "urbancode[streetview]"
+   pip install "urbancode[svi]"
+
+This installs the image, model, and acquisition stack. Model weights
+are downloaded to the UrbanCode cache on first use; the package wheel
+does not bundle them.
 
 ``color`` needs OpenCV. Model functions need torch. Live fetch
 needs provider credentials and accepts the ``download`` extra alias.
@@ -41,17 +45,35 @@ needs provider credentials and accepts the ``download`` extra alias.
 UrbanCode API
 -------------
 
-* :func:`urbancode.streetview.fetch` — live-only; not redistributed
-* :func:`urbancode.streetview.filename`
-* :func:`urbancode.streetview.color`
-* :func:`urbancode.streetview.segmentation`
-* :func:`urbancode.streetview.object_detection`
-* :func:`urbancode.streetview.scene_recognition`
-* :func:`urbancode.streetview.comfort`
-* :func:`urbancode.streetview.as_layer`
+* :func:`urbancode.svi.fetch` — live-only; not redistributed
+* :func:`urbancode.svi.filename`
+* :func:`urbancode.svi.color`
+* :func:`urbancode.svi.segmentation`
+* :func:`urbancode.svi.object_detection`
+* :func:`urbancode.svi.scene_recognition`
+* :func:`urbancode.svi.comfort`
+* :func:`urbancode.svi.as_layer`
 
-Use ``uc.streetview``. The compatibility alias is documented only
-in :doc:`/migration/svi-to-streetview`.
+Use ``uc.svi``. The compatibility alias is documented only
+in :doc:`/migration/streetview-to-svi`.
+
+::
+
+   import pandas as pd
+   import urbancode as uc
+
+   catalog = pd.read_json("examples/data/real/streetview/catalog.json")
+   photos = uc.images.from_table(
+       catalog[catalog["city_id"] == "punggol"],
+       view_type="streetview",
+       image_root="examples/data/real/streetview",
+   )
+   print(photos.kind, photos.metadata["n_images"])
+   photos.plot()
+
+::
+
+   vector 8
 
 Backend stack
 -------------
@@ -67,7 +89,7 @@ Backend stack
      - Status
    * - ZenSVI
      - Mapillary / KartaView / Amsterdam download
-     - ``streetview.fetch``
+     - ``svi.fetch``
      - Yes
      - integrated (live)
    * - streetlevel
@@ -108,7 +130,7 @@ timestamp, provider, model name/version, and missingness.
 ``segmentation``, ``object_detection``, ``scene_recognition``, and
 ``comfort`` are experimental and **blocked for offline docs**: torch
 weights and redistributable precomputed artifacts are not in this
-repository. Run them live with ``urbancode[streetview]``. Do not
+repository. Run them live with ``urbancode[svi]``. Do not
 treat a placeholder PNG as a result.
 
 .. figure:: /_static/recipes/streetview/filename_punggol.png
@@ -150,7 +172,7 @@ Reading the result
 Limitations
 -----------
 
-* ``streetview.fetch`` is blocked for offline docs.
+* ``svi.fetch`` is blocked for offline docs.
 * Precomputed masks are not a substitute for re-running the model
   when weights change.
 * Sampling bias is the dominant error, not the color formula.
@@ -162,7 +184,7 @@ Related pages
   :doc:`/reference/recipes/streetview/as_layer_punggol`
 * Workflow: :doc:`/workflows/street_experience`
 * API: :doc:`/reference/api/streetview`
-* Migration: :doc:`/migration/svi-to-streetview`
+* Migration: :doc:`/migration/streetview-to-svi`
 
 Use UrbanCode when photo features must join a City grid.
 Use ZenSVI or OpenCV directly when you are only downloading or

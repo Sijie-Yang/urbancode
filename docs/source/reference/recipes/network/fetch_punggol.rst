@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[network]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.network.fetch(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   streets = city.layer("streets")
+   streets.plot()
+
+``streets`` is the graph :class:`~urbancode.city.Layer` already stored in ``city``. ``streets.plot()`` draws the graph in native support; the code does not aggregate it to a grid.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/network/fetch_punggol.png
+   :alt: uc.network.fetch result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.network.fetch`` on dataset ``punggol``.
+   Unit: graph. Backend: osmnx.
 
 Inputs
 ------
@@ -48,16 +64,6 @@ Output
 
 City with graph and vector layers. CRS EPSG:4326 plus a metric CRS stamp.
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/network/fetch_punggol.png
-   :alt: uc.network.fetch result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.network.fetch`` on dataset ``punggol``.
-   Unit: graph. Backend: osmnx.
-
 How to read
 -----------
 
@@ -78,13 +84,6 @@ Limitations
 
 - committed pocket is a clipped OSM extract, not a live refresh
 - OSM timestamp is the extract date, not a planning-grade inventory
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/network/fetch_punggol.py
-   :language: python
-   :caption: examples/recipes/network/fetch_punggol.py
 
 Related pages
 -------------

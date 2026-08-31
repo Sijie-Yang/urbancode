@@ -14,72 +14,76 @@ Real case
 - Extra: ``urbancode[vector]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.images.from_table(...)
+   import pandas as pd
+   import urbancode as uc
+
+   catalog = pd.read_json("examples/data/real/streetview/catalog.json")
+   photos = uc.images.from_table(
+       catalog[catalog["city_id"] == "punggol"],
+       view_type="streetview",
+       image_root="examples/data/real/streetview",
+   )
+   print(photos.kind, photos.metadata["n_images"])
+   photos.plot()
+
+``catalog`` is the three-city source table. ``photos`` is the eight-row Punggol point :class:`~urbancode.city.Layer`; ``n_images`` counts catalog rows and ``photos.plot()`` maps their coordinates.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/images/from_table_punggol.png
+   :alt: uc.images.from_table result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.images.from_table`` on dataset ``streetview``.
+   Unit: image. Backend: geopandas.
 
 Inputs
 ------
 
-Table with unique ``image_id``, image path or URI, and lon/lat.
+table with image_id, path, and lon/lat
 
 Spatial support
 ---------------
 
-Native support: geotagged observation point. This is not a satellite
-raster and not a street-view download.
+See :doc:`/concepts/spatial_support_and_maps` for native vs aggregated geometry.
 
 Parameters
 ----------
 
-``id_column`` must identify each photo. Automatic IDs are allowed
-only with ``id_strategy="uri_hash"`` or ``"checksum"``.
-``view_type`` is ``streetview``, ``windowview``, or ``ground_photo``.
+See the signature of ``uc.images.from_table`` in the API reference. The recipe uses the committed fixture and does not hard-code result values.
 
 Method
 ------
 
-Builds a point Layer and stamps provenance. Window-view rows stay
-on this contract; they are not street view.
+Builds a geolocated photo Layer. image_id must be unique.
 
 Backend: ``geopandas``. Output unit: ``image``.
 
 Output
 ------
 
-Point Layer with ``image_id``, path/URI, ``view_type``, ``source``,
-``license``, ``captured_at``, and ``location_quality``.
-
-Figure
-------
-
-.. figure:: ../../../_static/recipes/images/from_table_punggol.png
-   :alt: Eight licensed Punggol street photos as a point Layer
-   :width: 100%
-
-   Output of ``uc.images.from_table`` on eight Commons photos.
-   Spatial support: points. n=8, not a census.
+point Layer. Unit: image.
 
 How to read
 -----------
 
-Each point is one photo. Several photos can share a location.
-Do not treat the set as a complete street inventory.
+Each point is one photo, not a street census.
 
 Parameters and sensitivity
 --------------------------
 
-Dropping ``image_id`` and inventing IDs from geometry would merge
-distinct photos. That is rejected.
+Change one parameter at a time (radius, cell size, date) and compare coverage.
 
 Failure modes
 -------------
 
-Duplicate ``image_id`` raises. Unknown ``view_type`` raises.
-Missing path and missing ``image_id`` raise.
+Missing extras raise ``MissingExtraError``. Invalid parameters raise ``ValueError``.
 
 Limitations
 -----------
@@ -87,17 +91,10 @@ Limitations
 - image_id must be unique; one location can have several photos
 - window-view photos use view_type=windowview, not streetview
 
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/images/from_table_punggol.py
-   :language: python
-   :caption: examples/recipes/images/from_table_punggol.py
-
 Related pages
 -------------
 
-- Concept: :doc:`/concepts/image_observations`
+- Domain: :doc:`/concepts/image_observations`
 - API: :doc:`/reference/api/images`
 - Workflow: :doc:`/workflows/research_cases/thermal_comfort_in_sight`
 - Dataset: :doc:`/reference/datasets`

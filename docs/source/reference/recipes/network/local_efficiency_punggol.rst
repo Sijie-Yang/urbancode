@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[network]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.network.local_efficiency(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   eff = uc.network.local_efficiency(city["streets"])
+   eff.plot()
+
+``eff`` is a graph :class:`~urbancode.city.Layer` whose nodes carry ``local_efficiency``. The value describes neighbour redundancy, not travel speed.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/network/local_efficiency_punggol.png
+   :alt: uc.network.local_efficiency result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.network.local_efficiency`` on dataset ``punggol``.
+   Unit: dimensionless. Backend: networkx.
 
 Inputs
 ------
@@ -48,16 +64,6 @@ Output
 
 Graph Layer. Node attribute ``local_efficiency`` (Latora–Marchiori).
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/network/local_efficiency_punggol.png
-   :alt: uc.network.local_efficiency result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.network.local_efficiency`` on dataset ``punggol``.
-   Unit: dimensionless. Backend: networkx.
-
 How to read
 -----------
 
@@ -78,13 +84,6 @@ Limitations
 
 - experimental Latora-Marchiori local efficiency
 - not a congestion or travel-time measure
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/network/local_efficiency_punggol.py
-   :language: python
-   :caption: examples/recipes/network/local_efficiency_punggol.py
 
 Related pages
 -------------

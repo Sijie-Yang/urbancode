@@ -36,6 +36,9 @@ Installation
 
    pip install "urbancode[imagery]"
 
+This installs raster I/O, labelled arrays, STAC search, and the vector
+stack needed for clipping. It does not install climate or torch.
+
 UrbanCode API
 -------------
 
@@ -52,6 +55,23 @@ UrbanCode API
 ``uc.imagery.utci`` is a compatibility alias of
 :func:`urbancode.climate.utci`. The tutorial lives on
 :doc:`climate`.
+
+::
+
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   ndvi = uc.imagery.ndvi(city.layers["sentinel2"])
+   print(ndvi.kind, ndvi.data.shape)
+   ndvi.plot()
+
+::
+
+   raster (200, 200)
+
+``ndvi`` is a 200 × 200 raster ``Layer`` on the committed 10 m
+Sentinel-2 grid. The plot shows those native pixels; no 250 m
+aggregation has happened yet.
 
 Backend stack
 -------------

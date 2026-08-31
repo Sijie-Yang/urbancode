@@ -14,13 +14,17 @@ copyright = "2024–2026, Sijie Yang"
 author = "Sijie Yang"
 version = __version__
 release = __version__
+language = "en"
+html_title = project
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "sphinx_copybutton",
+    "sphinx_immaterial",
 ]
 
 exclude_patterns = [
@@ -37,17 +41,76 @@ exclude_patterns = [
     "workflows/real_multi_city.rst",
 ]
 html_static_path = ["_static"]
-html_theme = "sphinx_rtd_theme"
+html_css_files = ["custom.css"]
+html_logo = "_static/urbancode_logo.svg"
+html_favicon = "_static/urbancode_logo.svg"
+html_theme = "sphinx_immaterial"
 html_last_updated_fmt = "%b %d, %Y"
+autosummary_generate = False
 
-autodoc_typehints = "description"
+html_theme_options = {
+    "font": False,
+    "icon": {
+        "repo": "fontawesome/brands/github",
+        "edit": "material/file-code",
+    },
+    "site_url": "https://urbancode.readthedocs.io",
+    "repo_url": "https://github.com/Sijie-Yang/UrbanCode/",
+    "edit_uri": "blob/main/docs/source",
+    "repo_name": "Sijie-Yang/UrbanCode",
+    "features": [
+        "navigation.sections",
+        "navigation.top",
+        "search.share",
+        "search.suggest",
+        "toc.follow",
+        "toc.sticky",
+        "content.code.copy",
+        "content.action.edit",
+    ],
+    "palette": [
+        {
+            "media": "(prefers-color-scheme)",
+            "scheme": "default",
+            "primary": "black",
+            "accent": "red",
+            "toggle": {
+                "icon": "material/brightness-auto",
+                "name": "Switch to light mode",
+            },
+        },
+        {
+            "media": "(prefers-color-scheme: light)",
+            "scheme": "default",
+            "primary": "black",
+            "accent": "red",
+            "toggle": {
+                "icon": "material/lightbulb",
+                "name": "Switch to dark mode",
+            },
+        },
+        {
+            "media": "(prefers-color-scheme: dark)",
+            "scheme": "slate",
+            "primary": "black",
+            "accent": "red",
+            "toggle": {
+                "icon": "material/lightbulb-outline",
+                "name": "Switch to system preference",
+            },
+        },
+    ],
+}
+
+# Match momepy. "description" strips annotations and leaves
+# dataclass ``<factory>`` defaults, which sphinx-immaterial then
+# treats as type parameters (``place=None`` as the parameter name).
+autodoc_typehints = "none"
 autodoc_default_options = {
     "members": False,
     "undoc-members": False,
     "show-inheritance": True,
 }
-# Heavy extras are mocked so RTD can document public street-view
-# signatures without installing torch / OpenCV / transformers.
 autodoc_mock_imports = [
     "torch",
     "torchvision",
@@ -84,6 +147,9 @@ nitpick_ignore = [
     ("py:class", "Iterable"),
     ("py:class", "LayerKind"),
     ("py:class", "City"),
+    ("py:class", "urbancode.city.City"),
+    ("py:obj", "urbancode.city.City"),
+    ("py:obj", "urbancode.city.Layer"),
     ("py:class", "numpy.ndarray"),
     ("py:class", "optional"),
     ("py:class", "pd.DataFrame"),
@@ -100,6 +166,7 @@ nitpick_ignore = [
     ("py:class", "numpy.ndarray | Layer"),
     ("py:class", "Path | Any"),
     ("py:exc", "ContractError"),
+    ("py:exc", "urbancode.errors.MissingExtraError"),
 ]
 
 _WORKFLOW_REDIRECTS = {
@@ -112,7 +179,18 @@ _WORKFLOW_REDIRECTS = {
 }
 
 
+def _sanitize_autodoc_signature(
+    app, what, name, obj, options, signature, return_annotation
+):
+    """Keep dataclass field defaults parseable by sphinx-immaterial."""
+    if signature:
+        signature = signature.replace("<factory>", "...")
+    return signature, return_annotation
+
+
 def setup(app) -> None:
+    app.connect("autodoc-process-signature", _sanitize_autodoc_signature)
+
     def _write_redirects(app_obj, exception) -> None:
         if exception is not None:
             return

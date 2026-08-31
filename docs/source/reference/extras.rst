@@ -18,12 +18,12 @@ is :doc:`/getting_started/installation`.
      - rasterio, STAC, :doc:`/domains/imagery`
    * - ``climate``
      - :func:`urbancode.climate.utci`
-   * - ``streetview``
+   * - ``svi``
      - :doc:`/domains/streetview`
    * - ``perception``
      - :func:`urbancode.perception.thermal_affordance`
    * - ``research``
-     - Research-case extras (perception + streetview + climate + viz)
+     - Research-case extras (perception + svi + climate + viz)
    * - ``spatial-stats``
      - Phase 2 dependency group; no public stats API yet
    * - ``viz``
@@ -31,13 +31,13 @@ is :doc:`/getting_started/installation`.
    * - ``standard``
      - vector + network + imagery + climate + viz
    * - ``all``
-     - standard + streetview + perception + survey + graph
+     - standard + svi + perception + survey + graph
    * - ``docs``
      - Sphinx
    * - ``dev``
      - pytest and linters
 
-``svi`` and ``download`` remain install aliases of ``streetview``.
+``streetview`` and ``download`` remain install aliases of ``svi``.
 ``gallery`` is an alias of ``viz``. Torch is not in ``standard``.
 
 There is no ``uc doctor`` command. Use

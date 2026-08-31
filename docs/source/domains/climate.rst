@@ -33,6 +33,10 @@ Installation
 
    pip install "urbancode[climate,imagery]"
 
+``climate`` installs the UTCI backend. ``imagery`` is included here
+because the mapped case passes raster inputs; scalar UTCI alone only
+needs ``urbancode[climate]``.
+
 UrbanCode API
 -------------
 
@@ -40,6 +44,17 @@ UrbanCode API
 
 ``uc.imagery.utci`` is a compatibility alias. Do not follow a second
 tutorial on the imagery page.
+
+::
+
+   import urbancode as uc
+
+   utci = uc.climate.utci(tdb=31.2, rh=74, v=1.8)
+   print(float(utci))
+
+::
+
+   34.0
 
 Backend stack
 -------------

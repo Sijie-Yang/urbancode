@@ -27,6 +27,13 @@ Minimal command
 
    uc --version
 
+::
+
+   urbancode 0.3.0
+
+The command prints the installed package version and exits without
+loading GIS or model backends.
+
 Related pages
 -------------
 

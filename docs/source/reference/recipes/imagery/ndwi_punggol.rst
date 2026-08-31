@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[imagery]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.imagery.ndwi(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   ndwi = uc.imagery.ndwi(city.layers["sentinel2"])
+   ndwi.plot()
+
+``ndwi`` is a dimensionless raster :class:`~urbancode.city.Layer` on the Sentinel-2 pixel grid. Positive pixels are water candidates, not validated water polygons.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/imagery/indices_punggol.png
+   :alt: uc.imagery.ndwi result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.imagery.ndwi`` on dataset ``punggol``.
+   Unit: dimensionless. Backend: rasterio.
 
 Inputs
 ------
@@ -48,16 +64,6 @@ Output
 
 Raster Layer. (B03 − B08) / (B03 + B08).
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/imagery/indices_punggol.png
-   :alt: uc.imagery.ndwi result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.imagery.ndwi`` on dataset ``punggol``.
-   Unit: dimensionless. Backend: rasterio.
-
 How to read
 -----------
 
@@ -78,13 +84,6 @@ Limitations
 
 - needs B03 and B08
 - water and dark shadow can look similar
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/imagery/ndwi_punggol.py
-   :language: python
-   :caption: examples/recipes/imagery/ndwi_punggol.py
 
 Related pages
 -------------

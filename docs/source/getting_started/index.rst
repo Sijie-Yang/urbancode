@@ -7,7 +7,7 @@ Three pages, in order.
 2. :doc:`quickstart` — the object chain on the real Punggol pocket.
 3. :doc:`first_project` — NDVI and reachability on one grid, then save.
 
-Then pick a research path: :doc:`/workflows/punggol_urban_profile`.
+Then pick an example: :doc:`/workflows/punggol_urban_profile`.
 
 .. toctree::
    :maxdepth: 1

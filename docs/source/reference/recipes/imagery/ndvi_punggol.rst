@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[imagery]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.imagery.ndvi(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   ndvi = uc.imagery.ndvi(city.layers["sentinel2"])
+   ndvi.plot()
+
+``ndvi`` is a dimensionless raster :class:`~urbancode.city.Layer` on the Sentinel-2 pixel grid. ``ndvi.plot()`` shows pixels, not 250 m analysis units.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/imagery/indices_punggol.png
+   :alt: uc.imagery.ndvi result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.imagery.ndvi`` on dataset ``punggol``.
+   Unit: dimensionless. Backend: rasterio.
 
 Inputs
 ------
@@ -50,16 +66,6 @@ Output
 
 Raster Layer ``ndvi``. Formula (B08 − B04) / (B08 + B04). Unit dimensionless. Resolution follows the source (10 m here).
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/imagery/indices_punggol.png
-   :alt: uc.imagery.ndvi result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.imagery.ndvi`` on dataset ``punggol``.
-   Unit: dimensionless. Backend: rasterio.
-
 How to read
 -----------
 
@@ -80,13 +86,6 @@ Limitations
 
 - single acquisition date
 - residual cloud and atmospheric effects
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/imagery/ndvi_punggol.py
-   :language: python
-   :caption: examples/recipes/imagery/ndvi_punggol.py
 
 Related pages
 -------------

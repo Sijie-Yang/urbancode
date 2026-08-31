@@ -27,7 +27,7 @@ Domain boundaries
      - Continuous geographic rasters: Sentinel-2, DEM, NDVI, NDBI.
    * - ``uc.images``
      - Discrete city photos with metadata: path, coordinates, license.
-   * - ``uc.streetview``
+   * - ``uc.svi``
      - Street-view acquisition and street-specific features.
    * - ``uc.perception``
      - Human-perception scores from city photos (street or window view).
@@ -59,10 +59,28 @@ Each row needs a unique ``image_id``. One location can have several
 photos, so geometry-only IDs are not allowed. Automatic IDs require
 an explicit ``id_strategy="uri_hash"`` or ``"checksum"``.
 
+On the fixture, filter the catalog first (IDs are unique inside one
+city, not across the file)::
+
+   import pandas as pd
+   import urbancode as uc
+
+   catalog = pd.read_json("examples/data/real/streetview/catalog.json")
+   photos = uc.images.from_table(
+       catalog[catalog["city_id"] == "punggol"],
+       view_type="streetview",
+       image_root="examples/data/real/streetview",
+   )
+   print(photos.metadata["n_images"], photos.kind)
+
+::
+
+   8 vector
+
 The Layer also carries ``view_type``, ``city_id``, ``source``,
 ``license``, ``captured_at``, and ``location_quality``.
 
-``uc.streetview.as_layer()`` stays. It calls this helper and sets
+``uc.svi.as_layer()`` stays. It calls this helper and sets
 ``view_type="streetview"``.
 
 See also

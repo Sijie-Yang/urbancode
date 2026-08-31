@@ -14,12 +14,28 @@ Real case
 - Extra: ``urbancode[network]``
 - Offline: True
 
-Command
--------
+Copy this
+---------
 
 .. code-block:: python
 
-   uc.network.centrality(...)
+   import urbancode as uc
+
+   city = uc.load("examples/data/real/punggol", lazy=True)
+   between = uc.network.centrality(city["streets"], metric="betweenness")
+   between.plot()
+
+``between`` is a graph :class:`~urbancode.city.Layer`. Its NetworkX nodes carry a new ``betweenness`` attribute; ``between.plot()`` colours the native nodes/edges by that value.
+
+The figure below is the output for the committed fixture. Live-source
+recipes can return different timestamps or inventories.
+
+.. figure:: ../../../_static/recipes/network/centrality_punggol.png
+   :alt: uc.network.centrality result for the registered dataset
+   :width: 100%
+
+   Output of ``uc.network.centrality`` on dataset ``punggol``.
+   Unit: dimensionless. Backend: networkx.
 
 Inputs
 ------
@@ -52,16 +68,6 @@ Output
 
 Graph Layer with node attribute ``betweenness`` or ``closeness`` (dimensionless).
 
-Figure
-------
-
-.. figure:: ../../../_static/recipes/network/centrality_punggol.png
-   :alt: uc.network.centrality result for the registered dataset
-   :width: 100%
-
-   Output of ``uc.network.centrality`` on dataset ``punggol``.
-   Unit: dimensionless. Backend: networkx.
-
 How to read
 -----------
 
@@ -82,13 +88,6 @@ Limitations
 
 - betweenness is sensitive to the pocket boundary
 - values are graph-theoretic, not traffic volume
-
-Complete script
----------------
-
-.. literalinclude:: ../../../../../examples/recipes/network/centrality_punggol.py
-   :language: python
-   :caption: examples/recipes/network/centrality_punggol.py
 
 Related pages
 -------------
