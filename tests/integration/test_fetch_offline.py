@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib
 from pathlib import Path
 from unittest.mock import patch
 
@@ -8,6 +9,9 @@ import pytest
 
 from urbancode.city import City
 from urbancode.fetch import expand_modalities, fetch
+
+_NETWORK_FETCH = importlib.import_module("urbancode.network.fetch")
+_IMAGERY_FETCH = importlib.import_module("urbancode.imagery.fetch")
 
 
 def test_modalities_expand_presets_only() -> None:
@@ -43,8 +47,8 @@ def test_fetch_partial_success_and_roundtrip(tmp_path: Path, cache_dir: Path) ->
         city.record_error("sentinel2", "stac unavailable")
         return city
 
-    with patch("urbancode.network.fetch.fetch", fake_network), patch(
-        "urbancode.imagery.fetch.fetch", fake_imagery
+    with patch.object(_NETWORK_FETCH, "fetch", fake_network), patch.object(
+        _IMAGERY_FETCH, "fetch", fake_imagery
     ):
         city = fetch(
             "Tinyville",
@@ -84,8 +88,8 @@ def test_fetch_forwards_options(tmp_path: Path) -> None:
         city.add_layer("ndvi", pd.DataFrame({"v": [1]}), kind="table")
         return city
 
-    with patch("urbancode.network.fetch.fetch", fake_network), patch(
-        "urbancode.imagery.fetch.fetch", fake_imagery
+    with patch.object(_NETWORK_FETCH, "fetch", fake_network), patch.object(
+        _IMAGERY_FETCH, "fetch", fake_imagery
     ):
         fetch(
             "Tinyville",
@@ -102,6 +106,6 @@ def test_fetch_on_error_raise() -> None:
     def boom(**kwargs):
         raise RuntimeError("overpass down")
 
-    with patch("urbancode.network.fetch.fetch", boom):
+    with patch.object(_NETWORK_FETCH, "fetch", boom):
         with pytest.raises(RuntimeError, match="overpass down"):
             fetch("Tinyville", layers=["streets"], on_error="raise")
