@@ -26,15 +26,23 @@ def _recipe_id(path: Path) -> str:
     return path.relative_to(ROOT / "examples" / "recipes").with_suffix("").as_posix()
 
 
-@pytest.mark.parametrize("path", discover(), ids=_recipe_id)
+def _offline_paths() -> list[Path]:
+    paths = []
+    for path in discover():
+        recipe_id = _recipe_id(path)
+        if path.name.startswith("_"):
+            continue
+        if recipe_id in OFFLINE_SKIP and os.environ.get("UC_RUN_HEAVY_RECIPES") != "1":
+            continue
+        paths.append(path)
+    return paths
+
+
+@pytest.mark.parametrize("path", _offline_paths(), ids=_recipe_id)
 def test_offline_recipe(path: Path, tmp_path: Path) -> None:
     recipe_id = _recipe_id(path)
-    if path.name.startswith("_"):
-        pytest.skip("helper")
     if recipe_id.startswith("adapters/"):
         pytest.importorskip("osmnx") if "osmnx" in recipe_id else None
-    if recipe_id in OFFLINE_SKIP and os.environ.get("UC_RUN_HEAVY_RECIPES") != "1":
-        pytest.skip("heavy or live-adjacent recipe")
     if "network" in recipe_id or "fusion" in recipe_id or "units" in recipe_id or "core" in recipe_id:
         pytest.importorskip("geopandas")
         pytest.importorskip("networkx")

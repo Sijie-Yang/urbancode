@@ -14,13 +14,6 @@ os.environ.setdefault(
 )
 
 
-@pytest.fixture(autouse=True)
-def _reset_svi_deprecation() -> None:
-    import urbancode.svi as svi
-
-    svi._WARNED = False
-
-
 @pytest.fixture
 def cache_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     root = tmp_path / "uc-cache"
