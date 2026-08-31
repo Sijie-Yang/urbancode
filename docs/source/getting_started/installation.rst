@@ -4,12 +4,9 @@ Installation
 UrbanCode requires Python 3.10 or newer on macOS, Linux, or Windows.
 The core wheel is small. GIS and deep-learning stacks are extras.
 
-Tutorials and the Punggol pocket need the GIS extra set:
+Tutorials and the Punggol pocket need a clone plus the GIS extra set:
 
-::
-
-   pip install "urbancode[standard]"
-   python -c "import urbancode as uc; print(uc.__version__); print(uc.backends.status())"
+.. include:: /_snippets/bootstrap.rst
 
 There is no ``uc doctor`` command. After install, probe extras with
 :func:`urbancode.backends.status` or :func:`urbancode.backends.available`.
@@ -56,11 +53,15 @@ Extras
      - UTCI (rasters still need ``imagery``)
    * - ``svi``
      - :doc:`/domains/streetview`
-     - Pillow, OpenCV, PyTorch, ZenSVI
-     - Color, live fetch, deprecated comfort
+     - Pillow, OpenCV, PyTorch, Transformers
+     - Color and deprecated comfort (no live fetch)
+   * - ``download``
+     - ``uc.svi.fetch``
+     - ZenSVI, streetlevel
+     - Mapillary / KartaView / unofficial Google
    * - ``perception``
      - :func:`urbancode.perception.thermal_affordance`
-     - PyTorch, TorchVision, OpenCV
+     - PyTorch, TorchVision, Transformers, OpenCV
      - TCIS VATA / VPI
    * - ``research``
      - perception + svi + climate + viz
@@ -91,7 +92,8 @@ Extras
      - sphinx, sphinx-immaterial
      - ``sphinx-build -W``
 
-``streetview`` and ``download`` remain install aliases of ``svi``.
+The ``streetview`` extra is an install alias of ``svi``.
+``download`` is separate and is the extra ``uc.svi.fetch`` asks for.
 ``gallery`` is an alias of ``viz``. Torch is not in ``standard``.
 
 When to install ``all``

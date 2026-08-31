@@ -13,13 +13,28 @@ Result first
    :alt: Sample photo, point coverage, grid counts, colorfulness, NDVI, and reachability
    :width: 100%
 
-   Eight licensed Commons photos, not a Punggol census.
+   Eight licensed Commons photos, not a Punggol census. The figure is
+   produced by ``examples/workflows/street_experience.py``.
 
-1. Inspect the catalog first
+1. Catalog files, then color
 ----------------------------
 
-The JSON has three cities. Image IDs are unique **inside** Punggol,
-not across the whole file.
+The taught chain is ``uc.svi.filename`` → ``uc.svi.color`` →
+``uc.svi.as_layer`` → ``uc.fusion.aggregate``. Geotags come from
+``examples/data/real/streetview/catalog.json``. Image IDs are unique
+**inside** Punggol, not across the whole file.
+
+.. literalinclude:: ../../../examples/workflows/street_experience.py
+   :language: python
+   :start-after: # tutorial:start
+   :end-before: # tutorial:end
+
+``filename`` lists JPEGs. ``color`` adds pixel statistics.
+``as_layer`` makes a point Layer. Empty cells stay null after
+``aggregate``; null is not zero.
+
+2. Inspect the catalog first
+----------------------------
 
 ::
 
@@ -34,60 +49,8 @@ not across the whole file.
    kallio               8
    greenwich_village    8
 
-2. One city → one Layer
------------------------
-
-::
-
-   import urbancode as uc
-
-   punggol = catalog[catalog["city_id"] == "punggol"]
-   photos = uc.images.from_table(
-       punggol,
-       view_type="streetview",
-       image_root="examples/data/real/streetview",
-   )
-   print(photos.kind, photos.metadata["n_images"])
-   print(photos.data[["image_id", "longitude", "latitude"]].head(2))
-
-::
-
-   vector 8
-
-A point Layer in EPSG:4326. ``image_root`` resolves the relative
-``path`` column. Call ``photos.plot()``.
-
-3. Count photos onto the grid
------------------------------
-
-::
-
-   city = uc.load("examples/data/real/punggol", lazy=True)
-   units = uc.units.grid(city, cell_size=250)
-   counts = uc.fusion.aggregate(
-       photos, units, stat="count", indicator="photo_count"
-   )
-   ndvi = uc.fusion.aggregate(
-       uc.imagery.ndvi(city.layers["sentinel2"]),
-       units, stat="mean", indicator="ndvi",
-   )
-   print(int((counts.to_pandas()["value"] > 0).sum()))
-
-::
-
-   3
-
-Eight photos land in 3 of 81 cells (one cell has six). Empty cells
-stay null. Null is not zero.
-
-::
-
-   result = uc.fusion.combine(units, counts, ndvi)
-   result.plot(indicator="photo_count")
-
-``result`` aligns ``photo_count`` and ``ndvi`` by unit ID. The plot
-selects the sparse count series; it does not fill unobserved cells or
-turn eight photos into area coverage.
+Eight photos land in 3 of 81 cells (one cell has six). Call
+``result.plot(indicator="photo_count")`` after the combine step.
 
 VATA is a different quantity. See
 :doc:`/workflows/research_cases/thermal_comfort_in_sight`.
@@ -97,3 +60,4 @@ Limitations
 
 * Not a survey of Punggol streets.
 * Faces and plates may appear; this is not a privacy-cleared set.
+* Colorfulness is a pixel statistic, not thermal affordance.

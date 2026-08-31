@@ -18,10 +18,12 @@ Result first
    (item ``S2B_MSIL2A_20240728T031519``, 28 July 2024). High values
    are greener canopies on that date only.
 
-Install ``urbancode[standard]``, clone this repository, and run
-the blocks from the **repository root**. The pocket
-``examples/data/real/punggol`` is a docs fixture; it is not inside
-the PyPI wheel. A live alternative is ``uc.fetch("Punggol, Singapore")``.
+Install from a clone as on :doc:`installation`. Run the blocks from
+the **repository root**. The pocket ``examples/data/real/punggol`` is
+a committed docs fixture; it is not inside the PyPI wheel. The
+executable source of these numbers is
+``examples/tutorials/quickstart.py``. A live alternative is
+``uc.fetch("Punggol, Singapore")``.
 
 1. Import and load
 ------------------
@@ -194,6 +196,13 @@ Limitations
 * One Sentinel-2 date is not a seasonal mean.
 * 150 m reachability is graph length, not a door-to-door walk.
 * The pocket is 2 km, so betweenness later will be boundary-sensitive.
+
+Executable source
+-----------------
+
+.. literalinclude:: ../../../examples/tutorials/quickstart.py
+   :language: python
+   :pyobject: run
 
 Next: :doc:`first_project` (save / reload). Concepts:
 :doc:`/concepts/study_area_city_layer`,

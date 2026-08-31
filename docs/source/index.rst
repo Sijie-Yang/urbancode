@@ -93,14 +93,21 @@ offline. Walkthrough: :doc:`getting_started/quickstart`.
 Install
 -------
 
+Minimal PyPI extras:
+
 ::
 
    pip install urbancode
    pip install "urbancode[standard]"     # vector + network + imagery + climate + viz
    pip install "urbancode[svi]"          # TCIS + color
 
+Tutorials need the committed pocket. Same bootstrap as
+:doc:`getting_started/installation`:
+
+.. include:: /_snippets/bootstrap.rst
+
 Python 3.10+. The core wheel is small. Torch is not in ``[standard]``.
-See :doc:`getting_started/installation` for extras and backends.
+``uc.svi.fetch`` needs ``urbancode[download]``.
 
 How to cite
 -----------

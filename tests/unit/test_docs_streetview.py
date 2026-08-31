@@ -114,6 +114,8 @@ def test_no_orphan_rst() -> None:
         doc = str(path.relative_to(DOCS)).replace("\\", "/").removesuffix(".rst")
         if doc in REDIRECT_DOCS:
             continue
+        if doc.startswith("_snippets/"):
+            continue
         if doc not in listed:
             orphans.append(doc)
     assert orphans == []
